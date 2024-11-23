@@ -60,7 +60,7 @@ public class PacketOrderM extends Check implements PostPredictionCheck {
         // we don't need to check pre-1.9 players here (no tick skipping)
         if (player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_8)) return;
 
-        if (player.isTickingReliablyFor(3)) {
+        if (player.isTickingReliablyFor(3) && !player.uncertaintyHandler.lastVehicleSwitch.hasOccurredSince(0)) {
             for (; invalid >= 1; invalid--) {
                 flagAndAlert();
             }

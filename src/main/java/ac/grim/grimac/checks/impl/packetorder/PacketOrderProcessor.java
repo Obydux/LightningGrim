@@ -3,11 +3,9 @@ package ac.grim.grimac.checks.impl.packetorder;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
-import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.protocol.world.BlockFace;
 import com.github.retrooper.packetevents.wrapper.play.client.*;
 import lombok.Getter;
@@ -137,38 +135,27 @@ public final class PacketOrderProcessor extends Check implements PostPredictionC
             closingInventory = true;
         }
 
-        if (WrapperPlayClientPlayerFlying.isFlying(event.getPacketType()) && player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_8) && !player.packetStateData.lastPacketWasTeleport) {
-            onTick();
+        if (WrapperPlayClientPlayerFlying.isFlying(event.getPacketType()) && !player.packetStateData.lastPacketWasTeleport && !player.packetStateData.lastPacketWasOnePointSeventeenDuplicate) {
+            openingInventory = false;
+            swapping = false;
+            dropping = false;
+            attacking = false;
+            interacting = false;
+            releasing = false;
+            digging = false;
+            placing = false;
+            using = false;
+            picking = false;
+            sprinting = false;
+            sneaking = false;
+            clickingInInventory = false;
+            closingInventory = false;
+            quickMoveClicking = false;
+            pickUpClicking = false;
+            leavingBed = false;
+            startingToGlide = false;
+            jumpingWithMount = false;
         }
-    }
-
-    @Override
-    public void onPredictionComplete(PredictionComplete predictionComplete) {
-        if (player.getClientVersion().isNewerThanOrEquals(ClientVersion.V_1_9)) {
-            onTick();
-        }
-    }
-
-    private void onTick() {
-        openingInventory = false;
-        swapping = false;
-        dropping = false;
-        attacking = false;
-        interacting = false;
-        releasing = false;
-        digging = false;
-        placing = false;
-        using = false;
-        picking = false;
-        sprinting = false;
-        sneaking = false;
-        clickingInInventory = false;
-        closingInventory = false;
-        quickMoveClicking = false;
-        pickUpClicking = false;
-        leavingBed = false;
-        startingToGlide = false;
-        jumpingWithMount = false;
     }
 
     @Contract(pure = true)

@@ -52,7 +52,7 @@ public class PacketOrderE extends Check implements PostPredictionCheck {
             return;
         }
 
-        if (player.isTickingReliablyFor(3)) {
+        if (player.isTickingReliablyFor(3) && !player.uncertaintyHandler.lastVehicleSwitch.hasOccurredSince(0)) {
             for (; invalid >= 1; invalid--) {
                 if (flagAndAlert() && setback) {
                     setback = false;
