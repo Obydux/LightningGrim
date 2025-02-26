@@ -2,11 +2,14 @@ package ac.grim.grimac.events.packets.worldreader;
 
 import ac.grim.grimac.player.GrimPlayer;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.stream.NetStreamInput;
 import com.github.retrooper.packetevents.protocol.world.chunk.BaseChunk;
 import com.github.retrooper.packetevents.protocol.world.chunk.impl.v_1_18.Chunk_v1_18;
 import com.github.retrooper.packetevents.protocol.world.chunk.reader.impl.ChunkReader_v1_18;
 import com.github.retrooper.packetevents.protocol.world.dimension.DimensionTypes;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+
+import java.io.ByteArrayInputStream;
 
 public class PacketWorldReaderEighteen extends BasePacketWorldReader {
 
@@ -21,13 +24,10 @@ public class PacketWorldReaderEighteen extends BasePacketWorldReader {
         // Skip past heightmaps
         wrapper.readNBT();
 
-        BaseChunk[] chunks = new ChunkReader_v1_18().read(
-                DimensionTypes.OVERWORLD,
-                null, null, true, false, false,
-                event.getUser().getTotalWorldHeight() >> 4,
-                wrapper.readVarInt(),
-                wrapper
-        );
+        BaseChunk[] chunks = new ChunkReader_v1_18().read(DimensionTypes.OVERWORLD, null,
+                null, true, false, false,
+                event.getUser().getTotalWorldHeight() >> 4, null,
+                new NetStreamInput(new ByteArrayInputStream(wrapper.readByteArray())));
 
         // Remove biomes to save memory
         for (int i = 0; i < chunks.length; i++) {
