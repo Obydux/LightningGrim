@@ -1,8 +1,8 @@
 package ac.grim.grimac.utils.collisions.datatypes;
 
-import ac.grim.grimac.utils.nmsutil.Ray;
 import ac.grim.grimac.utils.math.Location;
 import ac.grim.grimac.utils.math.Vector3dm;
+import ac.grim.grimac.utils.nmsutil.Ray;
 import com.github.retrooper.packetevents.protocol.world.BlockFace;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.util.Vector3i;
@@ -17,9 +17,8 @@ public class SimpleCollisionBox implements CollisionBox {
     public static final double COLLISION_EPSILON = 1.0E-7;
 
     public double minX, minY, minZ, maxX, maxY, maxZ;
-    private boolean isFullBlock = false;
-
     SimpleCollisionBox[] boxes = new SimpleCollisionBox[ComplexCollisionBox.DEFAULT_MAX_COLLISION_BOX_SIZE];
+    private boolean isFullBlock = false;
 
     public SimpleCollisionBox() {
         this(0, 0, 0, 0, 0, 0, false);
@@ -28,12 +27,13 @@ public class SimpleCollisionBox implements CollisionBox {
     /**
      * Creates a box defined by two points in 3d space; used to represent hitboxes and collision boxes.
      * If your min/max values are > 1 you should probably check out {@link HexCollisionBox}
-     * @param minX x position of first corner
-     * @param minY y position of first corner
-     * @param minZ z position of first corner
-     * @param maxX x position of second corner
-     * @param maxY y position of second corner
-     * @param maxZ z position of second corner
+     *
+     * @param minX      x position of first corner
+     * @param minY      y position of first corner
+     * @param minZ      z position of first corner
+     * @param maxX      x position of second corner
+     * @param maxY      y position of second corner
+     * @param maxZ      z position of second corner
      * @param fullBlock - whether on not the box is a perfect 1x1x1 sized block
      */
     public SimpleCollisionBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, boolean fullBlock) {
@@ -63,6 +63,7 @@ public class SimpleCollisionBox implements CollisionBox {
      * Creates a box defined by two points in 3d space; used to represent hitboxes and collision boxes.
      * If your min/max values are > 1 you should probably check out {@link HexCollisionBox}
      * Use only if you don't know the fullBlock status, which is rare
+     *
      * @param minX x position of first corner
      * @param minY y position of first corner
      * @param minZ z position of first corner
@@ -77,7 +78,8 @@ public class SimpleCollisionBox implements CollisionBox {
         this.maxY = maxY;
         this.minZ = minZ;
         this.maxZ = maxZ;
-        if (minX == 0 && minY == 0 && minZ == 0 && maxX == 1 && maxY == 1 && maxZ == 1) isFullBlock = true;
+        if (minX == 0 && minY == 0 && minZ == 0 && maxX == 1 && maxY == 1 && maxZ == 1)
+            isFullBlock = true;
     }
 
     public SimpleCollisionBox(Vector3d min, Vector3d max) {
@@ -515,10 +517,10 @@ public class SimpleCollisionBox implements CollisionBox {
         if (!(min < -COLLISION_EPSILON) && !(max > 1.0000001)) {
             for (int i = 0; i <= 3; i++) {
                 int j = 1 << i;
-                double d = min * (double)j;
-                double e = max * (double)j;
-                boolean bl = Math.abs(d - (double)Math.round(d)) < COLLISION_EPSILON * (double)j;
-                boolean bl2 = Math.abs(e - (double)Math.round(e)) < COLLISION_EPSILON * (double)j;
+                double d = min * (double) j;
+                double e = max * (double) j;
+                boolean bl = Math.abs(d - (double) Math.round(d)) < COLLISION_EPSILON * (double) j;
+                boolean bl2 = Math.abs(e - (double) Math.round(e)) < COLLISION_EPSILON * (double) j;
                 if (bl && bl2) {
                     return i;
                 }
