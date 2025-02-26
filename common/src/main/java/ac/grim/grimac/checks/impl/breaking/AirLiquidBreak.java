@@ -15,16 +15,15 @@ import com.github.retrooper.packetevents.util.Vector3i;
 
 @CheckData(name = "AirLiquidBreak", description = "Breaking a block that cannot be broken")
 public class AirLiquidBreak extends Check implements BlockBreakCheck {
-    public AirLiquidBreak(GrimPlayer player) {
-        super(player);
-    }
-
+    public final boolean noFireHitbox = player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_15_2);
     private int lastTick;
     private boolean didLastFlag;
     private Vector3i lastBreakLoc;
     private StateType lastBlockType;
 
-    public final boolean noFireHitbox = player.getClientVersion().isOlderThanOrEquals(ClientVersion.V_1_15_2);
+    public AirLiquidBreak(GrimPlayer player) {
+        super(player);
+    }
 
     @Override
     public void onBlockBreak(BlockBreak blockBreak) {
