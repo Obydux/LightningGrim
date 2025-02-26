@@ -847,7 +847,7 @@ public class GrimPlayer implements GrimUser {
         ignoreDuplicatePacketRotation = config.getBooleanElse("ignore-duplicate-packet-rotation", false);
         cancelDuplicatePacket = config.getBooleanElse("cancel-duplicate-packet", true);
         mitigateAutoblock = config.getBooleanElse("mitigate-autoblock", true);
-        mitigateDesyncNoSlow = config.getBooleanElse("mitigate-desync-noslow", true);
+        mitigateDesyncNoSlow = config.getBooleanElse("mitigate-desync-noslow", false);
         // reload all checks
         for (AbstractCheck value : checkManager.allChecks.values()) value.reload();
         // reload punishment manager

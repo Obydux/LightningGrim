@@ -180,7 +180,7 @@ experimental-checks: false
 
 # 取消有问题的格挡
 mitigate-autoblock: true
-mitigate-desync-noslow: true
+mitigate-desync-noslow: false
 
 # Grim有时会取消非法的数据包，比如用timer，在一秒钟内取消了数个数据包后，我们应该踢掉这个玩家？
 # 我们认为是应该的，因为有些数据包限制器并不计算被Grim取消的数据包。

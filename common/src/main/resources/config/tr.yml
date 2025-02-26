@@ -177,7 +177,7 @@ debug-pipeline-on-join: false
 experimental-checks: false
 
 mitigate-autoblock: true
-mitigate-desync-noslow: true
+mitigate-desync-noslow: false
 
 # Grim bazen timer gibi yasa dışı paketleri iptal eder; bir saniyede X paket iptal edildikten sonra, ne zaman
 # oyuncuyu basitçe atmalıyız? Bu, bazı paket sınırlayıcılarının Grim tarafından iptal edilen paketleri saymaması gerektiğindendir.

@@ -173,7 +173,7 @@ debug-pipeline-on-join: false
 experimental-checks: false
 
 mitigate-autoblock: true
-mitigate-desync-noslow: true
+mitigate-desync-noslow: false
 
 # Грим иногда отменяет незаконные пакеты, например, с таймером, после X пакетов в секунду отмененных, когда следует
 # нам просто кикнуть игрока? Это необходимо, так как некоторые ограничители пакетов не учитывают пакеты, отмененные Гримом.

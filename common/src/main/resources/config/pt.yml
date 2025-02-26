@@ -182,7 +182,7 @@ debug-pipeline-on-join: false
 experimental-checks: false
 
 mitigate-autoblock: true
-mitigate-desync-noslow: true
+mitigate-desync-noslow: false
 
 # Grim às vezes cancela pacotes ilegais como com o timer, depois de X pacotes em um segundo que foram cancelados, quando
 # deve-se simplesmente expulsar o jogador? Isso é requirido já que alguns limitadores de pacotes não contam pacotes
