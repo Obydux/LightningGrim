@@ -262,7 +262,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                         player.packetStateData.setSlowedByUsingItem(false);
 
                         if (player.isMitigateDesyncNoSlow()) {
-                            BukkitNMS.resetItemUsage(player.bukkitPlayer);
+                            GrimAPI.INSTANCE.getItemResetHandler().resetItemUsage(player.platformPlayer);
                         }
                     }
                 });
@@ -272,7 +272,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                         player.packetStateData.setSlowedByUsingItem(false);
 
                         if (player.isMitigateDesyncNoSlow()) {
-                            BukkitNMS.resetItemUsage(player.bukkitPlayer);
+                            GrimAPI.INSTANCE.getItemResetHandler().resetItemUsage(player.platformPlayer);
                         }
                     }
                 });
