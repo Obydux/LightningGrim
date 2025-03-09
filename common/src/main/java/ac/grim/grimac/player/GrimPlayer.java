@@ -499,8 +499,7 @@ public class GrimPlayer implements GrimUser {
                 addTransactionSend(transactionID);
                 user.writePacket(packet);
             }
-        } catch (
-                Exception ignored) { // Fix protocollib + viaversion support by ignoring any errors :) // TODO: Fix this
+        } catch (Exception ignored) { // Fix protocollib + viaversion support by ignoring any errors :) // TODO: Fix this
             // recompile
         }
     }
