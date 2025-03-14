@@ -17,18 +17,8 @@ public class Fabric1201PlayerSelectorAdapter implements PlayerSelector {
     }
 
     @Override
-    public boolean isSingle() {
-        return true;
-    }
-
-    @Override
     public Sender getSinglePlayer() {
         return ((FabricSenderFactory) GrimAPI.INSTANCE.getSenderFactory()).map(fabricSelector.single().getCommandSource());
-    }
-
-    @Override
-    public Collection<Sender> getPlayers() {
-        return Collections.singletonList(getSinglePlayer()); // Assuming your ServerPlayer can be cast to Player
     }
 
     @Override

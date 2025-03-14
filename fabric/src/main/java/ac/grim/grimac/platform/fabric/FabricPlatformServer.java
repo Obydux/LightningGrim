@@ -14,12 +14,14 @@ public class FabricPlatformServer implements PlatformServer {
         return "Fabric " + FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString() + " (MC: " + GrimACFabricLoaderPlugin.FABRIC_SERVER.getVersion() + ")";
     }
 
+    // < 1.14 to 1.19
     @Override
     public void dispatchCommand(Sender sender, String command) {
         ServerCommandSource commandSource = GrimACFabricLoaderPlugin.PLUGIN.getFabricSenderFactory().reverse(sender);
-        GrimACFabricLoaderPlugin.FABRIC_SERVER.getCommandManager().executeWithPrefix(commandSource, command);
+        GrimACFabricLoaderPlugin.FABRIC_SERVER.getCommandManager().execute(commandSource, command);
     }
 
+    // < 1.14 to 1.21.4
     @Override
     public Sender getConsoleSender() {
         ServerCommandSource consoleSource = GrimACFabricLoaderPlugin.FABRIC_SERVER.getCommandSource();
@@ -33,6 +35,7 @@ public class FabricPlatformServer implements PlatformServer {
 
     @Override
     public double getTPS() {
-        return GrimACFabricLoaderPlugin.FABRIC_SERVER.getAverageTickTime();
+        // TODO chain-load
+        return GrimACFabricLoaderPlugin.FABRIC_SERVER.getTickTime(); // GrimACFabricLoaderPlugin.FABRIC_SERVER.getAverageTickTime();
     }
 }

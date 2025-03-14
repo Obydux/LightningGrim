@@ -7,11 +7,9 @@ import ac.grim.grimac.utils.math.Location;
 import com.google.common.base.Preconditions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.server.world.ServerWorld;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.util.EnumSet;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -39,21 +37,22 @@ public class FabricGrimEntity implements GrimEntity {
         return false;
     }
 
+    // TODO chain-load
     @Override
     public CompletableFuture<Boolean> teleportAsync(Location location) {
         return CompletableFuture.supplyAsync(() -> {
             if (entity.getWorld() instanceof ServerWorld) {
-                entity.teleport(
-                        ((FabricPlatformWorld) location.getWorld()).getFabricWorld(),
-                        location.getX(),
-                        location.getY(),
-                        location.getZ(),
-                        EnumSet.noneOf(PositionFlag.class), // todo change to match paper? Do they do this?
-                        location.getYaw(),
-                        location.getPitch(),
-                        true // doesn't seem to be used?
-
-                );
+//                entity.teleport(
+//                        ((FabricPlatformWorld) location.getWorld()).getFabricWorld(),
+//                        location.getX(),
+//                        location.getY(),
+//                        location.getZ(),
+//                        EnumSet.noneOf(PositionFlag.class), // todo change to match paper? Do they do this?
+//                        location.getYaw(),
+//                        location.getPitch(),
+//                        true // doesn't seem to be used?
+//
+//                );
                 return true;
             }
             return false;

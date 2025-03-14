@@ -98,3 +98,7 @@ tasks.remapJar.configure {
 publishing.publications.create<MavenPublication>("maven") {
     artifact(tasks["remapJar"])
 }
+
+tasks.compileJava {
+    options.release.set(8)
+}

@@ -6,13 +6,12 @@ import ac.grim.grimac.platform.api.sender.SenderFactory;
 import ac.grim.grimac.platform.fabric.GrimACFabricLoaderPlugin;
 import ac.grim.grimac.platform.fabric.utils.convert.FabricConversionUtil;
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import net.fabricmc.fabric.api.util.TriState;
 import net.kyori.adventure.text.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.dedicated.ServerCommandOutput;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.rcon.RconCommandOutput;
-import net.minecraft.text.Text;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.SenderMapper;
 
@@ -48,7 +47,7 @@ public class FabricSenderFactory extends SenderFactory<ServerCommandSource> impl
 
     @Override
     protected void sendMessage(ServerCommandSource sender, Component message) {
-        sender.sendFeedback(() -> FabricConversionUtil.toNativeText(message), false);
+        sender.sendFeedback(FabricConversionUtil.toNativeText(message), false);
     }
 
     @Override
@@ -91,8 +90,8 @@ public class FabricSenderFactory extends SenderFactory<ServerCommandSource> impl
     @Override
     protected boolean isConsole(ServerCommandSource sender) {
         CommandOutput output = sender.output;
-        return output == sender.getServer() || // Console
-                output.getClass() == RconCommandOutput.class || // Rcon
+        return output instanceof MinecraftServer || // Console
+                output instanceof ServerCommandOutput || // Rcon
                 (output == CommandOutput.DUMMY && sender.getName().equals("")); // Functions
     }
 

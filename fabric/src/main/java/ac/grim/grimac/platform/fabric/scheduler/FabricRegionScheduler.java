@@ -20,6 +20,7 @@ public class FabricRegionScheduler implements RegionScheduler {
 
     public FabricRegionScheduler(GrimPlugin plugin) {
         this.plugin = plugin;
+        // TODO chain-load
         ServerTickEvents.END_SERVER_TICK.register(this::handleTasks);
     }
 

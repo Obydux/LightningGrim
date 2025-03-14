@@ -1,0 +1,47 @@
+GetCommandSource
+    1.14 - 1.21.1
+        Lnet/minecraft/entity/Entity;getCommandSource()Lnet/minecraft/server/command/ServerCommandSource;
+    1.21.2 - 1.21.4
+        ServerPlayerEntity#getCommandSource()
+
+Inventory methods
+    1.14 - 1.21.4
+        Lnet/minecraft/entity/player/PlayerInventory;getMainHandStack()Lnet/minecraft/item/ItemStack;
+
+Entity Teleport
+    // TODO 1.14-1.19.3 entity teleport
+    1.19.4 - 1.21.1
+        Lnet/minecraft/entity/Entity;teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FF)Z
+    1.21.2 - 1.21.4
+        Lnet/minecraft/entity/Entity;teleport(Lnet/minecraft/server/world/ServerWorld;DDDLjava/util/Set;FFF)Z
+
+GetTickTime
+    1.14 - 1.20.2
+        getTickTime()
+    // TODO MISSING 1.20.3-1.20.4
+    1.20.6 - latest
+        getAverageTickTime()
+
+
+1.21.2 - latest
+- fabricPlayer.sendMessage()
+
+
+Getting ServerPlayerEntity Inventory
+    1.14 - 1.16.5
+        player.inventory
+    1.17 - 1.21.4
+        PlayerEntity.getInventory()
+
+1.14 - 1.15.2
+    net.minecraft.entity.player.PlayerInventory#getInvSize
+    net.minecraft.entity.player.PlayerInventory#getInvStack
+    net.minecraft.entity.player.PlayerEntity#container - for getInventoryOpenKey
+1.16 - 1.21.4
+    net.minecraft.inventory.Inventory#size
+    net.minecraft.entity.player.PlayerInventory#getStack
+
+1.14 - 1.19
+    net.minecraft.server.command.CommandManager#execute
+1.19.1 - 1.21.4
+    net.minecraft.server.command.CommandManager#executeWithPrefix

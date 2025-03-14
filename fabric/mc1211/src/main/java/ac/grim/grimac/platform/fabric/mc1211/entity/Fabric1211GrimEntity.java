@@ -1,5 +1,6 @@
 package ac.grim.grimac.platform.fabric.mc1211.entity;
 
+import ac.grim.grimac.platform.fabric.GrimACFabricLoaderPlugin;
 import ac.grim.grimac.platform.fabric.entity.FabricGrimEntity;
 import ac.grim.grimac.platform.fabric.world.FabricPlatformWorld;
 import ac.grim.grimac.utils.math.Location;
@@ -33,5 +34,6 @@ public class Fabric1211GrimEntity extends FabricGrimEntity {
             }
             return false;
         });
+        return GrimACFabricLoaderPlugin.FABRIC_SERVER;
     }
 }
