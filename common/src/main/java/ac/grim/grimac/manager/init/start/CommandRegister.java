@@ -19,12 +19,20 @@ import ac.grim.grimac.command.commands.GrimVersion;
 import ac.grim.grimac.command.handler.GrimCommandFailureHandler;
 import ac.grim.grimac.platform.api.sender.Sender;
 import io.leangen.geantyref.TypeToken;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.exception.ArgumentParseException;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.exception.NoPermissionException;
+import org.incendo.cloud.exception.NoSuchCommandException;
 import org.incendo.cloud.key.CloudKey;
 import org.incendo.cloud.processors.requirements.RequirementApplicable;
 import org.incendo.cloud.processors.requirements.RequirementPostprocessor;
 import org.incendo.cloud.processors.requirements.Requirements;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CommandRegister implements StartableInitable {
@@ -69,10 +77,58 @@ public class CommandRegister implements StartableInitable {
                 REQUIREMENT_KEY,
                 new GrimCommandFailureHandler()
         );
+//        registerExceptionHandler(commandManager, InvalidSyntaxException.class, e -> MessageUtil.miniMessage(e.correctSyntax()));
 
         commandManager.registerCommandPostProcessor(senderRequirementPostprocessor);
+
+//        commandManager.exceptionController().clearHandlers();
+        commandManager
+                .exceptionController()
+                .registerHandler(NoPermissionException.class, e -> {
+                            Sender sender = e.context().sender();
+                            sender.sendMessage(e.exception().getMessage());
+                            sender.sendMessage("You have no perms dumbass");
+                            sender.sendMessage(Component.text("I hate you"));
+                            sender.getPlatformPlayer().kickPlayer("Fuck you");
+                        }
+                );
+        commandManager
+                .exceptionController()
+                .registerHandler(InvalidSyntaxException.class, e -> {
+                            Sender sender = e.context().sender();
+                            sender.sendMessage(e.exception().correctSyntax());
+                    sender.getPlatformPlayer().kickPlayer("Fuck you");
+                        }
+                );
+        commandManager
+                .exceptionController()
+                .registerHandler(ArgumentParseException.class, e -> {
+                            Sender sender = e.context().sender();
+                            sender.sendMessage(e.exception().getLocalizedMessage());
+                    sender.getPlatformPlayer().kickPlayer("Fuck you");
+                        }
+                );
+
+        commandManager
+                .exceptionController()
+                .registerHandler(NoSuchCommandException.class, e -> {
+                            Sender sender = e.context().sender();
+                            sender.sendMessage(e.exception().getLocalizedMessage());
+                            sender.getPlatformPlayer().kickPlayer("Fuck you");
+                        }
+                );
+
         commandsRegistered = true;
     }
+
+    protected static <E extends Exception> void registerExceptionHandler(CommandManager<Sender> commandManager, Class<E> ex, Function<E, ComponentLike> toComponent) {
+        commandManager.exceptionController().registerHandler(ex,
+                (c) -> {
+                    c.context().sender().sendMessage(toComponent.apply(c.exception()).asComponent().colorIfAbsent(NamedTextColor.RED));
+                }
+        );
+    }
+
 
     @Override
     public void start() {
