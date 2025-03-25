@@ -1,7 +1,6 @@
 package ac.grim.grimac.manager.init.start;
 
 import ac.grim.grimac.GrimAPI;
-import ac.grim.grimac.command.SenderRequirement;
 import ac.grim.grimac.command.commands.GrimAlerts;
 import ac.grim.grimac.command.commands.GrimBrands;
 import ac.grim.grimac.command.commands.GrimDebug;
@@ -16,9 +15,7 @@ import ac.grim.grimac.command.commands.GrimSpectate;
 import ac.grim.grimac.command.commands.GrimStopSpectating;
 import ac.grim.grimac.command.commands.GrimVerbose;
 import ac.grim.grimac.command.commands.GrimVersion;
-import ac.grim.grimac.command.handler.GrimCommandFailureHandler;
 import ac.grim.grimac.platform.api.sender.Sender;
-import io.leangen.geantyref.TypeToken;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,24 +24,20 @@ import org.incendo.cloud.exception.ArgumentParseException;
 import org.incendo.cloud.exception.InvalidSyntaxException;
 import org.incendo.cloud.exception.NoPermissionException;
 import org.incendo.cloud.exception.NoSuchCommandException;
-import org.incendo.cloud.key.CloudKey;
-import org.incendo.cloud.processors.requirements.RequirementApplicable;
-import org.incendo.cloud.processors.requirements.RequirementPostprocessor;
-import org.incendo.cloud.processors.requirements.Requirements;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CommandRegister implements StartableInitable {
 
-    public static final CloudKey<Requirements<Sender, SenderRequirement>>
-            REQUIREMENT_KEY = CloudKey.of(
-            "requirements",
-            new TypeToken<Requirements<Sender, SenderRequirement>>() {}
-    );
+//    public static final CloudKey<Requirements<Sender, SenderRequirement>>
+//            REQUIREMENT_KEY = CloudKey.of(
+//            "requirements",
+//            new TypeToken<Requirements<Sender, SenderRequirement>>() {}
+//    );
 
-    public static final RequirementApplicable.RequirementApplicableFactory<Sender,
-            SenderRequirement> REQUIREMENT_FACTORY = RequirementApplicable.factory(REQUIREMENT_KEY);
+//    public static final RequirementApplicable.RequirementApplicableFactory<Sender,
+//            SenderRequirement> REQUIREMENT_FACTORY = RequirementApplicable.factory(REQUIREMENT_KEY);
 
 
     private static boolean commandsRegistered = false;
@@ -72,14 +65,14 @@ public class CommandRegister implements StartableInitable {
         new GrimDump().register(commandManager);
         new GrimBrands().register(commandManager);
 
-        final RequirementPostprocessor<Sender, SenderRequirement>
-                senderRequirementPostprocessor = RequirementPostprocessor.of(
-                REQUIREMENT_KEY,
-                new GrimCommandFailureHandler()
-        );
+//        final RequirementPostprocessor<Sender, SenderRequirement>
+//                senderRequirementPostprocessor = RequirementPostprocessor.of(
+//                REQUIREMENT_KEY,
+//                new GrimCommandFailureHandler()
+//        );
 //        registerExceptionHandler(commandManager, InvalidSyntaxException.class, e -> MessageUtil.miniMessage(e.correctSyntax()));
 
-        commandManager.registerCommandPostProcessor(senderRequirementPostprocessor);
+//        commandManager.registerCommandPostProcessor(senderRequirementPostprocessor);
 
 //        commandManager.exceptionController().clearHandlers();
         commandManager
