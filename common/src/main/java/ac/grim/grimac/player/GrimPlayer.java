@@ -935,7 +935,7 @@ public class GrimPlayer implements GrimUser {
     }
 
     public void resyncPosition(Vector3i pos, int sequenceID) {
-        DefaultResyncHandler.resyncPosition(this, pos, sequenceID);
+        this.resyncHandler.resyncPosition(pos.x, pos.y, pos.z, sequenceID);
     }
 
     public void resyncPositions(SimpleCollisionBox box) {
