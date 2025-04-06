@@ -11,7 +11,6 @@ import com.github.retrooper.packetevents.protocol.world.chunk.reader.impl.ChunkR
 import com.github.retrooper.packetevents.protocol.world.dimension.DimensionTypes;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 
-
 public class PacketWorldReaderEighteen extends BasePacketWorldReader {
 
     private static final ChunkReader_v1_18 chunkReader_v1_18 = new ChunkReader_v1_18();

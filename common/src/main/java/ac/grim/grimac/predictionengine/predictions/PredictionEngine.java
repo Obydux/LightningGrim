@@ -8,6 +8,7 @@ import ac.grim.grimac.utils.data.KnownInput;
 import ac.grim.grimac.utils.data.Pair;
 import ac.grim.grimac.utils.data.VectorData;
 import ac.grim.grimac.utils.math.Vector3dm;
+import ac.grim.grimac.utils.math.GrimMath;
 import ac.grim.grimac.utils.math.VectorUtils;
 import ac.grim.grimac.utils.nmsutil.Collisions;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
@@ -30,6 +31,22 @@ public class PredictionEngine {
     }
 
     public static Vector3dm transformInputsToVector(GrimPlayer player, Vector3dm theoreticalInput) {
+        if (player.getClientVersion().isNewerThanOrEquals(ClientVersion.V_1_21_5)) { // TODO: float rounding imprecision?
+            if (theoreticalInput.lengthSquared() == 0.0) {
+                return theoreticalInput;
+            }
+
+            Vector3dm inputVector = theoreticalInput.clone().normalize().multiply(0.98F);
+            if (player.packetStateData.isSlowedByUsingItem()) {
+                inputVector = inputVector.multiply(0.2F);
+            }
+
+            if (player.isSlowMovement) {
+                inputVector = inputVector.multiply(player.sneakingSpeedMultiplier);
+            }
+
+            return modifyInputSpeedForSquareMovement(inputVector);
+        }
         float bestPossibleX;
         float bestPossibleZ;
 
@@ -59,6 +76,25 @@ public class PredictionEngine {
         }
 
         return inputVector;
+    }
+
+    private static Vector3dm modifyInputSpeedForSquareMovement(Vector3dm input) {
+        double length = input.length();
+        if (length <= 0.0F) {
+            return input;
+        } else {
+            Vector3dm multiplied = input.multiply(1.0F / length);
+            double distance = distanceToUnitSquare(multiplied);
+            double min = Math.min(length * distance, 1.0F);
+            return multiplied.multiply(min);
+        }
+    }
+
+    private static double distanceToUnitSquare(Vector3dm input) {
+        double x = Math.abs(input.getX());
+        double z = Math.abs(input.getZ());
+        double additional = z > x ? x / z : z / x;
+        return Math.sqrt(1.0F + GrimMath.square(additional));
     }
 
     public void guessBestMovement(float speed, GrimPlayer player) {
@@ -394,18 +430,29 @@ public class PredictionEngine {
         }
 
         for (VectorData vector : velocities) {
-            if (Math.abs(vector.vector.getX()) < minimumMovement) {
-                vector.vector.setX(0D);
+            if (player.getClientVersion().isNewerThanOrEquals(ClientVersion.V_1_21_5)) { // TODO: is this the right way??
+                if (horizontalDistanceSqr(vector.vector) < 9.0E-6) {
+                    vector.vector.setX(0D);
+                    vector.vector.setZ(0D);
+                }
+            } else {
+                if (Math.abs(vector.vector.getX()) < minimumMovement) {
+                    vector.vector.setX(0D);
+                }
+
+                if (Math.abs(vector.vector.getZ()) < minimumMovement) {
+                    vector.vector.setZ(0D);
+                }
             }
 
             if (Math.abs(vector.vector.getY()) < minimumMovement) {
                 vector.vector.setY(0D);
             }
-
-            if (Math.abs(vector.vector.getZ()) < minimumMovement) {
-                vector.vector.setZ(0D);
-            }
         }
+    }
+
+    public double horizontalDistanceSqr(Vector vector) {
+        return vector.getX() * vector.getX() + vector.getZ() * vector.getZ();
     }
 
     public void addExplosionToPossibilities(GrimPlayer player, Set<VectorData> existingVelocities) {
