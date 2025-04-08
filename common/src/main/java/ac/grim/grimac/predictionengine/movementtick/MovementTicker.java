@@ -440,7 +440,7 @@ public class MovementTicker {
                 player.uncertaintyHandler.lastStuckSpeedMultiplier.reset();
             }
 
-            player.stuckSpeedMultiplier = new Vector(1, 1, 1);
+            player.stuckSpeedMultiplier = new Vector3dm(1, 1, 1);
 
             Collisions.applyEffectsFromBlocks(player, new Vector3d(player.lastX, player.lastY, player.lastZ), new Vector3d(player.x, player.y, player.z));
 
@@ -451,7 +451,7 @@ public class MovementTicker {
 
             // Flying players are not affected by cobwebs/sweet berry bushes
             if (player.isFlying) {
-                player.stuckSpeedMultiplier = new Vector(1, 1, 1);
+                player.stuckSpeedMultiplier = new Vector3dm(1, 1, 1);
             }
         }
     }
