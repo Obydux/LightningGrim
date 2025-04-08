@@ -154,4 +154,8 @@ public class GrimMath {
     public static double square(double num) {
         return num * num;
     }
+
+    public static float sqrt(float value) {
+        return (float)Math.sqrt((double)value);
+    }
 }

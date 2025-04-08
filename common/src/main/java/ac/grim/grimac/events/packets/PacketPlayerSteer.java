@@ -101,6 +101,7 @@ public class PacketPlayerSteer extends PacketListenerAbstract {
 
             player.packetStateData.receivedSteerVehicle = true;
         } else if (event.getPacketType() == PacketType.Play.Client.PLAYER_INPUT) {
+
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 

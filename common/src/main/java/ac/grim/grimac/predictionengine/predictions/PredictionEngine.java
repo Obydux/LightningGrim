@@ -7,6 +7,8 @@ import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.KnownInput;
 import ac.grim.grimac.utils.data.Pair;
 import ac.grim.grimac.utils.data.VectorData;
+import ac.grim.grimac.utils.math.GrimMath;
+import ac.grim.grimac.utils.math.Vec2f;
 import ac.grim.grimac.utils.math.Vector3dm;
 import ac.grim.grimac.utils.math.VectorUtils;
 import ac.grim.grimac.utils.nmsutil.Collisions;
@@ -29,36 +31,76 @@ public class PredictionEngine {
         return outputVel;
     }
 
-    public static Vector3dm transformInputsToVector(GrimPlayer player, Vector3dm theoreticalInput) {
-        float bestPossibleX;
-        float bestPossibleZ;
-
-        // Slow movement was determined by the previous pose
-        if (player.isSlowMovement) {
-            bestPossibleX = (float) (theoreticalInput.getX() * player.sneakingSpeedMultiplier);
-            bestPossibleZ = (float) (theoreticalInput.getZ() * player.sneakingSpeedMultiplier);
+    private static Vec2f applyMovementSpeedFactors(GrimPlayer player, Vec2f input) {
+        if (input.lengthSquared() == 0.0F) {
+            return input;
         } else {
-            bestPossibleX = Math.min(Math.max(-1f, Math.round(theoreticalInput.getX())), 1f);
-            bestPossibleZ = Math.min(Math.max(-1f, Math.round(theoreticalInput.getZ())), 1f);
+            Vec2f vec2f = input.multiply(0.98F);
+            if (player.packetStateData.isSlowedByUsingItem()) {
+                vec2f = vec2f.multiply(0.2F);
+            }
+
+            if (player.isSlowMovement) {
+                float f = player.sneakingSpeedMultiplier;
+                vec2f = vec2f.multiply(f);
+            }
+
+            return applyDirectionalMovementSpeedFactors(vec2f);
         }
+    }
 
-        if (player.packetStateData.isSlowedByUsingItem()) {
-            bestPossibleX *= 0.2F;
-            bestPossibleZ *= 0.2F;
+    private static Vec2f applyDirectionalMovementSpeedFactors(Vec2f vec) {
+        float f = vec.length();
+        if (f <= 0.0F) {
+            return vec;
+        } else {
+            Vec2f vec2f = vec.multiply(1.0F / f);
+            float g = getDirectionalMovementSpeedMultiplier(vec2f);
+            float h = Math.min(f * g, 1.0F);
+            return vec2f.multiply(h);
         }
+    }
 
-        Vector3dm inputVector = new Vector3dm(bestPossibleX, 0, bestPossibleZ);
-        inputVector.multiply(0.98F);
+    private static float getDirectionalMovementSpeedMultiplier(Vec2f vec) {
+        float f = Math.abs(vec.x);
+        float g = Math.abs(vec.y);
+        float h = g > f ? f / g : g / f;
+        return GrimMath.sqrt(1.0F + GrimMath.square(h));
+    }
 
-        // Simulate float rounding imprecision
-        inputVector = new Vector3dm((float) inputVector.getX(), (float) inputVector.getY(), (float) inputVector.getZ());
+    public static Vector3dm transformInputsToVector(GrimPlayer player, Vec2f movementVector) {
+        if (player.getClientVersion().isNewerThanOrEquals(ClientVersion.V_1_21_5)) {
+            movementVector = movementVector.normalize();
+            movementVector = applyMovementSpeedFactors(player, movementVector);
+            return new Vector3dm(movementVector.x, 0, movementVector.y);
+        } else {
+            float bestPossibleX;
+            float bestPossibleZ;
 
-        if (inputVector.lengthSquared() > 1) {
-            double d0 = Math.sqrt(inputVector.getX() * inputVector.getX() + inputVector.getY() * inputVector.getY() + inputVector.getZ() * inputVector.getZ());
-            inputVector = new Vector3dm(inputVector.getX() / d0, inputVector.getY() / d0, inputVector.getZ() / d0);
+            // Slow movement was determined by the previous pose
+            if (player.isSlowMovement) {
+                bestPossibleX = (float) (movementVector.x * player.sneakingSpeedMultiplier);
+                bestPossibleZ = (float) (movementVector.y * player.sneakingSpeedMultiplier);
+            } else {
+                bestPossibleX = Math.min(Math.max(-1f, Math.round(movementVector.x)), 1f);
+                bestPossibleZ = Math.min(Math.max(-1f, Math.round(movementVector.y)), 1f);
+            }
+
+            if (player.packetStateData.isSlowedByUsingItem()) {
+                bestPossibleX *= 0.2F;
+                bestPossibleZ *= 0.2F;
+            }
+
+            Vector3dm inputVector = new Vector3dm(bestPossibleX, 0, bestPossibleZ);
+            inputVector.multiply(0.98F);
+
+            if (inputVector.lengthSquared() > 1) {
+                double d0 = Math.sqrt(inputVector.getX() * inputVector.getX() + inputVector.getY() * inputVector.getY() + inputVector.getZ() * inputVector.getZ());
+                inputVector = new Vector3dm(inputVector.getX() / d0, inputVector.getY() / d0, inputVector.getZ() / d0);
+            }
+            return inputVector;
         }
-
-        return inputVector;
+//        return new Vector3dm(inputVector.getX(), 0, inputVector.getZ());
     }
 
     public void guessBestMovement(float speed, GrimPlayer player) {
@@ -762,7 +804,7 @@ public class PredictionEngine {
                     for (int strafe = strafeMin; strafe <= strafeMax; strafe++) {
                         for (int forward = forwardMin; forward <= forwardMax; forward++) {
                             VectorData result = new VectorData(possibleLastTickOutput.vector.clone()
-                                    .add(getMovementResultFromInput(player, transformInputsToVector(player, new Vector3dm(strafe, 0, forward)), speed, player.xRot)),
+                                    .add(getMovementResultFromInput(player, transformInputsToVector(player, new Vec2f(strafe, forward)), speed, player.xRot)),
                                     possibleLastTickOutput, VectorData.VectorType.InputResult);
                             result = result.returnNewModified(result.vector.clone().multiply(player.stuckSpeedMultiplier), VectorData.VectorType.StuckMultiplier);
                             result = result.returnNewModified(handleOnClimbable(result.vector.clone(), player), VectorData.VectorType.Climbable);
