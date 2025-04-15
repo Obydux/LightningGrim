@@ -31,7 +31,7 @@ public class PredictionEngine {
     }
 
     public static Vector3dm transformInputsToVector(GrimPlayer player, Vector3dm theoreticalInput) {
-        if (player.getClientVersion().isNewerThanOrEquals(ClientVersion.V_1_21_5)) { // TODO: float rounding imprecision?
+        if (player.getClientVersion().isNewerThan(ClientVersion.V_1_21_4)) { // TODO: float rounding imprecision?
             if (theoreticalInput.lengthSquared() == 0.0) {
                 return theoreticalInput;
             }
@@ -443,7 +443,7 @@ public class PredictionEngine {
                 if (Math.abs(vector.vector.getZ()) < minimumMovement) {
                     vector.vector.setZ(0D);
                 }
-            }
+//            }
 
             if (Math.abs(vector.vector.getY()) < minimumMovement) {
                 vector.vector.setY(0D);

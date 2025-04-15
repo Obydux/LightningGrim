@@ -335,7 +335,7 @@ public class CompensatedEntities {
             }
 
             if (entity.getType() == EntityTypes.PIG) {
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5))
+                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_21_4))
                     offset = 1;
 
                 EntityData<?> pigSaddle = WatchableIndexUtil.getIndex(watchableObjects, 17 - offset);
