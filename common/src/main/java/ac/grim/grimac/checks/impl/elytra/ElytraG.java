@@ -1,6 +1,7 @@
 package ac.grim.grimac.checks.impl.elytra;
 
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.client.play.ClientEntityActionPacket;
 import ac.grim.grimac.checks.Check;
@@ -9,7 +10,6 @@ import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
 
 @CheckData(name = "ElytraG", description = "Started gliding with levitation", experimental = true)
 public class ElytraG extends Check implements PostPredictionCheck {

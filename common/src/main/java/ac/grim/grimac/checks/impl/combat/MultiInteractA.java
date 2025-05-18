@@ -1,5 +1,6 @@
 package ac.grim.grimac.checks.impl.combat;
 
+import ac.grim.grimac.api.packet.types.client.play.ClientInteractEntityPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
@@ -8,7 +9,6 @@ import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class MultiInteractA extends Check implements PostPredictionCheck {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Client.INTERACT_ENTITY) {
-            WrapperPlayClientInteractEntity packet = packetFactory.clientInteractEntity(event);
+            ClientInteractEntityPacket packet = packetFactory.clientInteractEntity(event);
             int entity = packet.getEntityId();
             boolean sneaking = packet.isSneaking().orElse(false);
 

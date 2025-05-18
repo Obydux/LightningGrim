@@ -1,6 +1,7 @@
 package ac.grim.grimac.checks.impl.misc;
 
 import ac.grim.grimac.GrimAPI;
+import ac.grim.grimac.api.packet.types.client.play.ClientPluginMessagePacket;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
@@ -11,7 +12,6 @@ import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientPluginMessage;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPluginMessage;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 
@@ -29,10 +29,10 @@ public class ClientBrand extends Check implements PacketCheck {
     @Override
     public void onPacketReceive(final PacketReceiveEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Client.PLUGIN_MESSAGE) {
-            WrapperPlayClientPluginMessage packet = new WrapperPlayClientPluginMessage(event);
+            ClientPluginMessagePacket packet = ClientPluginMessagePacket.from(event);
             handle(packet.getChannelName(), packet.getData());
         } else if (event.getPacketType() == PacketTypes.Configuration.Client.PLUGIN_MESSAGE) {
-            WrapperConfigClientPluginMessage packet = new WrapperConfigClientPluginMessage(event);
+            ac.grim.grimac.api.packet.types.client.config.ClientPluginMessagePacket packet = ac.grim.grimac.api.packet.types.client.config.ClientPluginMessagePacket.from(event);
             handle(packet.getChannelName(), packet.getData());
         }
     }

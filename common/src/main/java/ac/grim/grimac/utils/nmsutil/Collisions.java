@@ -23,7 +23,7 @@ import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.math.VectorUtils;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
+import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
 import com.github.retrooper.packetevents.protocol.world.Direction;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;

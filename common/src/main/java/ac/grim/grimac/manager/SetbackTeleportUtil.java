@@ -2,7 +2,7 @@ package ac.grim.grimac.manager;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.MCPacket;
-import ac.grim.grimac.api.packet.types.server.play.ServerSetPassengersPacket;
+import ac.grim.grimac.api.packet.types.server.play.*;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.impl.badpackets.BadPacketsN;
@@ -32,11 +32,8 @@ import ac.grim.grimac.utils.nmsutil.ReachUtils;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
-import com.github.retrooper.packetevents.protocol.teleport.RelativeFlag;
-import ac.grim.grimac.api.packet.types.server.play.ServerAttachEntityPacket;
-import ac.grim.grimac.api.packet.types.server.play.ServerEntityTeleportPacket;
-import ac.grim.grimac.api.packet.types.server.play.ServerEntityVelocityPacket;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerPositionAndLook;
+import ac.grim.grimac.api.packet.protocol.teleport.RelativeFlag;
+import ac.grim.grimac.api.packet.types.server.play.ServerPlayerPositionAndLookPacket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -204,7 +201,7 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
             blockOffsets = true;
         }
 
-        SetBackData data = new SetBackData(new TeleportData(position, MCPacket.getAPI().getVectorFactory().getImmutableVec3d(), new RelativeFlag(0b11000), player.lastTransactionSent.get(), 0), player.xRot, player.yRot, clientVel, player.inVehicle(), false);
+        SetBackData data = new SetBackData(new TeleportData(position, MCPacket.getAPI().getVectorFactory().getImmutableVec3d(), RelativeFlag.from(0b11000), player.lastTransactionSent.get(), 0), player.xRot, player.yRot, clientVel, player.inVehicle(), false);
         sendSetback(data);
     }
 
@@ -256,11 +253,11 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
             data.getTeleportData().setTransaction(player.lastTransactionSent.get());
 
             // Use provided transaction ID to make sure it can never desync, although there's no reason to do this
-            addSentTeleport(new Location(null, position.getX(), y, position.getZ(), player.xRot % 360, player.yRot % 360), MCPacket.getAPI().getVectorFactory().getImmutableVec3d(), data.getTeleportData().getTransaction(), new RelativeFlag(0b11000), false, teleportId);
+            addSentTeleport(new Location(null, position.getX(), y, position.getZ(), player.xRot % 360, player.yRot % 360), MCPacket.getAPI().getVectorFactory().getImmutableVec3d(), data.getTeleportData().getTransaction(), RelativeFlag.from(0b11000), false, teleportId);
             // This must be done after setting the sent teleport, otherwise we lose velocity data
             requiredSetBack = data;
             // Send after tracking to fix race condition
-            PacketEvents.getAPI().getProtocolManager().sendPacketSilently(player.user.getChannel(), new WrapperPlayServerPlayerPositionAndLook(position.getX(), position.getY(), position.getZ(), 0, 0, data.getTeleportData().getFlags().getMask(), teleportId, false));
+            PacketEvents.getAPI().getProtocolManager().sendPacketSilently(player.user.getChannel(), ServerPlayerPositionAndLookPacket.from(position.getX(), position.getY(), position.getZ(), 0, 0, data.getTeleportData().getFlags().getMask(), teleportId, false));
             player.sendTransaction();
 
             if (data.getVelocity() != null && data.getVelocity().lengthSquared() > 0) {
@@ -411,7 +408,7 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
             safePosition = safePosition.withZ(safePosition.getZ() + lastKnownGoodPosition.pos.getZ());
         }
 
-        data = new TeleportData(safePosition, velocity, new RelativeFlag(0b11000), transaction, teleportId);
+        data = new TeleportData(safePosition, velocity, RelativeFlag.from(0b11000), transaction, teleportId);
         requiredSetBack = new SetBackData(data, player.xRot, player.yRot, null, false, plugin);
 
         this.lastKnownGoodPosition = new SetbackPosWithVector(safePosition, new Vector3dm());

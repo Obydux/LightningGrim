@@ -1,5 +1,6 @@
 package ac.grim.grimac.predictionengine.movementtick;
 
+import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
@@ -29,7 +30,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
-import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
+import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import com.viaversion.viaversion.api.Via;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

@@ -1,5 +1,6 @@
 package ac.grim.grimac.utils.nmsutil;
 
+import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.player.GrimPlayer;
@@ -23,7 +24,7 @@ public class MainSupportingBlockPosFinder {
         Optional<ImmutableVector3i> supportingBlock = findSupportingBlock(player, slightlyBelowPlayer);
         if (supportingBlock.isEmpty() && (!lastSupportingBlock.lastOnGroundAndNoBlock())) {
             if (lastMovement != null) {
-                SimpleCollisionBox aabb2 = slightlyBelowPlayer.offset(-lastMovement.x, 0.0D, -lastMovement.z);
+                SimpleCollisionBox aabb2 = slightlyBelowPlayer.offset(-lastMovement.getX(), 0.0D, -lastMovement.getZ());
                 supportingBlock = findSupportingBlock(player, aabb2);
                 return new MainSupportingBlockData(supportingBlock.orElse(null), true);
             }

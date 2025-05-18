@@ -1,5 +1,6 @@
 package ac.grim.grimac.utils.nmsutil;
 
+import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
@@ -65,7 +66,7 @@ public class BlockProperties {
         }
 
         ImmutableVector3i pos = getOnPos(player, playerPos, mainSupportingBlockData, 0.2F);
-        return player.compensatedWorld.getBlockType(pos.x, pos.y, pos.z);
+        return player.compensatedWorld.getBlockType(pos.getX(), pos.getY(), pos.getZ());
     }
 
     public static float getFriction(GrimPlayer player, MainSupportingBlockData mainSupportingBlockData, ImmutableVector3d playerPos) {
@@ -118,13 +119,13 @@ public class BlockProperties {
      */
     private static PacketStateType getBlockPosBelowThatAffectsMyMovement(GrimPlayer player, MainSupportingBlockData mainSupportingBlockData, ImmutableVector3d playerPos) {
         ImmutableVector3i pos = getOnPos(player, playerPos, mainSupportingBlockData, 0.500001F);
-        return player.compensatedWorld.getBlockType(pos.x, pos.y, pos.z);
+        return player.compensatedWorld.getBlockType(pos.getX(), pos.getY(), pos.getZ());
     }
 
     private static ImmutableVector3i getOnPos(GrimPlayer player, ImmutableVector3d playerPos, MainSupportingBlockData mainSupportingBlockData, float searchBelowPlayer) {
         ImmutableVector3i mainBlockPos = mainSupportingBlockData.getBlockPos();
         if (mainBlockPos != null) {
-            PacketStateType blockstate = player.compensatedWorld.getBlockType(mainBlockPos.x, mainBlockPos.y, mainBlockPos.z);
+            PacketStateType blockstate = player.compensatedWorld.getBlockType(mainBlockPos.getX(), mainBlockPos.getY(), mainBlockPos.getZ());
 
             // I genuinely don't understand this code, or why fences are special
             boolean shouldReturn = (!((double) searchBelowPlayer <= 0.5D) || !BlockTags.FENCES.contains(blockstate)) &&

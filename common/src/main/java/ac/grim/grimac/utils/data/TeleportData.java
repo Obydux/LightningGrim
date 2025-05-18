@@ -3,7 +3,7 @@ package ac.grim.grimac.utils.data;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.protocol.teleport.RelativeFlag;
+import ac.grim.grimac.api.packet.protocol.teleport.RelativeFlag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

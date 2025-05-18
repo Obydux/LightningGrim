@@ -10,8 +10,10 @@ import ac.grim.grimac.api.packet.player.enums.DiggingAction;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.PacketConnectionState;
 import ac.grim.grimac.api.packet.types.PacketTypes;
+import ac.grim.grimac.api.packet.types.RecievablePacket;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerBlockPlacementPacket;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerUseItemPacket;
+import ac.grim.grimac.api.packet.types.client.play.ClientVehicleMovePacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerSetSlotPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
@@ -37,7 +39,6 @@ import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.item.ItemStack;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
@@ -48,7 +49,6 @@ import com.github.retrooper.packetevents.protocol.world.states.type.StateValue;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerDiggingPacket;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerFlying;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientVehicleMove;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerAcknowledgeBlockChanges;
 
 import java.util.ArrayList;
@@ -195,7 +195,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
         }
     }
 
-    private static void handleBlockPlaceOrUseItem(PacketWrapper<?> packet, GrimPlayer player) {
+    private static void handleBlockPlaceOrUseItem(RecievablePacket packet, GrimPlayer player) {
         // Legacy "use item" packet
         if (packet instanceof ClientPlayerBlockPlacementPacket place &&
                 PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9)) {
@@ -467,7 +467,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
 
         // Determine if teleport BEFORE we call the pre-prediction vehicle
         if (event.getPacketType() == PacketTypes.Play.Client.VEHICLE_MOVE) {
-            WrapperPlayClientVehicleMove move = new WrapperPlayClientVehicleMove(event);
+            ClientVehicleMovePacket move = ClientVehicleMovePacket.from(event);
             ImmutableVector3d position = move.getPosition();
             player.packetStateData.lastPacketWasTeleport = player.getSetbackTeleportUtil().checkVehicleTeleportQueue(position.getX(), position.getY(), position.getZ());
         }
@@ -540,7 +540,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
         }
 
         if (event.getPacketType() == PacketTypes.Play.Client.VEHICLE_MOVE && player.inVehicle()) {
-            WrapperPlayClientVehicleMove move = new WrapperPlayClientVehicleMove(event);
+            ClientVehicleMovePacket move = ClientVehicleMovePacket.from(event);
             ImmutableVector3d position = move.getPosition();
 
             player.lastX = player.x;
@@ -669,10 +669,10 @@ public class CheckManagerListener extends PacketListenerAbstract {
                     if (player.platformPlayer != null) {
                         if (packet.getHand() == InteractionHand.MAIN_HAND) {
                             PacketItemStack mainHand = player.platformPlayer.getInventory().getItemInHand();
-                            player.user.sendPacket(new ServerSetSlotPacket(0, player.getInventory().stateID, 36 + player.packetStateData.lastSlotSelected, (ItemStack) mainHand)); // TODO (Packet Rewrite) replace PE Wrappers with Packet API don't cast ItemStack
+                            player.user.sendPacket(ServerSetSlotPacket.from(0, player.getInventory().stateID, 36 + player.packetStateData.lastSlotSelected, mainHand));
                         } else {
                             PacketItemStack offHand = player.platformPlayer.getInventory().getItemInOffHand();
-                            player.user.sendPacket(new ServerSetSlotPacket(0, player.getInventory().stateID, 45, (ItemStack) offHand)); // TODO (Packet Rewrite) replace PE Wrappers with Packet API don't cast ItemStack
+                            player.user.sendPacket(ServerSetSlotPacket.from(0, player.getInventory().stateID, 45, offHand));
                         }
                     }
 

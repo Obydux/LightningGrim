@@ -1,5 +1,6 @@
 package ac.grim.grimac.utils.nmsutil;
 
+import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
@@ -23,7 +24,7 @@ import java.util.function.BiFunction;
 
 public class WorldRayTrace {
     public static HitData getNearestBlockHitResult(GrimPlayer player, PacketStateType heldItem, boolean sourcesHaveHitbox, boolean fluidPlacement, boolean itemUsePlacement) {
-        ImmutableVector3d startingPos = MCPacket.getAPI().getVectorFactory().getImmutableVec3d(player.x, player.y + player.getEyeHeight(), player.z);
+        ImmutableVector3d startingPos = MCPacket.getAPI().getVectorFactory().getImmutableVec3d(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
         Vector3dm startingVec = new Vector3dm(startingPos.getX(), startingPos.getY(), startingPos.getZ());
         Ray trace = new Ray(player, startingPos.getX(), startingPos.getY(), startingPos.getZ(), player.xRot, player.yRot);
         final double distance = itemUsePlacement && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_20_5) ? 5 : player.compensatedEntities.self.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
@@ -85,12 +86,12 @@ public class WorldRayTrace {
     // although I still don't understand Mojang's obsession with streams in some of the hottest methods... that kills performance
     public static HitData traverseBlocks(GrimPlayer player, ImmutableVector3d start, ImmutableVector3d end, BiFunction<PacketBlockState, ImmutableVector3i, HitData> predicate) {
         // I guess go back by the collision epsilon?
-        double endX = GrimMath.lerp(-1.0E-7D, end.x, start.x);
-        double endY = GrimMath.lerp(-1.0E-7D, end.y, start.y);
-        double endZ = GrimMath.lerp(-1.0E-7D, end.z, start.z);
-        double startX = GrimMath.lerp(-1.0E-7D, start.x, end.x);
-        double startY = GrimMath.lerp(-1.0E-7D, start.y, end.y);
-        double startZ = GrimMath.lerp(-1.0E-7D, start.z, end.z);
+        double endX = GrimMath.lerp(-1.0E-7D, end.getX(), start.getX());
+        double endY = GrimMath.lerp(-1.0E-7D, end.getY(), start.getY());
+        double endZ = GrimMath.lerp(-1.0E-7D, end.getZ(), start.getZ());
+        double startX = GrimMath.lerp(-1.0E-7D, start.getX(), end.getX());
+        double startY = GrimMath.lerp(-1.0E-7D, start.getY(), end.getY());
+        double startZ = GrimMath.lerp(-1.0E-7D, start.getZ(), end.getZ());
         int floorStartX = GrimMath.floor(startX);
         int floorStartY = GrimMath.floor(startY);
         int floorStartZ = GrimMath.floor(startZ);

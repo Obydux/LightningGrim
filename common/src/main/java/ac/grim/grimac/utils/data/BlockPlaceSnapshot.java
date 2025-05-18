@@ -1,12 +1,12 @@
 package ac.grim.grimac.utils.data;
 
-import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import ac.grim.grimac.api.packet.types.RecievablePacket;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class BlockPlaceSnapshot {
-    PacketWrapper<?> wrapper;
+    RecievablePacket wrapper;
     boolean sneaking;
 }

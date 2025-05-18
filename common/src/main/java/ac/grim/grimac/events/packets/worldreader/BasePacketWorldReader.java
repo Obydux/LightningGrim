@@ -4,6 +4,7 @@ import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.ListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketListenerInterface;
+import ac.grim.grimac.api.packet.types.server.play.*;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.chunks.Column;
 import ac.grim.grimac.utils.data.TeleportData;
@@ -11,13 +12,10 @@ import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.world.chunk.PacketChunk;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerAcknowledgeBlockChanges;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerAcknowledgePlayerDigging;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerBlockChange;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChangeGameState;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChunkData;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChunkDataBulk;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMultiBlockChange;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUnloadChunk;
+import ac.grim.grimac.api.packet.types.server.play.ServerMultiBlockChangePacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerUnloadChunkPacket;
 
 public class BasePacketWorldReader implements PacketListenerInterface {
 
@@ -29,7 +27,7 @@ public class BasePacketWorldReader implements PacketListenerInterface {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.UNLOAD_CHUNK) {
-            WrapperPlayServerUnloadChunk unloadChunk = new WrapperPlayServerUnloadChunk(event);
+            ServerUnloadChunkPacket unloadChunk = new ServerUnloadChunkPacket(event);
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
@@ -77,7 +75,7 @@ public class BasePacketWorldReader implements PacketListenerInterface {
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
-            WrapperPlayServerAcknowledgePlayerDigging ack = new WrapperPlayServerAcknowledgePlayerDigging(event);
+            ServerAcknowledgePlayerDiggingPacket ack = ServerAcknowledgePlayerDiggingPacket.from(event);
             player.compensatedWorld.handleBlockBreakAck(ack.getBlockPosition(), ack.getBlockId(), ack.getAction(), ack.isSuccessful());
         }
 
@@ -85,14 +83,14 @@ public class BasePacketWorldReader implements PacketListenerInterface {
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
-            WrapperPlayServerChangeGameState newState = new WrapperPlayServerChangeGameState(event);
+            ServerChangeGameStatePacket newState = ServerChangeGameStatePacket.from(event);
 
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> {
-                if (newState.getReason() == WrapperPlayServerChangeGameState.Reason.BEGIN_RAINING) {
+                if (newState.getReason() == ServerChangeGameStatePacket.Reason.BEGIN_RAINING) {
                     player.compensatedWorld.isRaining = true;
-                } else if (newState.getReason() == WrapperPlayServerChangeGameState.Reason.END_RAINING) {
+                } else if (newState.getReason() == ServerChangeGameStatePacket.Reason.END_RAINING) {
                     player.compensatedWorld.isRaining = false;
-                } else if (newState.getReason() == WrapperPlayServerChangeGameState.Reason.RAIN_LEVEL_CHANGE) {
+                } else if (newState.getReason() == ServerChangeGameStatePacket.Reason.RAIN_LEVEL_CHANGE) {
                     player.compensatedWorld.isRaining = newState.getValue() > 0.2f;
                 }
             });
@@ -153,7 +151,7 @@ public class BasePacketWorldReader implements PacketListenerInterface {
     }
 
     public void handleBlockChange(GrimPlayer player, PacketSendEvent event) {
-        WrapperPlayServerBlockChange blockChange = new WrapperPlayServerBlockChange(event);
+        ServerBlockChangePacket blockChange = ServerBlockChangePacket.from(event);
         int range = 16;
 
         ImmutableVector3i blockPosition = blockChange.getBlockPosition();
@@ -166,12 +164,12 @@ public class BasePacketWorldReader implements PacketListenerInterface {
     }
 
     public void handleMultiBlockChange(GrimPlayer player, PacketSendEvent event) {
-        WrapperPlayServerMultiBlockChange multiBlockChange = new WrapperPlayServerMultiBlockChange(event);
+        ServerMultiBlockChangePacket multiBlockChange = ServerMultiBlockChangePacket.from(event);
 
         int range = 16;
 
         final var blocks = multiBlockChange.getBlocks();
-        for (WrapperPlayServerMultiBlockChange.EncodedBlock blockChange : blocks) {
+        for (ServerMultiBlockChangePacket.EncodedBlock blockChange : blocks) {
             // Don't send a transaction unless it's within 16 blocks of the player
             if (Math.abs(blockChange.getX() - player.x) < range && Math.abs(blockChange.getY() - player.y) < range && Math.abs(blockChange.getZ() - player.z) < range && player.lastTransSent + 2 < System.currentTimeMillis()) {
                 player.sendTransaction();
@@ -181,7 +179,7 @@ public class BasePacketWorldReader implements PacketListenerInterface {
 
         // Add a single runnable to prevent excessive memory use when there are lots of block changes
         player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> {
-            for (WrapperPlayServerMultiBlockChange.EncodedBlock blockChange : blocks) {
+            for (ServerMultiBlockChangePacket.EncodedBlock blockChange : blocks) {
                 player.compensatedWorld.updateBlock(blockChange.getX(), blockChange.getY(), blockChange.getZ(), blockChange.getBlockId());
             }
         });

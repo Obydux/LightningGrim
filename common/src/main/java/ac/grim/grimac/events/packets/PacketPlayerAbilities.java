@@ -2,13 +2,13 @@ package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.api.config.ConfigManager;
 import ac.grim.grimac.api.packet.types.PacketTypes;
+import ac.grim.grimac.api.packet.types.client.play.ClientPlayerAbilitiesPacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerAbilities;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerAbilities;
+import ac.grim.grimac.api.packet.types.server.play.ServerPlayerAbilitiesPacket;
 
 // The client can send ability packets out of order due to Mojang's excellent netcode design.
 // We must delay the second ability packet until the tick after the first is received
@@ -25,7 +25,7 @@ public class PacketPlayerAbilities extends Check implements PacketCheck {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Client.PLAYER_ABILITIES) {
-            WrapperPlayClientPlayerAbilities abilities = new WrapperPlayClientPlayerAbilities(event);
+            ClientPlayerAbilitiesPacket abilities = ClientPlayerAbilitiesPacket.from(event);
             player.isFlying = abilities.isFlying() && player.canFly;
         }
     }
@@ -33,7 +33,7 @@ public class PacketPlayerAbilities extends Check implements PacketCheck {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.PLAYER_ABILITIES) {
-            WrapperPlayServerPlayerAbilities abilities = new WrapperPlayServerPlayerAbilities(event);
+            ServerPlayerAbilitiesPacket abilities = ServerPlayerAbilitiesPacket.from(event);
             player.sendTransaction();
 
             if (lastSentPlayerCanFly && !abilities.isFlightAllowed()) {

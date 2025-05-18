@@ -4,6 +4,7 @@ import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.types.server.play.ServerEntityAnimationPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityMetadataPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.player.GrimPlayer;
@@ -16,7 +17,6 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.entity.EntityData;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityAnimation;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUseBed;
 
 import java.util.List;
@@ -234,11 +234,11 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
         }
 
         if (event.getPacketType() == PacketTypes.Play.Server.ENTITY_ANIMATION) {
-            WrapperPlayServerEntityAnimation animation = new WrapperPlayServerEntityAnimation(event);
+            ServerEntityAnimationPacket animation = ServerEntityAnimationPacket.from(event);
 
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player != null && player.entityID == animation.getEntityId()
-                    && animation.getType() == WrapperPlayServerEntityAnimation.EntityAnimationType.WAKE_UP) {
+                    && animation.getType() == ServerEntityAnimationPacket.EntityAnimationType.WAKE_UP) {
                 // Split so packet received before transaction
                 player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get() + 1, () -> player.isInBed = false);
                 event.getTasksAfterSend().add(player::sendTransaction);

@@ -3,7 +3,8 @@ package ac.grim.grimac.manager.player.handlers;
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.handler.ResyncHandler;
 import ac.grim.grimac.api.math.Vector3dm;
-import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
+import ac.grim.grimac.api.packet.MCPacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerMultiBlockChangePacket;
 import ac.grim.grimac.api.platform.world.PlatformChunk;
 import ac.grim.grimac.api.platform.world.PlatformWorld;
 import ac.grim.grimac.player.GrimPlayer;
@@ -11,8 +12,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.netty.channel.ChannelHelper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerAcknowledgeBlockChanges;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerBlockChange;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMultiBlockChange;
+import ac.grim.grimac.api.packet.types.server.play.ServerBlockChangePacket;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -75,7 +75,7 @@ public class DefaultResyncHandler implements ResyncHandler {
                                 int maxY = currChunkY == maxChunkY ? maxBlockY & 15 : 15; // coordinate in chunk
 
                                 int totalBlocks = (maxX - minX + 1) * (maxZ - minZ + 1) * (maxY - minY + 1);
-                                WrapperPlayServerMultiBlockChange.EncodedBlock[] encodedBlocks = new WrapperPlayServerMultiBlockChange.EncodedBlock[totalBlocks];
+                                ServerMultiBlockChangePacket.EncodedBlock[] encodedBlocks = new ServerMultiBlockChangePacket.EncodedBlock[totalBlocks];
 
                                 int blockIndex = 0;
                                 // Alright, we are now in a chunk section
@@ -84,12 +84,12 @@ public class DefaultResyncHandler implements ResyncHandler {
                                     for (int currX = minX; currX <= maxX; ++currX) {
                                         for (int currY = minY; currY <= maxY; ++currY) {
                                             int blockId = chunk.getBlockID(currX, currY | (currChunkY << 4), currZ);
-                                            encodedBlocks[blockIndex++] = new WrapperPlayServerMultiBlockChange.EncodedBlock(blockId, currX, currY | (currChunkY << 4), currZ);
+                                            encodedBlocks[blockIndex++] = ServerMultiBlockChangePacket.EncodedBlock.from(blockId, currX, currY | (currChunkY << 4), currZ);
                                         }
                                     }
                                 }
 
-                                WrapperPlayServerMultiBlockChange packet = new WrapperPlayServerMultiBlockChange(MCPacket.getAPI().getVectorFactory().getImmutableVec3i(currChunkX, currChunkY, currChunkZ), true, encodedBlocks);
+                                ServerMultiBlockChangePacket packet = ServerMultiBlockChangePacket.from(MCPacket.getAPI().getVectorFactory().getImmutableVec3i(currChunkX, currChunkY, currChunkZ), true, encodedBlocks);
                                 ChannelHelper.runInEventLoop(player.user.getChannel(), () -> player.user.sendPacket(packet));
                             }
                         }
@@ -123,7 +123,7 @@ public class DefaultResyncHandler implements ResyncHandler {
 
             final int blockId = world.getChunkAt(chunkX, chunkZ).getBlockID(x & 15, y, z & 15);
 
-            player.user.sendPacket(new WrapperPlayServerBlockChange(MCPacket.getAPI().getVectorFactory().getImmutableVec3i(x, y, z), blockId));
+            player.user.sendPacket(ServerBlockChangePacket.from(MCPacket.getAPI().getVectorFactory().getImmutableVec3i(x, y, z), blockId));
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19)) { // Via will handle this for us pre-1.19
                 player.user.sendPacket(new WrapperPlayServerAcknowledgeBlockChanges(sequence)); // Make 1.19 clients apply the changes
             }

@@ -2,12 +2,12 @@ package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.types.PacketTypes;
+import ac.grim.grimac.api.packet.types.server.play.ServerChangeGameStatePacket;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChangeGameState;
 
 public class PacketChangeGameState extends Check implements PacketCheck {
     public PacketChangeGameState(GrimPlayer playerData) {
@@ -17,9 +17,9 @@ public class PacketChangeGameState extends Check implements PacketCheck {
     @Override
     public void onPacketSend(final PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.CHANGE_GAME_STATE) {
-            WrapperPlayServerChangeGameState packet = new WrapperPlayServerChangeGameState(event);
+            ServerChangeGameStatePacket packet = ServerChangeGameStatePacket.from(event);
 
-            if (packet.getReason() == WrapperPlayServerChangeGameState.Reason.CHANGE_GAME_MODE) {
+            if (packet.getReason() == ServerChangeGameStatePacket.Reason.CHANGE_GAME_MODE) {
                 player.sendTransaction();
 
                 player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> {

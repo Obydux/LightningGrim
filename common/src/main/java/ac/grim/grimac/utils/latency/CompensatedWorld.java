@@ -43,7 +43,7 @@ import com.github.retrooper.packetevents.protocol.world.chunk.palette.DataPalett
 import com.github.retrooper.packetevents.protocol.world.chunk.palette.ListPalette;
 import com.github.retrooper.packetevents.protocol.world.chunk.palette.PaletteType;
 import com.github.retrooper.packetevents.protocol.world.chunk.storage.LegacyFlexibleStorage;
-import com.github.retrooper.packetevents.protocol.world.dimension.DimensionType;
+import ac.grim.grimac.api.packet.world.dimension.PacketDimensionType;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.api.packet.world.enums.Half;
@@ -697,7 +697,7 @@ public class CompensatedWorld implements ICompensatedWorld {
         player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> chunks.remove(chunkPosition));
     }
 
-    public void setDimension(DimensionType dimension, PacketUser user) {
+    public void setDimension(PacketDimensionType dimension, PacketUser user) {
         // No world height NBT
         if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_17)) return;
 

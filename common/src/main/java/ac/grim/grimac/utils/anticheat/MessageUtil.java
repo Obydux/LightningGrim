@@ -26,11 +26,11 @@ public class MessageUtil {
     private final char PLACEHOLDER_ESCAPE_CHAR = '\uFFFF'; // this specific character holds no significance
 
     public @NotNull String toUnlabledString(@Nullable ImmutableVector3i vec) {
-        return vec == null ? "null" : vec.x + ", " + vec.y + ", " + vec.z;
+        return vec == null ? "null" : vec.getX() + ", " + vec.getY() + ", " + vec.getZ();
     }
 
     public @NotNull String toUnlabledString(@Nullable ImmutableVector3f vec) {
-        return vec == null ? "null" : vec.x + ", " + vec.y + ", " + vec.z;
+        return vec == null ? "null" : vec.getX() + ", " + vec.getY() + ", " + vec.getZ();
     }
 
     public @NotNull String replacePlaceholders(@Nullable GrimPlayer player, @NotNull String string) {

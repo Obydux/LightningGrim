@@ -1,8 +1,8 @@
 package ac.grim.grimac.utils.team;
 
+import ac.grim.grimac.api.packet.types.server.play.ServerTeamsPacket;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.api.packet.player.PacketUserProfile;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -15,19 +15,19 @@ public final class EntityTeam {
     public final Set<String> entries = new HashSet<>();
     private final GrimPlayer player;
     @Getter
-    private WrapperPlayServerTeams.CollisionRule collisionRule;
+    private ServerTeamsPacket.CollisionRule collisionRule;
 
     public EntityTeam(GrimPlayer player, String name) {
         this.player = player;
         this.name = name;
     }
 
-    public void update(WrapperPlayServerTeams teams) {
+    public void update(ServerTeamsPacket teams) {
         teams.getTeamInfo().ifPresent(info -> this.collisionRule = info.getCollisionRule());
 
         final TeamHandler teamHandler = player.checkManager.getPacketCheck(TeamHandler.class);
-        final WrapperPlayServerTeams.TeamMode mode = teams.getTeamMode();
-        if (mode == WrapperPlayServerTeams.TeamMode.ADD_ENTITIES || mode == WrapperPlayServerTeams.TeamMode.CREATE) {
+        final ServerTeamsPacket.TeamMode mode = teams.getTeamMode();
+        if (mode == ServerTeamsPacket.TeamMode.ADD_ENTITIES || mode == ServerTeamsPacket.TeamMode.CREATE) {
             label:
             for (String teamPlayer : teams.getPlayers()) {
                 if (teamPlayer.equals(player.user.getName())) {
@@ -44,7 +44,7 @@ public final class EntityTeam {
 
                 teamHandler.addEntityToTeam(teamPlayer, this);
             }
-        } else if (mode == WrapperPlayServerTeams.TeamMode.REMOVE_ENTITIES) {
+        } else if (mode == ServerTeamsPacket.TeamMode.REMOVE_ENTITIES) {
             label:
             for (String teamPlayer : teams.getPlayers()) {
                 if (teamPlayer.equals(player.user.getName())) {
@@ -66,7 +66,7 @@ public final class EntityTeam {
                 teamHandler.removeEntityFromTeam(teamPlayer);
                 entries.remove(teamPlayer);
             }
-        } else if (mode == WrapperPlayServerTeams.TeamMode.REMOVE) {
+        } else if (mode == ServerTeamsPacket.TeamMode.REMOVE) {
 
             EntityTeam playersTeam = teamHandler.getPlayerTeam();
             // The player's team was deleted, so we must unset the player's team

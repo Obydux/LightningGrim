@@ -14,7 +14,7 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketEnchantmentTypes;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
-import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
+import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 import lombok.Getter;
 import lombok.Setter;

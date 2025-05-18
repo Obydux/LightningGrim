@@ -1,8 +1,10 @@
 package ac.grim.grimac.utils.data.tags;
 
+import ac.grim.grimac.api.packet.ResourceLocationI;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.types.server.play.ServerTagsPacket;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.player.GrimPlayer;
 import com.github.retrooper.packetevents.PacketEvents;
@@ -33,7 +35,7 @@ public final class SyncedTags {
     private static final ServerVersion VERSION = PacketEvents.getAPI().getServerManager().getVersion();
     private static final ResourceLocation BLOCK = VERSION.isNewerThanOrEquals(ServerVersion.V_1_21) ? ResourceLocation.minecraft("block") : ResourceLocation.minecraft("blocks");
     private final GrimPlayer player;
-    private final Map<ResourceLocation, Map<ResourceLocation, SyncedTag<?>>> synced;
+    private final Map<ResourceLocationI, Map<ResourceLocationI, SyncedTag<?>>> synced;
 
     public SyncedTags(GrimPlayer player) {
         this.player = player;
@@ -55,7 +57,7 @@ public final class SyncedTags {
 
     @SafeVarargs
     private <T> void trackTags(ResourceLocation location, Function<Integer, T> remapper, SyncedTag.Builder<T>... syncedTags) {
-        final Map<ResourceLocation, SyncedTag<?>> tags = new HashMap<>(syncedTags.length);
+        final Map<ResourceLocationI, SyncedTag<?>> tags = new HashMap<>(syncedTags.length);
         for (SyncedTag.Builder<T> syncedTag : syncedTags) {
             syncedTag.remapper(remapper);
             final SyncedTag<T> built = syncedTag.build();
@@ -64,19 +66,20 @@ public final class SyncedTags {
         synced.put(location, tags);
     }
 
-    public SyncedTag<PacketStateType> block(ResourceLocation tag) {
-        final Map<ResourceLocation, SyncedTag<?>> blockTags = synced.get(BLOCK);
+    public SyncedTag<PacketStateType> block(ResourceLocationI tag) {
+        final Map<ResourceLocationI, SyncedTag<?>> blockTags = synced.get(BLOCK);
         return (SyncedTag<PacketStateType>) blockTags.get(tag);
     }
 
-    public void handleTagSync(WrapperPlayServerTags tags) {
+    // TODO (Packet Rewrite) (Platform independent tags)
+    public void handleTagSync(ServerTagsPacket tags) {
         if (player.getClientVersion().isOlderThan(PacketClientVersions.V_1_13)) return;
         tags.getTagMap().forEach((location, tagList) -> {
             if (!synced.containsKey(location)) return;
-            final Map<ResourceLocation, SyncedTag<?>> syncedTags = synced.get(location);
+            final Map<ResourceLocationI, SyncedTag<?>> syncedTags = synced.get(location);
             tagList.forEach(tag -> {
                 if (!syncedTags.containsKey(tag.getKey())) return;
-                syncedTags.get(tag.getKey()).readTagValues(tag);
+                syncedTags.get(tag.getKey()).readTagValues((WrapperPlayServerTags.Tag) tag);
             });
         });
     }

@@ -12,7 +12,7 @@ import ac.grim.grimac.utils.inventory.EnchantmentHelper;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
-import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
+import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 
 import java.util.OptionalInt;

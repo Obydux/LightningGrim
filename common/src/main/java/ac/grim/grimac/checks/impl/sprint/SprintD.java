@@ -9,7 +9,7 @@ import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 
-import static com.github.retrooper.packetevents.protocol.potion.PotionTypes.BLINDNESS;
+import static ac.grim.grimac.api.packet.protocol.potion.PotionTypes.BLINDNESS;
 
 @CheckData(name = "SprintD", description = "Started sprinting while having blindness", setback = 5, experimental = true)
 public class SprintD extends Check implements PostPredictionCheck {

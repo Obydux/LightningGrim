@@ -1,5 +1,6 @@
 package ac.grim.grimac.utils.nmsutil;
 
+import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.entity.PacketEntityType;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
@@ -155,7 +156,7 @@ public final class BoundingBoxSize {
 
                 ImmutableVector3d vec3 = MCPacket.getAPI().getVectorFactory().getImmutableVec3d(f, 0d, 0d);
                 vec3 = yRot(GrimMath.radians(-xRotEntity.interpYaw) - ((float) Math.PI / 2f), vec3);
-                return MCPacket.getAPI().getVectorFactory().getImmutableVec3d(x + vec3.x, y + (double) f1, z + vec3.z);
+                return MCPacket.getAPI().getVectorFactory().getImmutableVec3d(x + vec3.getX(), y + (double) f1, z + vec3.getZ());
             } else if (entity.getType() == PacketEntityTypes.LLAMA) {
                 float f = player.trigHandler.cos(GrimMath.radians(xRotEntity.interpYaw));
                 float f1 = player.trigHandler.sin(GrimMath.radians(xRotEntity.interpYaw));
@@ -175,9 +176,9 @@ public final class BoundingBoxSize {
         double cos = (float) Math.cos(yaw);
         double sin = (float) Math.sin(yaw);
         return MCPacket.getAPI().getVectorFactory().getImmutableVec3d(
-                start.x * cos + start.z * sin,
-                start.y,
-                start.z * cos - start.x * sin
+                start.getX() * cos + start.getZ() * sin,
+                start.getY(),
+                start.getZ() * cos - start.getX() * sin
         );
     }
 

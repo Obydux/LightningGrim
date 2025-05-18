@@ -15,7 +15,7 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.PacketType;
 import ac.grim.grimac.api.packet.types.client.play.ClientEntityActionPacket;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityAnimation;
+import ac.grim.grimac.api.packet.types.server.play.ServerEntityAnimationPacket;
 
 import java.util.ArrayDeque;
 import java.util.List;
@@ -63,10 +63,10 @@ public class Post extends Check implements PacketCheck, PostPredictionCheck {
     @Override
     public void onPacketSend(final PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.ENTITY_ANIMATION) {
-            WrapperPlayServerEntityAnimation animation = new WrapperPlayServerEntityAnimation(event);
+            ServerEntityAnimationPacket animation = ServerEntityAnimationPacket.from(event);
             if (animation.getEntityId() == player.entityID) {
-                if (animation.getType() == WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_MAIN_ARM ||
-                        animation.getType() == WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_OFF_HAND) {
+                if (animation.getType() == ServerEntityAnimationPacket.EntityAnimationType.SWING_MAIN_ARM ||
+                        animation.getType() == ServerEntityAnimationPacket.EntityAnimationType.SWING_OFF_HAND) {
                     isExemptFromSwingingCheck = player.lastTransactionSent.get();
                 }
             }

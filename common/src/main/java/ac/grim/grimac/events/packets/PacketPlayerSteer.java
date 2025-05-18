@@ -2,6 +2,7 @@ package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.types.client.play.ClientPlayerInputPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
@@ -13,8 +14,7 @@ import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerInput;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSteerVehicle;
+import ac.grim.grimac.api.packet.types.client.play.ClientSteerVehiclePacket;
 
 public class PacketPlayerSteer extends PacketListenerAbstract {
 
@@ -28,7 +28,7 @@ public class PacketPlayerSteer extends PacketListenerAbstract {
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
-            WrapperPlayClientSteerVehicle steer = new WrapperPlayClientSteerVehicle(event);
+            ClientSteerVehiclePacket steer = ClientSteerVehiclePacket.from(event);
 
             float forwards = steer.getForward();
             float sideways = steer.getSideways();
@@ -104,7 +104,7 @@ public class PacketPlayerSteer extends PacketListenerAbstract {
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
-            WrapperPlayClientPlayerInput input = new WrapperPlayClientPlayerInput(event);
+            ClientPlayerInputPacket input = ClientPlayerInputPacket.from(event);
             byte forward = 0;
             byte sideways = 0;
             if (input.isForward()) {
