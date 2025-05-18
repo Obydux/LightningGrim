@@ -5,7 +5,7 @@ import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerFlying;
+import ac.grim.grimac.api.packet.types.client.play.ClientPlayerFlyingMetaPacket;
 
 @CheckData(name = "CrashA")
 public class CrashA extends Check implements PacketCheck {
@@ -19,7 +19,7 @@ public class CrashA extends Check implements PacketCheck {
     public void onPacketReceive(PacketReceiveEvent event) {
         if (player.packetStateData.lastPacketWasTeleport) return;
         if (isFlying(event.getPacketType())) {
-            WrapperPlayClientPlayerFlying packet = new WrapperPlayClientPlayerFlying(event);
+            ClientPlayerFlyingMetaPacket packet = ClientPlayerFlyingMetaPacket.from(event);
 
             if (!packet.hasPositionChanged()) return;
             // Y technically is uncapped, but no player will reach these values legit

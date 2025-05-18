@@ -1,7 +1,11 @@
 package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
+import ac.grim.grimac.api.packet.types.client.play.ClientPongPacket;
+import ac.grim.grimac.api.packet.types.client.play.ClientWindowConfirmationPacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
+import ac.grim.grimac.api.packet.types.server.play.ServerPingPacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerWindowConfirmation;
 import ac.grim.grimac.checks.impl.badpackets.BadPacketsS;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.Pair;
@@ -9,10 +13,6 @@ import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPong;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientWindowConfirmation;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPing;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowConfirmation;
 
 public class PacketPingListener extends PacketListenerAbstract {
 
@@ -25,7 +25,7 @@ public class PacketPingListener extends PacketListenerAbstract {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Client.WINDOW_CONFIRMATION) {
-            WrapperPlayClientWindowConfirmation transaction = new WrapperPlayClientWindowConfirmation(event);
+            ClientWindowConfirmationPacket transaction = ClientWindowConfirmationPacket.from(event);
             short id = transaction.getActionId();
 
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
@@ -49,7 +49,7 @@ public class PacketPingListener extends PacketListenerAbstract {
         }
 
         if (event.getPacketType() == PacketTypes.Play.Client.PONG) {
-            WrapperPlayClientPong pong = new WrapperPlayClientPong(event);
+            ClientPongPacket pong = ClientPongPacket.from(event);
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
             player.packetStateData.lastTransactionPacketWasValid = false;
@@ -71,7 +71,7 @@ public class PacketPingListener extends PacketListenerAbstract {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.WINDOW_CONFIRMATION) {
-            WrapperPlayServerWindowConfirmation confirmation = new WrapperPlayServerWindowConfirmation(event);
+            ServerWindowConfirmation confirmation = ServerWindowConfirmation.from(event);
             short id = confirmation.getActionId();
             //
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
@@ -88,7 +88,7 @@ public class PacketPingListener extends PacketListenerAbstract {
         }
 
         if (event.getPacketType() == PacketTypes.Play.Server.PING) {
-            WrapperPlayServerPing pong = new WrapperPlayServerPing(event);
+            ServerPingPacket pong = ServerPingPacket.from(event);
             int id = pong.getId();
             //
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());

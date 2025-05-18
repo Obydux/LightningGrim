@@ -7,10 +7,6 @@ import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.math.GrimMath;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerInitializeWorldBorder;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWorldBorderCenter;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWorldBorderSize;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayWorldBorderLerpSize;
 
 public class PacketWorldBorder extends Check implements PacketCheck {
     double centerX;

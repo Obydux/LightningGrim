@@ -4,13 +4,13 @@ import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.ListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketListenerInterface;
+import ac.grim.grimac.api.packet.types.server.play.ServerBlockActionPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.ShulkerData;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerBlockAction;
 
 // If a player doesn't get this packet, then they don't know the shulker box is currently opened
 // Meaning if a player enters a chunk with an opened shulker box, they see the shulker box as closed.
@@ -31,7 +31,7 @@ public class PacketBlockAction implements PacketListenerInterface {
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
-            WrapperPlayServerBlockAction blockAction = new WrapperPlayServerBlockAction(event);
+            ServerBlockActionPacket blockAction = ServerBlockActionPacket.from(event);
             ImmutableVector3i blockPos = blockAction.getBlockPosition();
 
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> {

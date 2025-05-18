@@ -1,6 +1,7 @@
 package ac.grim.grimac.predictionengine.movementtick;
 
 import ac.grim.grimac.api.packet.MCPacket;
+import ac.grim.grimac.api.packet.ResourceLocationI;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
@@ -11,14 +12,13 @@ import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.BlockProperties;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.item.PacketStateType;
-import com.github.retrooper.packetevents.resources.ResourceLocation;
 
 import java.util.ArrayList;
 
 public class MovementTickerStrider extends MovementTickerRideable {
 
     private static final ServerUpdateAttributesPacket.PropertyModifier SUFFOCATING_MODIFIER = ServerUpdateAttributesPacket.PropertyModifier.from(
-            ResourceLocation.minecraft("suffocating"), -0.34F, ServerUpdateAttributesPacket.PropertyModifier.Operation.MULTIPLY_BASE);
+            ResourceLocationI.minecraft("suffocating"), -0.34F, ServerUpdateAttributesPacket.PropertyModifier.Operation.MULTIPLY_BASE);
 
     public MovementTickerStrider(GrimPlayer player) {
         super(player);

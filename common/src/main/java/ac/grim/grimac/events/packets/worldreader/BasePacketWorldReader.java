@@ -11,9 +11,7 @@ import ac.grim.grimac.utils.data.TeleportData;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.world.chunk.PacketChunk;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerAcknowledgeBlockChanges;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChunkData;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChunkDataBulk;
+import ac.grim.grimac.api.packet.types.server.play.ServerAcknowledgeBlockChangesPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerMultiBlockChangePacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerUnloadChunkPacket;
 
@@ -27,7 +25,7 @@ public class BasePacketWorldReader implements PacketListenerInterface {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.UNLOAD_CHUNK) {
-            ServerUnloadChunkPacket unloadChunk = new ServerUnloadChunkPacket(event);
+            ServerUnloadChunkPacket unloadChunk = ServerUnloadChunkPacket.from(event);
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
@@ -67,7 +65,7 @@ public class BasePacketWorldReader implements PacketListenerInterface {
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;
 
-            WrapperPlayServerAcknowledgeBlockChanges changes = new WrapperPlayServerAcknowledgeBlockChanges(event);
+            ServerAcknowledgeBlockChangesPacket changes = ServerAcknowledgeBlockChangesPacket.from(event);
             player.compensatedWorld.handlePredictionConfirmation(changes.getSequence());
         }
 
@@ -99,14 +97,14 @@ public class BasePacketWorldReader implements PacketListenerInterface {
 
     public void handleMapChunkBulk(GrimPlayer player, PacketSendEvent event) {
         // Only exists in 1.7 and 1.8
-        WrapperPlayServerChunkDataBulk chunkData = new WrapperPlayServerChunkDataBulk(event);
+        ServerChunkDataBulkPacket chunkData = ServerChunkDataBulkPacket.from(event);
         for (int i = 0; i < chunkData.getChunks().length; i++) {
             addChunkToCache(event, player, chunkData.getChunks()[i], true, chunkData.getX()[i], chunkData.getZ()[i]);
         }
     }
 
     public void handleMapChunk(GrimPlayer player, PacketSendEvent event) {
-        WrapperPlayServerChunkData chunkData = new WrapperPlayServerChunkData(event);
+        ServerChunkDataPacket chunkData = ServerChunkDataPacket.from(event);
         addChunkToCache(event, player, chunkData.getColumn().getChunks(), chunkData.getColumn().isFullChunk(), chunkData.getColumn().getX(), chunkData.getColumn().getZ());
         event.setLastUsedWrapper(null);
     }

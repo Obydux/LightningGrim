@@ -18,7 +18,6 @@ import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.teleport.RelativeFlag;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPlayerRotation;
 import ac.grim.grimac.api.packet.types.server.play.ServerVehicleMovePacket;
 
 public class PacketServerTeleport extends PacketListenerAbstract {

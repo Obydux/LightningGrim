@@ -11,7 +11,6 @@ import ac.grim.grimac.utils.data.CooldownData;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
-import com.github.retrooper.packetevents.resources.ResourceLocation;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class CompensatedCooldown extends Check implements PositionCheck {
     }
 
     // Yes, new cooldowns overwrite old ones, we don't have to check for an existing cooldown
-    public void addCooldown(ResourceLocation location, int cooldown, int transaction) {
+    public void addCooldown(ResourceLocationI location, int cooldown, int transaction) {
         if (cooldown == 0) {
             removeCooldown(location);
             return;
@@ -74,7 +73,7 @@ public class CompensatedCooldown extends Check implements PositionCheck {
         itemCooldownMap.put(location, new CooldownData(cooldown, transaction));
     }
 
-    public void removeCooldown(ResourceLocation location) {
+    public void removeCooldown(ResourceLocationI location) {
         itemCooldownMap.remove(location);
     }
 }

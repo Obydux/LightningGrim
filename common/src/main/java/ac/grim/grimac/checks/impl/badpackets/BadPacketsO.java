@@ -2,14 +2,14 @@ package ac.grim.grimac.checks.impl.badpackets;
 
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
+import ac.grim.grimac.api.packet.types.client.play.ClientKeepAlivePacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerKeepAlivePacket;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.Pair;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientKeepAlive;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerKeepAlive;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -25,7 +25,7 @@ public class BadPacketsO extends Check implements PacketCheck {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.KEEP_ALIVE) {
-            WrapperPlayServerKeepAlive packet = new WrapperPlayServerKeepAlive(event);
+            ServerKeepAlivePacket packet = ServerKeepAlivePacket.from(event);
             keepaliveMap.add(new Pair<>(packet.getId(), System.nanoTime()));
         }
     }
@@ -33,7 +33,7 @@ public class BadPacketsO extends Check implements PacketCheck {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Client.KEEP_ALIVE) {
-            WrapperPlayClientKeepAlive packet = new WrapperPlayClientKeepAlive(event);
+            ClientKeepAlivePacket packet = ClientKeepAlivePacket.from(event);
 
             long id = packet.getId();
             boolean hasID = false;

@@ -7,7 +7,6 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
-import ac.grim.grimac.api.packet.types.client.play.ClientClickWindowPacket;
 import ac.grim.grimac.api.packet.types.client.play.ClientClickWindowPacket.WindowClickType;
 
 @CheckData(name = "PacketOrderA", experimental = true)

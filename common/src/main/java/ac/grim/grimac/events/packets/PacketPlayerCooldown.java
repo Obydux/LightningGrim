@@ -2,11 +2,11 @@ package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
+import ac.grim.grimac.api.packet.types.server.play.ServerSetCooldownPacket;
 import ac.grim.grimac.player.GrimPlayer;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSetCooldown;
 
 public class PacketPlayerCooldown extends PacketListenerAbstract {
 
@@ -17,7 +17,7 @@ public class PacketPlayerCooldown extends PacketListenerAbstract {
     @Override
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.SET_COOLDOWN) {
-            WrapperPlayServerSetCooldown cooldown = new WrapperPlayServerSetCooldown(event);
+            ServerSetCooldownPacket cooldown = ServerSetCooldownPacket.from(event);
 
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player == null) return;

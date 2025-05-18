@@ -11,7 +11,6 @@ import ac.grim.grimac.api.util.ChatUtil;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.wrapper.configuration.client.WrapperConfigClientPluginMessage;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 

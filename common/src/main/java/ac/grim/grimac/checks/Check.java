@@ -11,7 +11,6 @@ import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.PacketWrapperFactory;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerFlyingMetaPacket;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerFlying;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;

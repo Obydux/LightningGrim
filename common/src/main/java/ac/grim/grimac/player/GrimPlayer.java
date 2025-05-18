@@ -17,9 +17,11 @@ import ac.grim.grimac.api.packet.player.PacketUser;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.PacketConnectionState;
+import ac.grim.grimac.api.packet.types.SendablePacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityTeleportPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityVelocityPacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerPingPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.api.packet.world.dimension.PacketDimensionType;
@@ -71,9 +73,7 @@ import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import com.github.retrooper.packetevents.util.Vector3d;
-import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisconnect;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPing;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowConfirmation;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.connection.UserConnection;
@@ -462,9 +462,9 @@ public class GrimPlayer implements GrimUser {
         short transactionID = (short) (-1 * (transactionIDCounter.getAndIncrement() & 0x7FFF));
         try {
 
-            PacketWrapper<?> packet;
+            SendablePacket packet;
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17)) {
-                packet = new WrapperPlayServerPing(transactionID);
+                packet = ServerPingPacket.from(transactionID);
             } else {
                 packet = new WrapperPlayServerWindowConfirmation((byte) 0, transactionID, false);
             }

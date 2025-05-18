@@ -6,6 +6,7 @@ import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityAnimationPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityMetadataPacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerUseBedPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.nmsutil.WatchableIndexUtil;
@@ -17,7 +18,6 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.entity.EntityData;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUseBed;
 
 import java.util.List;
 import java.util.Optional;
@@ -221,7 +221,7 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
         }
 
         if (event.getPacketType() == PacketTypes.Play.Server.USE_BED) {
-            WrapperPlayServerUseBed bed = new WrapperPlayServerUseBed(event);
+            ServerUseBedPacket bed = ServerUseBedPacket.from(event);
 
             GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (player != null && player.entityID == bed.getEntityId()) {

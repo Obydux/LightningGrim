@@ -1,5 +1,6 @@
 package ac.grim.grimac.events.packets.worldreader;
 
+import ac.grim.grimac.api.packet.types.SendablePacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.player.GrimPlayer;
 import com.github.retrooper.packetevents.protocol.world.chunk.impl.v1_16.Chunk_v1_9;
@@ -7,7 +8,6 @@ import com.github.retrooper.packetevents.protocol.world.chunk.palette.DataPalett
 import com.github.retrooper.packetevents.protocol.world.chunk.palette.ListPalette;
 import com.github.retrooper.packetevents.protocol.world.chunk.palette.PaletteType;
 import com.github.retrooper.packetevents.protocol.world.chunk.storage.BitStorage;
-import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
@@ -15,7 +15,7 @@ import java.util.BitSet;
 public class PacketWorldReaderEight extends BasePacketWorldReader {
     @Override
     public void handleMapChunkBulk(final GrimPlayer player, final PacketSendEvent event) {
-        PacketWrapper<?> wrapper = new PacketWrapper<>(event);
+        SendablePacket wrapper = SendablePacket.from(event);
         ByteBuf buffer = (ByteBuf) wrapper.getBuffer();
 
         boolean skylight = wrapper.readBoolean();
@@ -47,7 +47,7 @@ public class PacketWorldReaderEight extends BasePacketWorldReader {
 
     @Override
     public void handleMapChunk(final GrimPlayer player, final PacketSendEvent event) {
-        PacketWrapper<?> wrapper = new PacketWrapper<>(event);
+        SendablePacket wrapper = SendablePacket.from(event);
 
         final int chunkX = wrapper.readInt();
         final int chunkZ = wrapper.readInt();

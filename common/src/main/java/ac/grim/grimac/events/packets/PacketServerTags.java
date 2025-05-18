@@ -6,7 +6,6 @@ import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerTagsPacket;
 import ac.grim.grimac.player.GrimPlayer;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTags;
 
 public class PacketServerTags extends PacketListenerAbstract {
 

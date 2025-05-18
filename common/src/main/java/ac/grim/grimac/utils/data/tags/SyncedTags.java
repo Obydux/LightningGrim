@@ -10,7 +10,6 @@ import ac.grim.grimac.player.GrimPlayer;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
-import com.github.retrooper.packetevents.resources.ResourceLocation;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTags;
 
 import java.util.HashMap;
@@ -23,17 +22,17 @@ import java.util.function.Function;
  */
 public final class SyncedTags {
 
-    public static final ResourceLocation CLIMBABLE = ResourceLocation.minecraft("climbable");
-    public static final ResourceLocation MINEABLE_AXE = ResourceLocation.minecraft("mineable/axe");
-    public static final ResourceLocation MINEABLE_PICKAXE = ResourceLocation.minecraft("mineable/pickaxe");
-    public static final ResourceLocation MINEABLE_SHOVEL = ResourceLocation.minecraft("mineable/shovel");
-    public static final ResourceLocation MINEABLE_HOE = ResourceLocation.minecraft("mineable/hoe");
-    public static final ResourceLocation NEEDS_DIAMOND_TOOL = ResourceLocation.minecraft("needs_diamond_tool");
-    public static final ResourceLocation NEEDS_IRON_TOOL = ResourceLocation.minecraft("needs_iron_tool");
-    public static final ResourceLocation NEEDS_STONE_TOOL = ResourceLocation.minecraft("needs_stone_tool");
-    public static final ResourceLocation SWORD_EFFICIENT = ResourceLocation.minecraft("sword_efficient");
+    public static final ResourceLocationI CLIMBABLE = ResourceLocationI.minecraft("climbable");
+    public static final ResourceLocationI MINEABLE_AXE = ResourceLocationI.minecraft("mineable/axe");
+    public static final ResourceLocationI MINEABLE_PICKAXE = ResourceLocationI.minecraft("mineable/pickaxe");
+    public static final ResourceLocationI MINEABLE_SHOVEL = ResourceLocationI.minecraft("mineable/shovel");
+    public static final ResourceLocationI MINEABLE_HOE = ResourceLocationI.minecraft("mineable/hoe");
+    public static final ResourceLocationI NEEDS_DIAMOND_TOOL = ResourceLocationI.minecraft("needs_diamond_tool");
+    public static final ResourceLocationI NEEDS_IRON_TOOL = ResourceLocationI.minecraft("needs_iron_tool");
+    public static final ResourceLocationI NEEDS_STONE_TOOL = ResourceLocationI.minecraft("needs_stone_tool");
+    public static final ResourceLocationI SWORD_EFFICIENT = ResourceLocationI.minecraft("sword_efficient");
     private static final ServerVersion VERSION = PacketEvents.getAPI().getServerManager().getVersion();
-    private static final ResourceLocation BLOCK = VERSION.isNewerThanOrEquals(ServerVersion.V_1_21) ? ResourceLocation.minecraft("block") : ResourceLocation.minecraft("blocks");
+    private static final ResourceLocationI BLOCK = VERSION.isNewerThanOrEquals(ServerVersion.V_1_21) ? ResourceLocationI.minecraft("block") : ResourceLocationI.minecraft("blocks");
     private final GrimPlayer player;
     private final Map<ResourceLocationI, Map<ResourceLocationI, SyncedTag<?>>> synced;
 
@@ -56,7 +55,7 @@ public final class SyncedTags {
     }
 
     @SafeVarargs
-    private <T> void trackTags(ResourceLocation location, Function<Integer, T> remapper, SyncedTag.Builder<T>... syncedTags) {
+    private <T> void trackTags(ResourceLocationI location, Function<Integer, T> remapper, SyncedTag.Builder<T>... syncedTags) {
         final Map<ResourceLocationI, SyncedTag<?>> tags = new HashMap<>(syncedTags.length);
         for (SyncedTag.Builder<T> syncedTag : syncedTags) {
             syncedTag.remapper(remapper);

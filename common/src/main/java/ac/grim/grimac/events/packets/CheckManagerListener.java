@@ -9,11 +9,10 @@ import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.player.enums.DiggingAction;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.PacketConnectionState;
+import ac.grim.grimac.api.packet.protocol.world.IViewPoint;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.RecievablePacket;
-import ac.grim.grimac.api.packet.types.client.play.ClientPlayerBlockPlacementPacket;
-import ac.grim.grimac.api.packet.types.client.play.ClientPlayerUseItemPacket;
-import ac.grim.grimac.api.packet.types.client.play.ClientVehicleMovePacket;
+import ac.grim.grimac.api.packet.types.client.play.*;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerSetSlotPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
@@ -42,14 +41,11 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.Location;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateValue;
-import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-import ac.grim.grimac.api.packet.types.client.play.ClientPlayerDiggingPacket;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerFlying;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerAcknowledgeBlockChanges;
+import ac.grim.grimac.api.packet.types.client.play.ClientPlayerFlyingMetaPacket;
+import ac.grim.grimac.api.packet.types.server.play.ServerAcknowledgeBlockChangesPacket;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -393,13 +389,13 @@ public class CheckManagerListener extends PacketListenerAbstract {
         }
     }
 
-    private boolean isMojangStupid(GrimPlayer player, PacketReceiveEvent event, WrapperPlayClientPlayerFlying flying) {
+    private boolean isMojangStupid(GrimPlayer player, PacketReceiveEvent event, ClientPlayerFlyingMetaPacket flying) {
         // Teleports are not stupidity packets.
         if (player.packetStateData.lastPacketWasTeleport) return false;
         // Mojang has become less stupid!
         if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21)) return false;
 
-        final Location location = flying.getLocation();
+        final IViewPoint location = flying.getLocation();
         final double threshold = player.getMovementThreshold();
 
         // Don't check duplicate 1.17 packets (Why would you do this mojang?)
@@ -426,7 +422,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
                 }
             } else {
                 // Override location to force it to use the last real position of the player. Prevents position-related bypasses like nofall.
-                flying.setLocation(new Location(player.filterMojangStupidityOnMojangStupidity.getX(), player.filterMojangStupidityOnMojangStupidity.getY(), player.filterMojangStupidityOnMojangStupidity.getZ(), location.getYaw(), location.getPitch()));
+                flying.setLocation(IViewPoint.from(player.filterMojangStupidityOnMojangStupidity.getX(), player.filterMojangStupidityOnMojangStupidity.getY(), player.filterMojangStupidityOnMojangStupidity.getZ(), location.getYaw(), location.getPitch()));
                 event.markForReEncode(true);
             }
 
@@ -477,7 +473,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
         if (isFlying(event.getPacketType())) {
             player.serverOpenedInventoryThisTick = false;
 
-            WrapperPlayClientPlayerFlying flying = new WrapperPlayClientPlayerFlying(event);
+            ClientPlayerFlyingMetaPacket flying = ClientPlayerFlyingMetaPacket.from(event);
 
             ImmutableVector3d position = VectorUtils.clampVector(flying.getLocation().getPosition());
             // Teleports must be POS LOOK
@@ -533,8 +529,8 @@ public class CheckManagerListener extends PacketListenerAbstract {
         }
 
         if (isFlying(event.getPacketType())) {
-            WrapperPlayClientPlayerFlying flying = new WrapperPlayClientPlayerFlying(event);
-            Location pos = flying.getLocation();
+            ClientPlayerFlyingMetaPacket flying = ClientPlayerFlyingMetaPacket.from(event);
+            IViewPoint pos = flying.getLocation();
             boolean ignoreRotation = player.packetStateData.lastPacketWasOnePointSeventeenDuplicate && player.isIgnoreDuplicatePacketRotation();
             handleFlying(player, pos.getX(), pos.getY(), pos.getZ(), ignoreRotation ? player.xRot : pos.getYaw(), ignoreRotation ? player.yRot : pos.getPitch(), flying.hasPositionChanged(), flying.hasRotationChanged(), flying.isOnGround(), teleportData, event);
         }
@@ -659,7 +655,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
 
                     // Ends the client prediction introduced in 1.19+
                     if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_19) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19)) {
-                        player.user.sendPacket(new WrapperPlayServerAcknowledgeBlockChanges(packet.getSequence()));
+                        player.user.sendPacket(ServerAcknowledgeBlockChangesPacket.from(packet.getSequence()));
                     } else { // The client isn't smart enough to revert changes
                         player.resyncPosition(packet.getBlockPosition());
                         player.resyncPosition(facePos);

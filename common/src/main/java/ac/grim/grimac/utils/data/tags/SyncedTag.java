@@ -1,6 +1,6 @@
 package ac.grim.grimac.utils.data.tags;
 
-import com.github.retrooper.packetevents.resources.ResourceLocation;
+import ac.grim.grimac.api.packet.ResourceLocationI;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTags;
 
 import java.util.Collections;
@@ -10,12 +10,12 @@ import java.util.function.Function;
 
 public final class SyncedTag<T> {
 
-    private final ResourceLocation location;
+    private final ResourceLocationI location;
     private final Set<T> values;
     private final Function<Integer, T> remapper;
     private final boolean supported;
 
-    private SyncedTag(ResourceLocation location, Function<Integer, T> remapper, Set<T> defaultValues, boolean supported) {
+    private SyncedTag(ResourceLocationI location, Function<Integer, T> remapper, Set<T> defaultValues, boolean supported) {
         this.location = location;
         this.supported = supported;
         this.values = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -23,11 +23,11 @@ public final class SyncedTag<T> {
         this.values.addAll(defaultValues);
     }
 
-    public static <T> Builder<T> builder(ResourceLocation location) {
+    public static <T> Builder<T> builder(ResourceLocationI location) {
         return new Builder<>(location);
     }
 
-    public ResourceLocation location() {
+    public ResourceLocationI location() {
         return location;
     }
 
@@ -46,12 +46,12 @@ public final class SyncedTag<T> {
     }
 
     public static final class Builder<T> {
-        private final ResourceLocation location;
+        private final ResourceLocationI location;
         private Function<Integer, T> remapper;
         private Set<T> defaultValues;
         private boolean supported = true;
 
-        private Builder(ResourceLocation location) {
+        private Builder(ResourceLocationI location) {
             this.location = location;
         }
 
