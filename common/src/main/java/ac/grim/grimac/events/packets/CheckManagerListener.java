@@ -38,7 +38,7 @@ import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.item.ItemStack;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import com.github.retrooper.packetevents.protocol.world.Location;

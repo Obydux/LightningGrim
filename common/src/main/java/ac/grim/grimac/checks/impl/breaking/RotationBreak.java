@@ -15,8 +15,8 @@ import ac.grim.grimac.utils.data.Pair;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.Ray;
 import ac.grim.grimac.utils.nmsutil.ReachUtils;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 
 import java.util.ArrayList;

@@ -9,7 +9,7 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 
 @CheckData(name = "ElytraC", description = "Started gliding too frequently", experimental = true)
 public class ElytraC extends Check implements PostPredictionCheck {

@@ -9,7 +9,7 @@ import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.MessageUtil;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 
 import java.util.ArrayList;
 

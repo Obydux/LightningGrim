@@ -1,7 +1,7 @@
 package ac.grim.grimac.platform.fabric.utils.convert;
 
 import ac.grim.grimac.api.packet.item.PacketItemStack;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import net.kyori.adventure.text.Component;
 //import net.minecraft.network.RegistryByteBuf;
 //import net.minecraft.registry.DynamicRegistryManager;

@@ -1,5 +1,7 @@
 package ac.grim.grimac.checks.impl.breaking;
 
+import ac.grim.grimac.api.packet.player.enums.GameMode;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.BlockBreakCheck;
@@ -8,9 +10,7 @@ import ac.grim.grimac.utils.anticheat.update.BlockBreak;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.math.VectorUtils;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.player.enums.DiggingAction;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 
 @CheckData(name = "FarBreak", description = "Breaking blocks too far away", experimental = true)
 public class FarBreak extends Check implements BlockBreakCheck {

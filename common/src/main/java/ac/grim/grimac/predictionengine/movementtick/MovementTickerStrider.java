@@ -2,13 +2,13 @@ package ac.grim.grimac.predictionengine.movementtick;
 
 import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.attribute.ValuedAttribute;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityStrider;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.BlockProperties;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import com.github.retrooper.packetevents.resources.ResourceLocation;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MovementTickerStrider extends MovementTickerRideable {
 
-    private static final ServerUpdateAttributesPacket.PropertyModifier SUFFOCATING_MODIFIER = new ServerUpdateAttributesPacket.PropertyModifier(
+    private static final ServerUpdateAttributesPacket.PropertyModifier SUFFOCATING_MODIFIER = ServerUpdateAttributesPacket.PropertyModifier.from(
             ResourceLocation.minecraft("suffocating"), -0.34F, ServerUpdateAttributesPacket.PropertyModifier.Operation.MULTIPLY_BASE);
 
     public MovementTickerStrider(GrimPlayer player) {
@@ -66,7 +66,7 @@ public class MovementTickerStrider extends MovementTickerRideable {
         if (newSpeed) {
             final ServerUpdateAttributesPacket.Property lastProperty = movementSpeedAttr.property().orElse(null);
             if (lastProperty != null && (!strider.isShaking || lastProperty.getModifiers().stream().noneMatch(mod -> mod.getName().getKey().equals("suffocating")))) {
-                ServerUpdateAttributesPacket.Property newProperty = new ServerUpdateAttributesPacket.Property(lastProperty.getAttribute(), lastProperty.getValue(), new ArrayList<>(lastProperty.getModifiers()));
+                ServerUpdateAttributesPacket.Property newProperty = ServerUpdateAttributesPacket.Property.from(lastProperty.getAttribute(), lastProperty.getValue(), new ArrayList<>(lastProperty.getModifiers()));
                 if (!strider.isShaking) {
                     newProperty.getModifiers().removeIf(modifier -> modifier.getName().getKey().equals("suffocating"));
                 } else {

@@ -9,7 +9,7 @@ import ac.grim.grimac.utils.anticheat.update.BlockPlace;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 
 @CheckData(name = "PacketOrderN", experimental = true)
 public class PacketOrderN extends BlockPlaceCheck {

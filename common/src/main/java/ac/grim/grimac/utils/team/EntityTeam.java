@@ -1,7 +1,7 @@
 package ac.grim.grimac.utils.team;
 
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import ac.grim.grimac.api.packet.player.PacketUserProfile;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import lombok.Getter;
 
@@ -35,7 +35,7 @@ public final class EntityTeam {
                     continue;
                 }
 
-                for (UserProfile profile : player.compensatedEntities.profiles.values()) {
+                for (PacketUserProfile profile : player.compensatedEntities.profiles.values()) {
                     if (profile.getName() != null && profile.getName().equals(teamPlayer)) {
                         teamHandler.addEntityToTeam(profile.getUUID().toString(), this);
                         continue label;
@@ -53,7 +53,7 @@ public final class EntityTeam {
                     continue;
                 }
 
-                for (UserProfile profile : player.compensatedEntities.profiles.values()) {
+                for (PacketUserProfile profile : player.compensatedEntities.profiles.values()) {
                     if (profile.getName() != null && profile.getName().equals(teamPlayer)) {
                         String uuid = profile.getUUID().toString();
                         entries.remove(uuid);

@@ -3,7 +3,7 @@ package ac.grim.grimac.predictionengine.movementtick;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityRideable;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 
 public class MovementTickerPig extends MovementTickerRideable {
     public MovementTickerPig(GrimPlayer player) {

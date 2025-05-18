@@ -4,7 +4,7 @@ import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.math.GrimMath;
-import com.github.retrooper.packetevents.protocol.attribute.Attribute;
+import ac.grim.grimac.api.packet.protocol.attribute.Attribute;
 
 import java.util.List;
 import java.util.Optional;

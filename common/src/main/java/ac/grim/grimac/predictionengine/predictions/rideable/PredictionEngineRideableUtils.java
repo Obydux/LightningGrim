@@ -1,6 +1,5 @@
 package ac.grim.grimac.predictionengine.predictions.rideable;
 
-import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.predictionengine.predictions.PredictionEngine;
 import ac.grim.grimac.predictionengine.predictions.PredictionEngineNormal;
@@ -11,7 +10,7 @@ import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.BlockProperties;
 import ac.grim.grimac.utils.nmsutil.JumpPower;
 import ac.grim.grimac.utils.nmsutil.ReachUtils;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
 
 import java.util.ArrayList;

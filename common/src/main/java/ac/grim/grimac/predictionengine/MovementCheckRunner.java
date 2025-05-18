@@ -5,6 +5,7 @@ import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.item.PacketItemTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.impl.prediction.Phase;
@@ -40,9 +41,8 @@ import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.utils.nmsutil.Riptide;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketItemType;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 

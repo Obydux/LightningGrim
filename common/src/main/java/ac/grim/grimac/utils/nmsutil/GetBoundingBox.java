@@ -1,9 +1,9 @@
 package ac.grim.grimac.utils.nmsutil;
 
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.packetentity.PacketEntity;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 
 public class GetBoundingBox {
     public static SimpleCollisionBox getCollisionBoxForPlayer(GrimPlayer player, double centerX, double centerY, double centerZ) {

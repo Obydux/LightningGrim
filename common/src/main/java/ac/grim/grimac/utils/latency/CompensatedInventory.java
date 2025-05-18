@@ -25,7 +25,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.item.type.ItemType;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.types.server.play.ServerOpenHorseWindowPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerOpenWindowPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerSetSlotPacket;

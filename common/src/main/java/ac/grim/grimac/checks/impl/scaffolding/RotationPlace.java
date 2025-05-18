@@ -2,6 +2,7 @@ package ac.grim.grimac.checks.impl.scaffolding;
 
 import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3f;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
@@ -15,8 +16,7 @@ import ac.grim.grimac.utils.data.Pair;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.Ray;
 import ac.grim.grimac.utils.nmsutil.ReachUtils;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;

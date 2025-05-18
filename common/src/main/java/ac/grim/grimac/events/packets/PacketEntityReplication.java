@@ -5,7 +5,9 @@ import ac.grim.grimac.api.config.ConfigManager;
 import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.entity.EntityData;
 import ac.grim.grimac.api.packet.entity.PacketEntityType;
+import ac.grim.grimac.api.packet.player.PacketUserProfile;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.potion.PotionType;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.api.packet.types.server.play.*;
@@ -22,10 +24,7 @@ import ac.grim.grimac.utils.reflection.ViaVersionUtil;
 import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.entity.EntityPositionData;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
-import com.github.retrooper.packetevents.protocol.player.UserProfile;
-import com.github.retrooper.packetevents.protocol.potion.PotionType;
 import ac.grim.grimac.api.packet.types.server.play.ServerAttachEntityPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerDestroyEntitiesPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityEffectPacket;
@@ -36,7 +35,7 @@ import ac.grim.grimac.api.packet.types.server.play.ServerEntityRelativeMoveAndRo
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityRotationPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityStatusPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerPlayerInfoPacket;
-import ac.grim.grimac.api.packet.types.server.play.ServerRemoveEntityEffect;
+import ac.grim.grimac.api.packet.types.server.play.ServerRemoveEntityEffectPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerSetPassengersPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerSpawnEntityPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerSpawnLivingEntityPacket;
@@ -142,10 +141,10 @@ public class PacketEntityReplication extends Check implements PacketCheck {
 
         // 1.19.3+
         else if (event.getPacketType() == PacketTypes.Play.Server.PLAYER_INFO_UPDATE) {
-            ServerPlayerInfoUpdate info = new ServerPlayerInfoUpdate(event);
+            ServerPlayerInfoUpdatePacket info = ServerPlayerInfoUpdatePacket.from(event);
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> {
-                for (ServerPlayerInfoUpdate.PlayerInfo entry : info.getEntries()) {
-                    final UserProfile gameProfile = entry.getGameProfile();
+                for (ServerPlayerInfoUpdatePacket.PlayerInfo entry : info.getEntries()) {
+                    final PacketUserProfile gameProfile = entry.getGameProfile();
                     final UUID uuid = gameProfile.getUUID();
                     player.compensatedEntities.profiles.put(uuid, gameProfile);
                 }
@@ -154,11 +153,11 @@ public class PacketEntityReplication extends Check implements PacketCheck {
             ServerPlayerInfoRemovePacket remove = ServerPlayerInfoRemovePacket.from(event);
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> remove.getProfileIds().forEach(player.compensatedEntities.profiles::remove));
         } else if (event.getPacketType() == PacketTypes.Play.Server.PLAYER_INFO) {
-            ServerPlayerInfoPacket info = new ServerPlayerInfoPacket(event);
+            ServerPlayerInfoPacket info = ServerPlayerInfoPacket.from(event);
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> {
                 if (info.getAction() == ServerPlayerInfoPacket.Action.ADD_PLAYER) {
                     for (ServerPlayerInfoPacket.PlayerData entry : info.getPlayerDataList()) {
-                        final UserProfile gameProfile = entry.getUserProfile();
+                        final PacketUserProfile gameProfile = entry.getUserProfile();
                         final UUID uuid = gameProfile.getUUID();
                         player.compensatedEntities.profiles.put(uuid, gameProfile);
                     }
@@ -167,7 +166,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                 }
             });
         } else if (event.getPacketType() == PacketTypes.Play.Server.ENTITY_EFFECT) {
-            ServerEntityEffectPacket effect = new ServerEntityEffectPacket(event);
+            ServerEntityEffectPacket effect = ServerEntityEffectPacket.from(event);
 
             PotionType type = effect.getPotionType();
 
@@ -197,7 +196,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                 entity.addPotionEffect(type, effect.getEffectAmplifier());
             });
         } else if (event.getPacketType() == PacketTypes.Play.Server.REMOVE_ENTITY_EFFECT) {
-            ServerRemoveEntityEffect effect = new ServerRemoveEntityEffect(event);
+            ServerRemoveEntityEffectPacket effect = ServerRemoveEntityEffectPacket.from(event);
 
             if (isDirectlyAffectingPlayer(player, effect.getEntityId())) player.sendTransaction();
 
@@ -208,7 +207,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                 entity.removePotionEffect(effect.getPotionType());
             });
         } else if (event.getPacketType() == PacketTypes.Play.Server.UPDATE_ATTRIBUTES) {
-            ServerUpdateAttributesPacket attributes = new ServerUpdateAttributesPacket(event);
+            ServerUpdateAttributesPacket attributes = ServerUpdateAttributesPacket.from(event);
 
             int entityID = attributes.getEntityId();
 
@@ -218,7 +217,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(),
                     () -> player.compensatedEntities.updateAttributes(entityID, attributes.getProperties()));
         } else if (event.getPacketType() == PacketTypes.Play.Server.ENTITY_STATUS) {
-            ServerEntityStatusPacket status = new ServerEntityStatusPacket(event);
+            ServerEntityStatusPacket status = ServerEntityStatusPacket.from(event);
             // This hasn't changed from 1.7.2 to 1.17
             // Needed to exempt players on dead vehicles, as dead entities have strange physics.
             if (status.getStatus() == 3) {
@@ -290,14 +289,14 @@ public class PacketEntityReplication extends Check implements PacketCheck {
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get(), () -> player.packetStateData.setSlowedByUsingItem(false));
             player.latencyUtils.addRealTimeTask(player.lastTransactionSent.get() + 1, () -> player.packetStateData.setSlowedByUsingItem(false));
         } else if (event.getPacketType() == PacketTypes.Play.Server.SET_PASSENGERS) {
-            ServerSetPassengersPacket mount = new ServerSetPassengersPacket(event);
+            ServerSetPassengersPacket mount = ServerSetPassengersPacket.from(event);
 
             int vehicleID = mount.getEntityId();
             int[] passengers = mount.getPassengers();
 
             handleMountVehicle(event, vehicleID, passengers);
         } else if (event.getPacketType() == PacketTypes.Play.Server.ATTACH_ENTITY) {
-            ServerAttachEntityPacket attach = new ServerAttachEntityPacket(event);
+            ServerAttachEntityPacket attach = ServerAttachEntityPacket.from(event);
 
             // This packet was replaced by the mount packet on 1.9+ servers - to support multiple passengers on one vehicle
             if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
@@ -326,7 +325,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                 }
             }
         } else if (event.getPacketType() == PacketTypes.Play.Server.DESTROY_ENTITIES) {
-            ServerDestroyEntitiesPacket destroy = new ServerDestroyEntitiesPacket(event);
+            ServerDestroyEntitiesPacket destroy = ServerDestroyEntitiesPacket.from(event);
 
             int[] destroyEntityIds = destroy.getEntityIds();
 

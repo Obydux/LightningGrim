@@ -1,6 +1,7 @@
 package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
+import ac.grim.grimac.api.packet.player.PacketUserProfile;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerPlayerInfoPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerPlayerInfoUpdatePacket;
@@ -10,8 +11,7 @@ import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
-import com.github.retrooper.packetevents.protocol.player.UserProfile;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -36,7 +36,7 @@ public class PacketHidePlayerInfo extends PacketListenerAbstract {
                 return;
             }
 
-            ServerPlayerInfoPacket info = new ServerPlayerInfoPacket(event);
+            ServerPlayerInfoPacket info = ServerPlayerInfoPacket.from(event);
 
             if (info.getAction() == ServerPlayerInfoPacket.Action.UPDATE_GAME_MODE || info.getAction() == ServerPlayerInfoPacket.Action.ADD_PLAYER) {
                 List<ServerPlayerInfoPacket.PlayerData> nmsPlayerInfoDataList = info.getPlayerDataList();
@@ -61,7 +61,7 @@ public class PacketHidePlayerInfo extends PacketListenerAbstract {
             GrimPlayer receiver = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
             if (receiver == null) return;
             //create wrappers
-            ServerPlayerInfoUpdatePacket wrapper = new ServerPlayerInfoUpdatePacket(event);
+            ServerPlayerInfoUpdatePacket wrapper = ServerPlayerInfoUpdatePacket.from(event);
             EnumSet<ServerPlayerInfoUpdatePacket.Action> actions = wrapper.getActions();
             //player's game mode updated
             if (actions.contains(ServerPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE)) {
@@ -72,12 +72,12 @@ public class PacketHidePlayerInfo extends PacketListenerAbstract {
                 for (ServerPlayerInfoUpdatePacket.PlayerInfo entry : wrapper.getEntries()) {
                     //check if the player should be hidden
                     ServerPlayerInfoUpdatePacket.PlayerInfo modifiedPacket = null;
-                    final UserProfile gameProfile = entry.getGameProfile();
+                    final PacketUserProfile gameProfile = entry.getGameProfile();
                     if (GrimAPI.INSTANCE.getSpectateManager().shouldHidePlayer(receiver, gameProfile.getUUID())) {
                         hideCount++;
                         //modify & create a new packet from pre-existing one if they are a spectator
                         if (entry.getGameMode() == GameMode.SPECTATOR) {
-                            modifiedPacket = new ServerPlayerInfoUpdate.PlayerInfo(
+                            modifiedPacket = ServerPlayerInfoUpdatePacket.PlayerInfo.from(
                                     gameProfile,
                                     entry.isListed(),
                                     entry.getLatency(),
@@ -102,7 +102,7 @@ public class PacketHidePlayerInfo extends PacketListenerAbstract {
                     if (onlyGameMode) { // if only the game mode changed, cancel
                         event.setCancelled(true);
                     } else { //if more than the game mode changed, remove the action
-                        wrapper.getActions().remove(ServerPlayerInfoUpdate.Action.UPDATE_GAME_MODE);
+                        wrapper.getActions().remove(ServerPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE);
                         event.markForReEncode(true);
                     }
                 } else { //modify entries

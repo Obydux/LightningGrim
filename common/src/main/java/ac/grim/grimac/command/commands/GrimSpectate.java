@@ -1,6 +1,7 @@
 package ac.grim.grimac.command.commands;
 
 import ac.grim.grimac.GrimAPI;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.command.BuildableCommand;
 import ac.grim.grimac.command.requirements.PlayerSenderRequirement;
 import ac.grim.grimac.manager.init.start.CommandRegister;
@@ -8,7 +9,6 @@ import ac.grim.grimac.api.platform.command.PlayerSelector;
 import ac.grim.grimac.api.platform.player.PlatformPlayer;
 import ac.grim.grimac.api.platform.sender.Sender;
 import ac.grim.grimac.utils.anticheat.MessageUtil;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.context.CommandContext;

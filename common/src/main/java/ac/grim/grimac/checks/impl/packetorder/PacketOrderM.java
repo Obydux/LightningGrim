@@ -1,6 +1,7 @@
 package ac.grim.grimac.checks.impl.packetorder;
 
 import ac.grim.grimac.api.packet.MCPacket;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.client.play.ClientInteractEntityPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
@@ -10,7 +11,6 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 
 @CheckData(name = "PacketOrderM", experimental = true)
 public class PacketOrderM extends Check implements PostPredictionCheck {

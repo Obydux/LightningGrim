@@ -1,7 +1,11 @@
 package ac.grim.grimac.utils.latency;
 
+import ac.grim.grimac.api.packet.ResourceLocationI;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
+import ac.grim.grimac.api.packet.protocol.attribute.Attribute;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.potion.PotionType;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.ShulkerData;
@@ -13,16 +17,12 @@ import ac.grim.grimac.utils.nmsutil.BoundingBoxSize;
 import ac.grim.grimac.utils.nmsutil.WatchableIndexUtil;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.attribute.Attribute;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.entity.EntityData;
 import ac.grim.grimac.api.packet.entity.PacketEntityType;
-import com.github.retrooper.packetevents.protocol.player.UserProfile;
-import com.github.retrooper.packetevents.protocol.potion.PotionType;
+import ac.grim.grimac.api.packet.player.PacketUserProfile;
 import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import com.github.retrooper.packetevents.protocol.world.Direction;
-import com.github.retrooper.packetevents.resources.ResourceLocation;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -42,7 +42,7 @@ public class CompensatedEntities {
 
     public final Int2ObjectOpenHashMap<PacketEntity> entityMap = new Int2ObjectOpenHashMap<>(40, 0.7f);
     public final Int2ObjectOpenHashMap<TrackerData> serverPositionsMap = new Int2ObjectOpenHashMap<>(40, 0.7f);
-    public final Object2ObjectOpenHashMap<UUID, UserProfile> profiles = new Object2ObjectOpenHashMap<>();
+    public final Object2ObjectOpenHashMap<UUID, PacketUserProfile> profiles = new Object2ObjectOpenHashMap<>();
     public Integer serverPlayerVehicle = null;
     public boolean hasSprintingAttributeEnabled = false;
     public TrackerData selfTrackedEntity;
@@ -114,7 +114,7 @@ public class CompensatedEntities {
                 boolean found = false;
                 List<ServerUpdateAttributesPacket.PropertyModifier> modifiers = snapshotWrapper.getModifiers();
                 for (ServerUpdateAttributesPacket.PropertyModifier modifier : modifiers) {
-                    final ResourceLocation name = modifier.getName();
+                    final ResourceLocationI name = modifier.getName();
                     if (name.getKey().equals(SPRINTING_MODIFIER_UUID.toString()) || name.getKey().equals("sprinting")) {
                         found = true;
                         break;

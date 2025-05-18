@@ -31,7 +31,7 @@ import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.nmsutil.ReachUtils;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import com.github.retrooper.packetevents.protocol.teleport.RelativeFlag;
 import ac.grim.grimac.api.packet.types.server.play.ServerAttachEntityPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityTeleportPacket;
@@ -219,9 +219,9 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
                 if (player.compensatedEntities.serverPlayerVehicle != null) {
                     // Dismount player from vehicle
                     if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
-                        player.user.sendPacket(new ServerSetPassengersPacket(vehicleId, new int[2]));
+                        player.user.sendPacket(ServerSetPassengersPacket.from(vehicleId, new int[2]));
                     } else {
-                        player.user.sendPacket(new ServerAttachEntityPacket(vehicleId, -1, false));
+                        player.user.sendPacket(ServerAttachEntityPacket.from(vehicleId, -1, false));
                     }
 
                     // Stop the player from being able to teleport vehicles and simply re-enter them to continue,

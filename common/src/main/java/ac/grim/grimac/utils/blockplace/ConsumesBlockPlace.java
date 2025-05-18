@@ -2,6 +2,7 @@ package ac.grim.grimac.utils.blockplace;
 
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.item.PacketItemTypes;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.api.packet.world.enums.Attachment;
 import ac.grim.grimac.player.GrimPlayer;
@@ -9,7 +10,6 @@ import ac.grim.grimac.utils.anticheat.update.BlockPlace;
 import ac.grim.grimac.utils.collisions.AxisUtil;
 import ac.grim.grimac.utils.latency.CompensatedWorld;
 import ac.grim.grimac.utils.nmsutil.Materials;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.ItemTags;

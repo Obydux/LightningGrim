@@ -17,7 +17,7 @@ import ac.grim.grimac.utils.nmsutil.CheckIfChunksLoaded;
 import ac.grim.grimac.utils.nmsutil.Collisions;
 import ac.grim.grimac.utils.nmsutil.FluidTypeFlowing;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 
@@ -167,7 +167,7 @@ public final class PlayerBaseTick {
                 float percentFrozen = (float) Math.min(i, ticksToFreeze) / (float) ticksToFreeze;
                 float percentFrozenReducedToSpeed = -0.05F * percentFrozen;
 
-                property.get().getModifiers().add(new ServerUpdateAttributesPacket.PropertyModifier(CompensatedEntities.SNOW_MODIFIER_UUID, percentFrozenReducedToSpeed, ServerUpdateAttributesPacket.PropertyModifier.Operation.ADDITION));
+                property.get().getModifiers().add(ServerUpdateAttributesPacket.PropertyModifier.from(CompensatedEntities.SNOW_MODIFIER_UUID, percentFrozenReducedToSpeed, ServerUpdateAttributesPacket.PropertyModifier.Operation.ADDITION));
                 playerSpeed.recalculate();
             }
         }

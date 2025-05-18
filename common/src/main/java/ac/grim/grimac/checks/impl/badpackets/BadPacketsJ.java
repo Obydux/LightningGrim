@@ -1,5 +1,6 @@
 package ac.grim.grimac.checks.impl.badpackets;
 
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
@@ -10,7 +11,6 @@ import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerUseItemPacket;
 
 import java.util.ArrayList;

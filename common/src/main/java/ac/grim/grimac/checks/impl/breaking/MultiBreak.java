@@ -1,6 +1,7 @@
 package ac.grim.grimac.checks.impl.breaking;
 
 import ac.grim.grimac.api.packet.player.enums.DiggingAction;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
@@ -10,7 +11,6 @@ import ac.grim.grimac.utils.anticheat.MessageUtil;
 import ac.grim.grimac.utils.anticheat.update.BlockBreak;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 
 import java.util.ArrayList;

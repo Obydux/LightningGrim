@@ -2,6 +2,7 @@ package ac.grim.grimac.utils.data.packetentity;
 
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.potion.PotionType;
 import ac.grim.grimac.checks.impl.sprint.SprintD;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
@@ -10,10 +11,9 @@ import ac.grim.grimac.utils.inventory.EnchantmentHelper;
 import ac.grim.grimac.utils.math.GrimMath;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketEnchantmentTypes;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
-import com.github.retrooper.packetevents.protocol.potion.PotionType;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import com.github.retrooper.packetevents.protocol.potion.PotionTypes;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 import lombok.Getter;
@@ -70,7 +70,7 @@ public class PacketEntitySelf extends PacketEntity {
         });
 
         final ValuedAttribute movementSpeed = ValuedAttribute.ranged(Attributes.MOVEMENT_SPEED, 0.1f, 0, 1024);
-        movementSpeed.with(new ServerUpdateAttributesPacket.Property(Attributes.MOVEMENT_SPEED, 0.1f, new ArrayList<>()));
+        movementSpeed.with(ServerUpdateAttributesPacket.Property.from(Attributes.MOVEMENT_SPEED, 0.1f, new ArrayList<>()));
         trackAttribute(movementSpeed);
         trackAttribute(ValuedAttribute.ranged(Attributes.ATTACK_SPEED, 4, 0, 1024)
                 .requiredVersion(player, PacketClientVersions.V_1_9));

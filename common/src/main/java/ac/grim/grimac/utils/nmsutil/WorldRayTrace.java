@@ -2,6 +2,7 @@ package ac.grim.grimac.utils.nmsutil;
 
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.player.GrimPlayer;
@@ -13,7 +14,6 @@ import ac.grim.grimac.utils.data.HitData;
 import ac.grim.grimac.utils.data.Pair;
 import ac.grim.grimac.utils.math.GrimMath;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 

@@ -8,7 +8,7 @@ import ac.grim.grimac.utils.inventory.Inventory;
 import ac.grim.grimac.utils.inventory.slot.ResultSlot;
 import ac.grim.grimac.utils.inventory.slot.Slot;
 import ac.grim.grimac.utils.math.GrimMath;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;

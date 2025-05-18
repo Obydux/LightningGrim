@@ -6,8 +6,7 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.protocol.player.GameMode;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import ac.grim.grimac.api.packet.player.enums.GameMode;
 
 @CheckData(name = "BadPacketsC", description = "Interacted with self")
 public class BadPacketsC extends Check implements PacketCheck {
