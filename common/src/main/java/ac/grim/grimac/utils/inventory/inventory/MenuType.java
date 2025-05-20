@@ -1,6 +1,6 @@
 package ac.grim.grimac.utils.inventory.inventory;
 
-import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.PacketServerVersion;
 import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.inventory.Inventory;
@@ -40,7 +40,7 @@ public enum MenuType {
     private static final MenuType[] MENU_BY_ID_ARRAY;
 
     static {
-        ServerVersion version = ServerVersions.getServerVersion();
+        PacketServerVersion version = ServerVersions.getServerVersion();
         MenuType[] menuTypes = MenuType.values();
 
         int menuIdLimit;
@@ -65,7 +65,7 @@ public enum MenuType {
             return UNKNOWN;
         }
 
-        ServerVersion version = ServerVersions.getServerVersion();
+        PacketServerVersion version = ServerVersions.getServerVersion();
         // versions under 1.20.3
         if (version.isOlderThan(ServerVersions.V_1_20_3)) { // TODO: Can this be moved to the static block?
             if (id >= 7) {

@@ -1,6 +1,6 @@
 package ac.grim.grimac.platform.bukkit.manager;
 
-import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.PacketServerVersion;
 import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.platform.manager.ItemResetHandler;
 import ac.grim.grimac.api.platform.player.PlatformPlayer;
@@ -28,7 +28,7 @@ public class BukkitItemResetHandler implements ItemResetHandler {
 
     @SneakyThrows
     private @NotNull ItemUsageReset createItemUsageResetFunction() {
-        ServerVersion version = ServerVersions.getServerVersion();
+        PacketServerVersion version = ServerVersions.getServerVersion();
         if (version.isNewerThan(ServerVersions.V_1_17) && PaperUtils.PAPER) {
             if (version.isOlderThan(ServerVersions.V_1_19)) {
                 return LivingEntity::clearActiveItem;

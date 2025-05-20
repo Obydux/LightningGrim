@@ -45,8 +45,8 @@ dependencies {
     api(libs.adventure.text.minimessage)
     api(libs.jetbrains.annotations)
 
-    api(project(":api"))
-    api(project(":api:packet"))
+    implementation(project(":api"))
+    implementation(project(":api:packetevents"))
 
     compileOnly(libs.floodgate.api)
     compileOnly(libs.via.version.api)

@@ -4,7 +4,7 @@ import ac.grim.grimac.api.packet.ResourceLocationI;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
-import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.PacketServerVersion;
 import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.server.play.ServerTagsPacket;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
@@ -30,7 +30,7 @@ public final class SyncedTags {
     public static final ResourceLocationI NEEDS_IRON_TOOL = ResourceLocationI.minecraft("needs_iron_tool");
     public static final ResourceLocationI NEEDS_STONE_TOOL = ResourceLocationI.minecraft("needs_stone_tool");
     public static final ResourceLocationI SWORD_EFFICIENT = ResourceLocationI.minecraft("sword_efficient");
-    private static final ServerVersion VERSION = ServerVersions.getServerVersion();
+    private static final PacketServerVersion VERSION = ServerVersions.getServerVersion();
     private static final ResourceLocationI BLOCK = VERSION.isNewerThanOrEquals(ServerVersions.V_1_21) ? ResourceLocationI.minecraft("block") : ResourceLocationI.minecraft("blocks");
     private final GrimPlayer player;
     private final Map<ResourceLocationI, Map<ResourceLocationI, SyncedTag<?>>> synced;
@@ -40,7 +40,6 @@ public final class SyncedTags {
         this.synced = new HashMap<>();
         PacketClientVersion version = player.getClientVersion();
         trackTags(BLOCK, id -> PacketStateTypes.getById(VERSION.toClientVersion(), id),
-                // // TODO (Packet Rewrite) fix hacky cast
                 SyncedTag.<PacketStateType>builder(CLIMBABLE).defaults(BlockTags.CLIMBABLE.getStates()).supported(version.isNewerThanOrEquals(PacketClientVersions.V_1_16)),
                 SyncedTag.<PacketStateType>builder(MINEABLE_AXE).defaults(BlockTags.MINEABLE_AXE.getStates()).supported(version.isNewerThanOrEquals(PacketClientVersions.V_1_17)),
                 SyncedTag.<PacketStateType>builder(MINEABLE_PICKAXE).defaults(BlockTags.MINEABLE_PICKAXE.getStates()).supported(version.isNewerThanOrEquals(PacketClientVersions.V_1_17)),

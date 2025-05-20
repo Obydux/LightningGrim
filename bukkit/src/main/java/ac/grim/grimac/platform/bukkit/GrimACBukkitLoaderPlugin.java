@@ -2,7 +2,7 @@ package ac.grim.grimac.platform.bukkit;
 
 import ac.grim.grimac.api.lazy.LazyHolder;
 import ac.grim.grimac.api.packet.MCPacketAPI;
-import ac.grim.grimac.api.packet.impl.pe.PEPacketAPI;
+import ac.grim.grimac.api.packet.pe.PEPacketAPI;
 import ac.grim.grimac.api.platform.CoreLoader;
 import ac.grim.grimac.api.platform.init.Initable;
 import ac.grim.grimac.api.plugin.BasicGrimPlugin;

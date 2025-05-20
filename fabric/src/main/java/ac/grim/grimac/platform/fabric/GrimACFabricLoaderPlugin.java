@@ -3,8 +3,8 @@ package ac.grim.grimac.platform.fabric;
 import ac.grim.grimac.api.GrimAbstractAPI;
 import ac.grim.grimac.api.lazy.LazyHolder;
 import ac.grim.grimac.api.packet.MCPacketAPI;
-import ac.grim.grimac.api.packet.impl.pe.PEPacketAPI;
-import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.pe.PEPacketAPI;
+import ac.grim.grimac.api.packet.protocol.version.server.PacketServerVersion;
 import ac.grim.grimac.api.plugin.BasicGrimPlugin;
 import ac.grim.grimac.api.GrimAPIProvider;
 import ac.grim.grimac.api.plugin.GrimPlugin;
@@ -161,7 +161,7 @@ public abstract class GrimACFabricLoaderPlugin implements PlatformLoader {
         return fabricMessageUtil;
     }
 
-    public abstract ServerVersion getNativeVersion();
+    public abstract PacketServerVersion getNativeVersion();
 
     @Override
     public MCPacketAPI getMCPacketAPI() {

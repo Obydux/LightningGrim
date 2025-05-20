@@ -1,6 +1,6 @@
 package ac.grim.grimac.platform.fabric.mc1194;
 
-import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.PacketServerVersion;
 import ac.grim.grimac.api.platform.PlatformServer;
 import ac.grim.grimac.api.platform.manager.ParserDescriptorFactory;
 import ac.grim.grimac.platform.fabric.mc1161.command.Fabric1161PlayerSelectorAdapter;
@@ -47,7 +47,7 @@ public class GrimACFabric1190LoaderPlugin extends GrimACFabric1170LoaderPlugin {
     }
 
     @Override
-    public ServerVersion getNativeVersion() {
+    public PacketServerVersion getNativeVersion() {
         return ServerVersions.V_1_19_4;
     }
 }

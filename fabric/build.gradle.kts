@@ -77,8 +77,8 @@ allprojects {
         }
         modImplementation(libsx.findLibrary("fabric-loader").get())
 
-        api(project(":api"))
-        api(project(":api:packet"))
+        implementation(project(":api"))
+        implementation(project(":api:packetevents"))
     }
 
     publishing.publications.create<MavenPublication>("maven") {

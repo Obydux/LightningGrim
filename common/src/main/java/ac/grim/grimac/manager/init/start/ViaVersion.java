@@ -1,7 +1,7 @@
 package ac.grim.grimac.manager.init.start;
 
 import ac.grim.grimac.GrimAPI;
-import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.PacketServerVersion;
 import ac.grim.grimac.api.platform.init.StartableInitable;
 import ac.grim.grimac.api.util.LogUtil;
 import ac.grim.grimac.utils.reflection.ViaVersionUtil;
@@ -14,7 +14,7 @@ public class ViaVersion implements StartableInitable {
     public void start() {
         if (!ViaVersionUtil.isAvailable()) return;
 
-        ServerVersion serverVersion = ServerVersions.getServerVersion();
+        PacketServerVersion serverVersion = ServerVersions.getServerVersion();
 
         if (Via.getConfig().getValues().containsKey("fix-1_21-placement-rotation") && Via.getConfig().fix1_21PlacementRotation() && serverVersion.isOlderThan(ServerVersions.V_1_21)) {
             LogUtil.error("GrimAC has detected that you are using ViaVersion with the `fix-1_21-placement-rotation` option enabled.");

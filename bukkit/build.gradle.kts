@@ -45,8 +45,8 @@ dependencies {
     implementation(libs.adventure.platform.bukkit)
 
     shadowCommon(project(":common", "default"))
-    api(project(":api"))
-    api(project(":api:packet"))
+    implementation(project(":api"))
+    implementation(project(":api:packetevents"))
 }
 
 bukkit {
