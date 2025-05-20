@@ -2,14 +2,13 @@ package ac.grim.grimac.platform.bukkit.initables;
 
 import ac.grim.grimac.api.GrimAPIProvider;
 import ac.grim.grimac.api.GrimUser;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.platform.Platform;
 import ac.grim.grimac.api.platform.init.AbstractTickEndEvent;
 import ac.grim.grimac.api.util.LogUtil;
 import ac.grim.grimac.platform.bukkit.player.BukkitPlatformPlayer;
 import ac.grim.grimac.platform.bukkit.utils.list.HookedListWrapper;
 import ac.grim.grimac.platform.bukkit.utils.reflection.PaperUtils;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.util.reflection.Reflection;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import org.bukkit.Bukkit;
@@ -30,7 +29,7 @@ public class BukkitTickEndEvent extends AbstractTickEndEvent implements Listener
         if (!super.shouldInjectEndTick()) {
             return;
         }
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_11_2) && !Boolean.getBoolean("paper.explicit-flush")) {
+        if (ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_11_2) && !Boolean.getBoolean("paper.explicit-flush")) {
             LogUtil.warn("Reach.enable-post-packet=true but paper.explicit-flush=false, add \"-Dpaper.explicit-flush=true\" to your server's startup flags for fully functional extra reach accuracy.");
         }
         // this is necessary for folia

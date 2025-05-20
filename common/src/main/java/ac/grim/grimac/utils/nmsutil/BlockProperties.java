@@ -5,18 +5,18 @@ import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.MainSupportingBlockData;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityHorse;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityStrider;
 import ac.grim.grimac.utils.math.GrimMath;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.item.PacketEnchantmentTypes;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 
 public class BlockProperties {
     public static float getFrictionInfluencedSpeed(float f, GrimPlayer player) {
@@ -178,7 +178,7 @@ public class BlockProperties {
         // This is the 1.16.0 and 1.16.1 method for detecting if the player is on soul speed
         if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_16) && player.getClientVersion().isOlderThanOrEquals(PacketClientVersions.V_1_16_1)) {
             PacketStateType onBlock = BlockProperties.getOnBlock(player, pos.getX(), pos.getY(), pos.getZ());
-            if (onBlock == PacketStateTypes.SOUL_SAND && player.getInventory().getBoots().getEnchantmentLevel(PacketEnchantmentTypes.SOUL_SPEED, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion()) > 0)
+            if (onBlock == PacketStateTypes.SOUL_SAND && player.getInventory().getBoots().getEnchantmentLevel(PacketEnchantmentTypes.SOUL_SPEED, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion()) > 0)
                 return 1.0f;
         }
 
@@ -198,7 +198,7 @@ public class BlockProperties {
             // On 1.21, let attributes handle this
             if (player.getClientVersion().isOlderThan(PacketClientVersions.V_1_21)
                     && player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_16_2)
-                    && player.getInventory().getBoots().getEnchantmentLevel(PacketEnchantmentTypes.SOUL_SPEED, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion()) > 0)
+                    && player.getInventory().getBoots().getEnchantmentLevel(PacketEnchantmentTypes.SOUL_SPEED, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion()) > 0)
                 return 1.0f;
             return 0.4f;
         }

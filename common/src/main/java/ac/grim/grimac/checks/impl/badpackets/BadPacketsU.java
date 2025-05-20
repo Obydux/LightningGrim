@@ -1,6 +1,8 @@
 package ac.grim.grimac.checks.impl.badpackets;
 
 import ac.grim.grimac.api.packet.item.PacketItemStack;
+import ac.grim.grimac.api.packet.item.PacketItemTypes;
+import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerBlockPlacementPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3f;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
@@ -9,9 +11,7 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.protocol.item.type.ItemTypes;
 import ac.grim.grimac.api.packet.types.PacketTypes;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 
 @CheckData(name = "BadPacketsU", description = "Sent impossible use item packet")
@@ -29,11 +29,11 @@ public class BadPacketsU extends Check implements PacketCheck {
 
                 // This packet is always sent at (-1, -1, -1) at (0, 0, 0) on the block
                 // except y gets wrapped?
-                final int expectedY = player.getClientVersion().isNewerThanOrEquals(ClientVersion.V_1_8) ? 4095 : 255;
+                final int expectedY = player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_8) ? 4095 : 255;
 
                 final boolean failedItemCheck = packet.getItemStack().isPresent() && isEmpty(packet.getItemStack().get())
                         // ViaVersion can sometimes cause this part of the check to false
-                        && player.getClientVersion().isOlderThan(ClientVersion.V_1_9);
+                        && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_9);
 
                 final ImmutableVector3i pos = packet.getBlockPosition();
                 final ImmutableVector3f cursor = packet.getCursorPosition();
@@ -61,6 +61,6 @@ public class BadPacketsU extends Check implements PacketCheck {
     }
 
     private boolean isEmpty(PacketItemStack itemStack) {
-        return itemStack.getType() == null || itemStack.getType() == ItemTypes.AIR;
+        return itemStack.getType() == null || itemStack.getType() == PacketItemTypes.AIR;
     }
 }

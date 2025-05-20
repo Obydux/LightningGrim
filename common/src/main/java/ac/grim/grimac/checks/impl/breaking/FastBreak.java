@@ -4,6 +4,7 @@ import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.player.enums.DiggingAction;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.checks.Check;
@@ -14,7 +15,6 @@ import ac.grim.grimac.utils.anticheat.update.BlockBreak;
 import ac.grim.grimac.utils.math.GrimMath;
 import ac.grim.grimac.utils.nmsutil.BlockBreakSpeed;
 import ac.grim.grimac.utils.reflection.ViaVersionUtil;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 
@@ -29,7 +29,7 @@ public class FastBreak extends Check implements BlockBreakCheck {
     // For some reason these states flag and I don't know why.
     // Better to just exempt to not annoy legit players.
     private static final Set<PacketStateType> EXEMPT_STATES = Set.of();
-    private final boolean clientOlderThanServer = PacketEvents.getAPI().getServerManager().getVersion().getProtocolVersion() > player.getClientVersion().getProtocolVersion();
+    private final boolean clientOlderThanServer = ServerVersions.getServerVersion().getProtocolVersion() > player.getClientVersion().getProtocolVersion();
 
     public FastBreak(GrimPlayer playerData) {
         super(playerData);

@@ -3,14 +3,13 @@ package ac.grim.grimac.utils.data.packetentity;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.potion.PotionType;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.checks.impl.sprint.SprintD;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.attribute.ValuedAttribute;
 import ac.grim.grimac.utils.inventory.EnchantmentHelper;
 import ac.grim.grimac.utils.math.GrimMath;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketEnchantmentTypes;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
@@ -88,7 +87,7 @@ public class PacketEntitySelf extends PacketEntity {
                 .withGetRewriter(value -> {
                     // Server versions older than 1.20.5 don't send the attribute, if the player is in creative then assume legacy max reach distance.
                     if (player.gamemode == GameMode.CREATIVE
-                            && PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_20_5)) {
+                            && ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_20_5)) {
                         return 5.0;
                     }
                     // < 1.20.5 is unchanged due to requiredVersion, otherwise controlled by the server
@@ -103,14 +102,14 @@ public class PacketEntitySelf extends PacketEntity {
                     }
 
                     // On clients < 1.21, use depth strider enchant level always
-                    final double depthStrider = EnchantmentHelper.getMaximumEnchantLevel(player.getInventory(), PacketEnchantmentTypes.DEPTH_STRIDER, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion());
+                    final double depthStrider = EnchantmentHelper.getMaximumEnchantLevel(player.getInventory(), PacketEnchantmentTypes.DEPTH_STRIDER, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion());
                     if (player.getClientVersion().isOlderThan(PacketClientVersions.V_1_21)) {
                         return depthStrider;
                     }
 
                     // Server is older than 1.21, but player is on 1.21+ so return depth strider value / 3 to simulate via
                     // https://github.com/ViaVersion/ViaVersion/blob/dc503cd613f5cf00a6f11b78e52b1a76a42acf91/common/src/main/java/com/viaversion/viaversion/protocols/v1_20_5to1_21/storage/EfficiencyAttributeStorage.java#L34
-                    if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_21)) {
+                    if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_21)) {
                         return depthStrider / 3;
                     }
 
@@ -133,7 +132,7 @@ public class PacketEntitySelf extends PacketEntity {
                     }
 
                     // https://github.com/ViaVersion/ViaVersion/blob/dc503cd613f5cf00a6f11b78e52b1a76a42acf91/common/src/main/java/com/viaversion/viaversion/protocols/v1_20_5to1_21/storage/EfficiencyAttributeStorage.java#L32
-                    if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_21)) {
+                    if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_21)) {
                         return clamped;
                     }
 

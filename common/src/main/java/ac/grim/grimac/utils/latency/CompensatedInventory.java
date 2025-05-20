@@ -1,10 +1,12 @@
 package ac.grim.grimac.utils.latency;
 
 import ac.grim.grimac.api.packet.item.PacketItemStack;
+import ac.grim.grimac.api.packet.item.PacketItemType;
 import ac.grim.grimac.api.packet.item.PacketItemTypes;
 import ac.grim.grimac.api.packet.player.enums.DiggingAction;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.client.play.ClientClickWindowPacket;
 import ac.grim.grimac.api.packet.types.client.play.ClientCreativeInventoryActionPacket;
@@ -21,10 +23,7 @@ import ac.grim.grimac.utils.inventory.inventory.AbstractContainerMenu;
 import ac.grim.grimac.utils.inventory.inventory.MenuType;
 import ac.grim.grimac.utils.inventory.inventory.NotImplementedMenu;
 import ac.grim.grimac.utils.lists.CorrectingPlayerInventoryStorage;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.item.type.ItemType;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.types.server.play.ServerOpenHorseWindowPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerOpenWindowPacket;
@@ -83,7 +82,7 @@ public class CompensatedInventory extends Check implements PacketCheck {
             return packetSlot - 36;
         }
         // 45 is offhand is packet, it is 40 in bukkit
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9) && packetSlot == 45) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9) && packetSlot == 45) {
             return 40;
         }
         return -1;
@@ -136,7 +135,7 @@ public class CompensatedInventory extends Check implements PacketCheck {
     }
 
     public PacketItemStack getOffHand() {
-        if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9))
+        if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9))
             return PacketItemStack.EMPTY;
         PacketItemStack item = isPacketInventoryActive || player.platformPlayer == null ? inventory.getOffhand() :
                 player.platformPlayer.getInventory().getItemInOffHand();
@@ -178,7 +177,7 @@ public class CompensatedInventory extends Check implements PacketCheck {
         };
     }
 
-    public boolean hasItemType(ItemType type) {
+    public boolean hasItemType(PacketItemType type) {
         if (isPacketInventoryActive || player.platformPlayer == null)
             return inventory.hasItemType(type);
 
@@ -270,7 +269,7 @@ public class CompensatedInventory extends Check implements PacketCheck {
             if (player.gamemode != GameMode.CREATIVE) return;
 
             boolean valid = action.getSlot() >= 1 &&
-                    (PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_8) ?
+                    (ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_8) ?
                             action.getSlot() <= 45 : action.getSlot() < 45);
 
             if (valid) {
@@ -344,7 +343,7 @@ public class CompensatedInventory extends Check implements PacketCheck {
             MenuType menuType = MenuType.getMenuType(open.getType());
 
             AbstractContainerMenu newMenu;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_14)) {
                 newMenu = MenuType.getMenuFromID(player, inventory, menuType);
             } else {
                 newMenu = MenuType.getMenuFromString(player, inventory, open.getLegacyType(), open.getLegacySlots(), open.getHorseId());

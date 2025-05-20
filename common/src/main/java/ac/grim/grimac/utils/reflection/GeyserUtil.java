@@ -1,10 +1,10 @@
 package ac.grim.grimac.utils.reflection;
 
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.util.reflection.Reflection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class GeyserUtil {
@@ -37,10 +37,10 @@ public class GeyserUtil {
                 }
             }
             if (GEYSER_API_METHOD == null) {
-                GEYSER_API_METHOD = Reflection.getMethodExact(GEYSER_CLASS, "api", null);
+                GEYSER_API_METHOD = getMethodExact(GEYSER_CLASS, "api", null);
             }
             if (CONNECTION_BY_UUID_METHOD == null) {
-                CONNECTION_BY_UUID_METHOD = Reflection.getMethod(GEYSER_API_CLASS, "connectionByUuid", 0);
+                CONNECTION_BY_UUID_METHOD = getMethod(GEYSER_API_CLASS, "connectionByUuid", 0);
             }
             Object apiInstance = null;
             try {
@@ -59,5 +59,41 @@ public class GeyserUtil {
             return connection != null;
         }
         return false;
+    }
+
+    // TODO (Packet Rewrite) Replace usage of reflection with compiling against API
+    public static Method getMethodExact(final Class<?> cls, final String name, Class<?> returning, Class<?>... params) {
+        if (cls == null) {
+            return null;
+        }
+        for (final Method m : cls.getDeclaredMethods()) {
+            if (m.getName().equals(name)
+                    && Arrays.equals(m.getParameterTypes(), params) &&
+                    (returning == null || m.getReturnType().equals(returning))) {
+                m.setAccessible(true);
+                return m;
+            }
+        }
+        if (cls.getSuperclass() != null) {
+            return getMethodExact(cls.getSuperclass(), name, null, params);
+        }
+        return null;
+    }
+
+    public static Method getMethod(final Class<?> cls, final String name, final int index) {
+        if (cls == null) {
+            return null;
+        }
+        int currentIndex = 0;
+        for (final Method m : cls.getDeclaredMethods()) {
+            if (m.getName().equals(name) && index == currentIndex++) {
+                m.setAccessible(true);
+                return m;
+            }
+        }
+        if (cls.getSuperclass() != null) {
+            return getMethod(cls.getSuperclass(), name, index);
+        }
+        return null;
     }
 }

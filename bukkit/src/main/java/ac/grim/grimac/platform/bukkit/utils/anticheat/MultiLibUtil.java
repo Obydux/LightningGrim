@@ -1,7 +1,6 @@
 package ac.grim.grimac.platform.bukkit.utils.anticheat;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
@@ -9,7 +8,7 @@ import java.lang.reflect.Method;
 public class MultiLibUtil {
 
     public final static Method externalPlayerMethod = getMethod(Player.class, "isExternalPlayer");
-    private static final boolean IS_PRE_1_18 = PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_18);
+    private static final boolean IS_PRE_1_18 = ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_18);
 
     public static Method getMethod(Class<?> clazz, String methodName) {
         try {

@@ -2,6 +2,7 @@ package ac.grim.grimac.manager.init.start;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
@@ -12,7 +13,6 @@ import ac.grim.grimac.utils.data.VectorData;
 import ac.grim.grimac.utils.lists.EvictingQueue;
 import ac.grim.grimac.utils.math.GrimMath;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.PacketEvents;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.AllArgsConstructor;
@@ -78,7 +78,7 @@ public final class SuperDebug extends Check implements PostPredictionCheck {
         sb.append("\nClient Brand: ");
         sb.append(player.getBrand());
         sb.append("\nServer Version: ");
-        sb.append(PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
+        sb.append(ServerVersions.getServerVersion().getReleaseName());
         sb.append("\nPing: ");
         sb.append(player.getTransactionPing());
         sb.append("ms\n\n");

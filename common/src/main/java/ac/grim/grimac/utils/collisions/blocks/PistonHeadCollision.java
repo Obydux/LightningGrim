@@ -2,13 +2,12 @@ package ac.grim.grimac.utils.collisions.blocks;
 
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionFactory;
 import ac.grim.grimac.utils.collisions.datatypes.ComplexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HexCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 
 public class PistonHeadCollision implements CollisionFactory {
@@ -23,19 +22,19 @@ public class PistonHeadCollision implements CollisionFactory {
         //
         // Avoid isShort() call pre-1.13
         // Follow the server's version on 1.13+ clients, as that's the correct way to do it
-        double longAmount = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13) && block.isShort() ? 0 : 4;
+        double longAmount = ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13) && block.isShort() ? 0 : 4;
 
         // And 1.9, 1.10 clients always have "long" piston collision boxes - even if the piston is "short"
         // 1.11 and 1.12 clients differentiate short and long piston collision boxes - but I can never get long heads in multiplayer
         // They show up in the debug world, but my client crashes every time I join the debug world in multiplayer in these two version
         // So just group together 1.9-1.12 into all having long pistons
-        if (version.isOlderThanOrEquals(PacketClientVersions.V_1_12_2) || PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_12_2))
+        if (version.isOlderThanOrEquals(PacketClientVersions.V_1_12_2) || ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_12_2))
             longAmount = 4;
 
 
         // 1.8 and 1.7 clients always have "short" piston collision boxes
         // Apply last to overwrite other long amount setters
-        if (version.isOlderThan(PacketClientVersions.V_1_9) || PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9))
+        if (version.isOlderThan(PacketClientVersions.V_1_9) || ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9))
             longAmount = 0;
 
 

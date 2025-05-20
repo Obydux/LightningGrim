@@ -22,7 +22,7 @@ import ac.grim.grimac.utils.collisions.datatypes.OffsetCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.Face;
 import ac.grim.grimac.api.packet.world.enums.Half;
 import ac.grim.grimac.api.packet.world.enums.Leaves;

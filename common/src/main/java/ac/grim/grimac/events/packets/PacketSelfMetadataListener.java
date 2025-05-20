@@ -4,17 +4,16 @@ import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityAnimationPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityMetadataPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerUseBedPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.nmsutil.WatchableIndexUtil;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.entity.EntityData;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
@@ -62,7 +61,7 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
                 // to the player on old servers... because the player just overrides this pose the very next tick
                 //
                 // It makes no sense to me why mojang is doing this, it has to be a bug.
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_14)) {
                     List<EntityData<?>> metadataStuff = entityMetadata.getEntityMetadata();
 
                     // Remove the pose metadata from the list
@@ -97,7 +96,7 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
                     }
                 }
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9)) {
                     EntityData<?> gravity = WatchableIndexUtil.getIndex(entityMetadata.getEntityMetadata(), 5);
 
                     if (gravity != null) {
@@ -116,7 +115,7 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
                     }
                 }
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_17)) {
                     EntityData<?> frozen = WatchableIndexUtil.getIndex(entityMetadata.getEntityMetadata(), 7);
 
                     if (frozen != null) {
@@ -127,12 +126,12 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
                     }
                 }
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_14)) {
                     int id;
 
-                    if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+                    if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                         id = 12; // Added in 1.14 with an initial ID of 12
-                    } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+                    } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                         id = 13; // 1.15 changed this to 13
                     } else {
                         id = 14; // 1.17 changed this to 14
@@ -156,9 +155,9 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
                     }
                 }
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13) &&
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13) &&
                         player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9)) {
-                    EntityData<?> riptide = WatchableIndexUtil.getIndex(entityMetadata.getEntityMetadata(), PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17) ? 8 : 7);
+                    EntityData<?> riptide = WatchableIndexUtil.getIndex(entityMetadata.getEntityMetadata(), ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_17) ? 8 : 7);
 
                     // This one only present if it changed
                     if (riptide != null && riptide.getValue() instanceof Byte) {
@@ -184,7 +183,7 @@ public class PacketSelfMetadataListener extends PacketListenerAbstract {
                         // - Server: Okay, I will not make you eat or stop eating because it makes sense that the server doesn't control a player's eating.
                         //
                         // This was added for stuff like shields, but IMO it really should be all client sided
-                        if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                        if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9)) {
                             boolean isActive = (((byte) riptide.getValue()) & 1) > 0;
                             boolean isOffhand = (((byte) riptide.getValue()) & 2) > 0;
 

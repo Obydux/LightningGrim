@@ -2,12 +2,11 @@ package ac.grim.grimac.events.packets.worldreader;
 
 import ac.grim.grimac.api.packet.types.SendablePacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
+import ac.grim.grimac.api.packet.world.chunk.v1_9.ChunkV1_9;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.protocol.world.chunk.impl.v1_16.Chunk_v1_9;
-import com.github.retrooper.packetevents.protocol.world.chunk.palette.DataPalette;
-import com.github.retrooper.packetevents.protocol.world.chunk.palette.ListPalette;
-import com.github.retrooper.packetevents.protocol.world.chunk.palette.PaletteType;
-import com.github.retrooper.packetevents.protocol.world.chunk.storage.BitStorage;
+import ac.grim.grimac.api.packet.world.chunk.palette.DataPaletteHolder;
+import ac.grim.grimac.api.packet.world.chunk.palette.ListPalette;
+import ac.grim.grimac.api.packet.world.chunk.storage.BitStorage;
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
@@ -32,7 +31,7 @@ public class PacketWorldReaderEight extends BasePacketWorldReader {
 
         for (int column = 0; column < columns; column++) {
             BitSet bitset = BitSet.valueOf(new long[]{mask[column]});
-            Chunk_v1_9[] chunkSections = new Chunk_v1_9[16];
+            ChunkV1_9[] chunkSections = new ChunkV1_9[16];
             readChunk(buffer, chunkSections, bitset);
 
             // 256 is the biome data at the end of the array
@@ -56,7 +55,7 @@ public class PacketWorldReaderEight extends BasePacketWorldReader {
         BitSet mask = BitSet.valueOf(new long[]{(long) wrapper.readUnsignedShort()});
         int size = wrapper.readVarInt(); // Ignore size
 
-        final Chunk_v1_9[] chunks = new Chunk_v1_9[16];
+        final ChunkV1_9[] chunks = new ChunkV1_9[16];
         this.readChunk((ByteBuf) event.getByteBuf(), chunks, mask);
 
         this.addChunkToCache(event, player, chunks, groundUp, chunkX, chunkZ);
@@ -64,7 +63,7 @@ public class PacketWorldReaderEight extends BasePacketWorldReader {
         event.setLastUsedWrapper(null); // Make sure this incomplete packet isn't sent
     }
 
-    private void readChunk(final ByteBuf buf, final Chunk_v1_9[] chunks, final BitSet set) {
+    private void readChunk(final ByteBuf buf, final ChunkV1_9[] chunks, final BitSet set) {
         for (int ind = 0; ind < 16; ++ind) {
             if (set.get(ind)) {
                 chunks[ind] = readChunk(buf);
@@ -72,10 +71,10 @@ public class PacketWorldReaderEight extends BasePacketWorldReader {
         }
     }
 
-    public Chunk_v1_9 readChunk(final ByteBuf in) {
-        ListPalette palette = new ListPalette(4);
-        BitStorage storage = new BitStorage(4, 4096);
-        DataPalette dataPalette = new DataPalette(palette, storage, PaletteType.CHUNK);
+    public ChunkV1_9 readChunk(final ByteBuf in) {
+        ListPalette palette = ListPalette.from(4);
+        BitStorage storage = BitStorage.from(4, 4096);
+        DataPaletteHolder dataPalette = DataPaletteHolder.from(palette, storage);
 
         palette.stateToId(0); // Make sure to init chunk as air
 
@@ -101,13 +100,15 @@ public class PacketWorldReaderEight extends BasePacketWorldReader {
                 lastNext = next;
                 next = (short) (((next & 0xFF00) >> 8) | (next << 8)); // Flip endian bytes, computations are cheap compared to memory access
                 dataPalette.set(i & 15, (i >> 8) & 15, (i >> 4) & 15, next); // Allow it to resize
-                lastID = dataPalette.storage.get(i); // Get stored ID
+                // TODO (Packet Rewrite) confirm new code is correct
+                // lastID = dataPalette.storage.get(i); // Get stored ID
+                lastID = storage.get(i);
                 continue;
             }
-
-            dataPalette.storage.set(i, lastID);
+            // TODO (Packet Rewrite) confirm new code is correct
+            storage.set(i, lastID);
         }
 
-        return new Chunk_v1_9(blockCount, dataPalette);
+        return ChunkV1_9.from(blockCount, dataPalette);
     }
 }

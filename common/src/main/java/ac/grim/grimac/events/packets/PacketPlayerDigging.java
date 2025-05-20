@@ -12,10 +12,9 @@ import ac.grim.grimac.api.packet.types.client.play.ClientPlayerDiggingPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.checks.impl.movement.NoSlow;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import com.github.retrooper.packetevents.protocol.component.ComponentTypes;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.FoodProperties;
 import com.github.retrooper.packetevents.protocol.component.builtin.item.ItemConsumable;
@@ -73,7 +72,7 @@ public class PacketPlayerDigging extends PacketListenerAbstract {
             if (item.getType() == PacketItemTypes.SPLASH_POTION)
                 return;
             // 1.8 splash potion
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9) && item.getLegacyData() > 16384) {
+            if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9) && item.getLegacyData() > 16384) {
                 return;
             }
 
@@ -116,7 +115,7 @@ public class PacketPlayerDigging extends PacketListenerAbstract {
                 && item.getDamageValue() < item.getMaxDamage() - 1 // Player can't use item if it's "about to break"
                 && (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_13_2)
                 || player.getClientVersion().isOlderThanOrEquals(PacketClientVersions.V_1_8))) {
-            player.packetStateData.setSlowedByUsingItem(item.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion()) <= 0);
+            player.packetStateData.setSlowedByUsingItem(item.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion()) <= 0);
             player.packetStateData.eatingHand = hand;
         }
 
@@ -150,7 +149,7 @@ public class PacketPlayerDigging extends PacketListenerAbstract {
         if (material.hasAttribute(PacketItemAttribute.SWORD)) {
             if (player.getClientVersion().isOlderThanOrEquals(PacketClientVersions.V_1_8))
                 player.packetStateData.setSlowedByUsingItem(true);
-            else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9)) // ViaVersion stuff
+            else if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9)) // ViaVersion stuff
                 player.packetStateData.setSlowedByUsingItem(false);
         }
     }
@@ -167,11 +166,11 @@ public class PacketPlayerDigging extends PacketListenerAbstract {
                 player.packetStateData.setSlowedByUsingItem(false);
                 player.packetStateData.slowedByUsingItemTransaction = player.lastTransactionReceived.get();
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
                     PacketItemStack hand = player.packetStateData.eatingHand == InteractionHand.OFF_HAND ? player.getInventory().getOffHand() : player.getInventory().getHeldItem();
 
                     if (hand.getType() == PacketItemTypes.TRIDENT
-                            && hand.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion()) > 0) {
+                            && hand.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion()) > 0) {
                         player.packetStateData.tryingToRiptide = true;
                     }
                 }
@@ -226,7 +225,7 @@ public class PacketPlayerDigging extends PacketListenerAbstract {
                     ? packetFactory.clientPlayerUseItem(event).getHand()
                     : InteractionHand.MAIN_HAND;
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_8)
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_8)
                     && player.gamemode == GameMode.SPECTATOR)
                 return;
 

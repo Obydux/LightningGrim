@@ -1,5 +1,6 @@
 package ac.grim.grimac.manager.init.start;
 
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.platform.init.StartableInitable;
 import ac.grim.grimac.events.packets.CheckManagerListener;
 import ac.grim.grimac.events.packets.PacketBlockAction;
@@ -21,7 +22,6 @@ import ac.grim.grimac.events.packets.worldreader.PacketWorldReaderEight;
 import ac.grim.grimac.events.packets.worldreader.PacketWorldReaderEighteen;
 import ac.grim.grimac.api.util.LogUtil;
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 
 
 public class PacketManager implements StartableInitable {
@@ -43,13 +43,13 @@ public class PacketManager implements StartableInitable {
         PacketEvents.getAPI().getEventManager().registerListener(new CheckManagerListener());
         PacketEvents.getAPI().getEventManager().registerListener(new PacketPlayerSteer());
 
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
             PacketEvents.getAPI().getEventManager().registerListener(new PacketServerTags());
         }
 
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_18)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_18)) {
             PacketEvents.getAPI().getEventManager().registerListener(new PacketWorldReaderEighteen());
-        } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_8_8)) {
+        } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_8_8)) {
             PacketEvents.getAPI().getEventManager().registerListener(new PacketWorldReaderEight());
         } else {
             PacketEvents.getAPI().getEventManager().registerListener(new BasePacketWorldReader());

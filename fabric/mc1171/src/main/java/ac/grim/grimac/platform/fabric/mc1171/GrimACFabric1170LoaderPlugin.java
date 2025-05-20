@@ -1,5 +1,7 @@
 package ac.grim.grimac.platform.fabric.mc1171;
 
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.platform.PlatformServer;
 import ac.grim.grimac.api.platform.manager.ParserDescriptorFactory;
 import ac.grim.grimac.platform.fabric.GrimACFabricLoaderPlugin;
@@ -15,7 +17,6 @@ import ac.grim.grimac.platform.fabric.mc1161.util.convert.Fabric1161MessageUtil;
 import ac.grim.grimac.platform.fabric.player.FabricPlatformPlayerFactory;
 import ac.grim.grimac.platform.fabric.utils.convert.IFabricConversionUtil;
 import ac.grim.grimac.platform.fabric.utils.message.IFabricMessageUtil;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 
 public class GrimACFabric1170LoaderPlugin extends GrimACFabricLoaderPlugin {
 
@@ -50,6 +51,6 @@ public class GrimACFabric1170LoaderPlugin extends GrimACFabricLoaderPlugin {
 
     @Override
     public ServerVersion getNativeVersion() {
-        return ServerVersion.V_1_17_1;
+        return ServerVersions.V_1_17_1;
     }
 }

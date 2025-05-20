@@ -8,8 +8,7 @@ import ac.grim.grimac.checks.type.PositionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PositionUpdate;
 import ac.grim.grimac.utils.data.CooldownData;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
 
 import java.util.Iterator;
@@ -48,7 +47,7 @@ public class CompensatedCooldown extends Check implements PositionCheck {
     // all the same to us... having a cooldown or not having one
     public boolean hasItem(PacketItemStack item) {
         // 1.21.2+ uses this stupid logic of cooldown groups
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21_2)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_21_2)) {
             PacketComponentItemUseCooldown cooldown = item.getComponentOr(PacketComponentTypes.USE_COOLDOWN, null);
             if (cooldown != null) {
                 final Optional<ResourceLocationI> cooldownGroup = cooldown.getCooldownGroup();

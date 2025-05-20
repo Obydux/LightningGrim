@@ -2,10 +2,10 @@ package ac.grim.grimac.utils.nmsutil;
 
 import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.item.PacketItemTypes;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.math.GrimMath;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.item.PacketEnchantmentTypes;
 
 public class Riptide {
@@ -15,9 +15,9 @@ public class Riptide {
 
         int j;
         if (main.getType() == PacketItemTypes.TRIDENT) {
-            j = main.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion());
+            j = main.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, ServerVersions.getServerVersion().getProtocolVersion());
         } else if (off.getType() == PacketItemTypes.TRIDENT) {
-            j = off.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion());
+            j = off.getEnchantmentLevel(PacketEnchantmentTypes.RIPTIDE, ServerVersions.getServerVersion().getProtocolVersion());
         } else {
             return new Vector3dm(); // Can't riptide
         }

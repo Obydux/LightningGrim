@@ -4,6 +4,8 @@ import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.CollisionData;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
@@ -11,10 +13,7 @@ import ac.grim.grimac.utils.collisions.datatypes.ComplexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HitBoxFactory;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.api.packet.world.enums.North;
 import ac.grim.grimac.api.packet.world.enums.South;
@@ -37,7 +36,7 @@ public class DynamicHitboxWall extends DynamicConnecting implements HitBoxFactor
         int north = 0, south = 0, west = 0, east = 0, up = 0;
 
         if (isModernServer()) {
-            boolean sixteen = PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_16);
+            boolean sixteen = ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_16);
             north = getConnectionValue(state.north(), sixteen);
             east = getConnectionValue(state.east(), sixteen);
             south = getConnectionValue(state.south(), sixteen);
@@ -55,7 +54,7 @@ public class DynamicHitboxWall extends DynamicConnecting implements HitBoxFactor
     }
 
     private boolean isModernServer() {
-        return PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_12_2);
+        return ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_12_2);
     }
 
     private int getConnectionValue(Enum<?> direction, boolean sixteen) {

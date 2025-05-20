@@ -15,6 +15,11 @@ import ac.grim.grimac.api.packet.types.client.play.ClientPlayerDiggingPacket;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.api.packet.world.chunk.PacketChunk;
+import ac.grim.grimac.api.packet.world.chunk.palette.DataPaletteHolder;
+import ac.grim.grimac.api.packet.world.chunk.palette.ListPalette;
+import ac.grim.grimac.api.packet.world.chunk.storage.LegacyFlexibleStorage;
+import ac.grim.grimac.api.packet.world.chunk.v1_18.ChunkV1_18;
+import ac.grim.grimac.api.packet.world.chunk.v1_9.ChunkV1_9;
 import ac.grim.grimac.api.packet.world.enums.North;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.change.BlockModification;
@@ -32,19 +37,12 @@ import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.Collisions;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import com.github.retrooper.packetevents.netty.channel.ChannelHelper;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.chunk.impl.v1_16.Chunk_v1_9;
-import com.github.retrooper.packetevents.protocol.world.chunk.impl.v_1_18.Chunk_v1_18;
-import com.github.retrooper.packetevents.protocol.world.chunk.palette.DataPalette;
-import com.github.retrooper.packetevents.protocol.world.chunk.palette.ListPalette;
-import com.github.retrooper.packetevents.protocol.world.chunk.palette.PaletteType;
-import com.github.retrooper.packetevents.protocol.world.chunk.storage.LegacyFlexibleStorage;
 import ac.grim.grimac.api.packet.world.dimension.PacketDimensionType;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.api.packet.world.enums.Half;
 import ac.grim.grimac.api.packet.world.enums.South;
@@ -69,7 +67,7 @@ import java.util.Set;
 
 // Inspired by https://github.com/GeyserMC/Geyser/blob/master/connector/src/main/java/org/geysermc/connector/network/session/cache/ChunkCache.java
 public class CompensatedWorld implements ICompensatedWorld {
-    public static final PacketClientVersion blockVersion = PacketEvents.getAPI().getServerManager().getVersion().toClientVersion();
+    public static final PacketClientVersion blockVersion = ServerVersions.getServerVersion().toClientVersion();
     private static final PacketBlockState airData = PacketBlockState.getByGlobalId(blockVersion, 0);
     public final GrimPlayer player;
     public final Long2ObjectMap<Column> chunks;
@@ -196,7 +194,7 @@ public class CompensatedWorld implements ICompensatedWorld {
         this.currentlyChangedBlocks = new LinkedList<>(); // Reset variable without changing original
 
         // We don't need to simulate any packets, it is native to the version we are on
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_19)) {
             // Pull the confirmation ID out of the packet
             int confirmationId = 0;
             if (wrapper instanceof ClientPlayerBlockPlacementPacket) {
@@ -255,12 +253,12 @@ public class CompensatedWorld implements ICompensatedWorld {
     }
 
     private static PacketChunk create() {
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_18)) {
-            return new Chunk_v1_18();
-        } else if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_16)) {
-            return new Chunk_v1_9(0, DataPalette.createForChunk());
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_18)) {
+            return ChunkV1_18.from();
+        } else if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_16)) {
+            return ChunkV1_9.from(0, DataPaletteHolder.createForChunk());
         }
-        return new Chunk_v1_9(0, new DataPalette(new ListPalette(4), new LegacyFlexibleStorage(4, 4096), PaletteType.CHUNK));
+        return ChunkV1_9.from(0, DataPaletteHolder.from(ListPalette.from(4), LegacyFlexibleStorage.from(4, 4096)));
     }
 
     public void updateBlock(ImmutableVector3i pos, PacketBlockState state) {
@@ -323,7 +321,7 @@ public class CompensatedWorld implements ICompensatedWorld {
             PacketBlockState otherDoor = getBlock(blockX,
                     blockY + (data.half() == Half.LOWER ? 1 : -1), blockZ);
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
                 if (BlockTags.DOORS.contains(otherDoor.getType())) {
                     otherDoor.setOpen(!otherDoor.isOpen());
                     updateBlock(blockX, blockY + (data.half() == Half.LOWER ? 1 : -1), blockZ, otherDoor.getGlobalId());
@@ -484,7 +482,7 @@ public class CompensatedWorld implements ICompensatedWorld {
             BlockFace badTwo = needed.getCCW();
 
             boolean isPowered = false;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
                 switch (needed) {
                     case DOWN:
                         isPowered = true;
@@ -699,7 +697,7 @@ public class CompensatedWorld implements ICompensatedWorld {
 
     public void setDimension(PacketDimensionType dimension, PacketUser user) {
         // No world height NBT
-        if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_17)) return;
+        if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_17)) return;
 
         minHeight = dimension.getMinY();
         maxHeight = minHeight + dimension.getHeight();

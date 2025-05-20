@@ -1,11 +1,11 @@
 package ac.grim.grimac.platform.bukkit.manager;
 
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.platform.manager.ItemResetHandler;
 import ac.grim.grimac.api.platform.player.PlatformPlayer;
 import ac.grim.grimac.platform.bukkit.player.BukkitPlatformPlayer;
 import ac.grim.grimac.platform.bukkit.utils.reflection.PaperUtils;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
@@ -28,14 +28,14 @@ public class BukkitItemResetHandler implements ItemResetHandler {
 
     @SneakyThrows
     private @NotNull ItemUsageReset createItemUsageResetFunction() {
-        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
-        if (version.isNewerThan(ServerVersion.V_1_17) && PaperUtils.PAPER) {
-            if (version.isOlderThan(ServerVersion.V_1_19)) {
+        ServerVersion version = ServerVersions.getServerVersion();
+        if (version.isNewerThan(ServerVersions.V_1_17) && PaperUtils.PAPER) {
+            if (version.isOlderThan(ServerVersions.V_1_19)) {
                 return LivingEntity::clearActiveItem;
             }
-            Method setLivingEntityFlag = Class.forName(version.isOlderThan(ServerVersion.V_1_20_5) ? "net.minecraft.world.entity.EntityLiving" : "net.minecraft.world.entity.LivingEntity")
-                    .getDeclaredMethod(version.isOlderThan(ServerVersion.V_1_20_5) ? "c" : "setLivingEntityFlag", int.class, boolean.class);
-            Method getHandle = (version.isOlderThan(ServerVersion.V_1_20_5)
+            Method setLivingEntityFlag = Class.forName(version.isOlderThan(ServerVersions.V_1_20_5) ? "net.minecraft.world.entity.EntityLiving" : "net.minecraft.world.entity.LivingEntity")
+                    .getDeclaredMethod(version.isOlderThan(ServerVersions.V_1_20_5) ? "c" : "setLivingEntityFlag", int.class, boolean.class);
+            Method getHandle = (version.isOlderThan(ServerVersions.V_1_20_5)
                     ? Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getClass().getPackageName().split("\\.")[3] + ".entity.CraftPlayer")
                     : Class.forName("org.bukkit.craftbukkit.entity.CraftPlayer")
             ).getMethod("getHandle");
@@ -49,7 +49,7 @@ public class BukkitItemResetHandler implements ItemResetHandler {
             };
         }
 
-        if (version == ServerVersion.V_1_8_8) {
+        if (version == ServerVersions.V_1_8_8) {
             Class<?> EntityHuman = Class.forName("net.minecraft.server.v1_8_R3.EntityHuman");
             Method getHandle = Class.forName("org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer").getMethod("getHandle");
             Method clearActiveItem = EntityHuman.getMethod("bV");
@@ -68,7 +68,7 @@ public class BukkitItemResetHandler implements ItemResetHandler {
         }
 
         String nmsPackage = Bukkit.getServer().getClass().getPackageName().split("\\.")[3];
-        String livingEntityPackage = version.isNewerThan(ServerVersion.V_1_16_5) ? "net.minecraft.world.entity.EntityLiving" : "net.minecraft.server." + nmsPackage + ".EntityLiving";
+        String livingEntityPackage = version.isNewerThan(ServerVersions.V_1_16_5) ? "net.minecraft.world.entity.EntityLiving" : "net.minecraft.server." + nmsPackage + ".EntityLiving";
         Method getHandle = Class.forName("org.bukkit.craftbukkit." + nmsPackage + ".entity.CraftPlayer").getMethod("getHandle");
         Method clearActiveItem = Class.forName(livingEntityPackage).getMethod(
             switch (nmsPackage) {

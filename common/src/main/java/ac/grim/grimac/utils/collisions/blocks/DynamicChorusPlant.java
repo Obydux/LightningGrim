@@ -11,8 +11,7 @@ import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionFactory;
 import ac.grim.grimac.utils.collisions.datatypes.ComplexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.world.enums.East;
@@ -70,7 +69,7 @@ public class DynamicChorusPlant implements CollisionFactory {
 
         Set<BlockFace> directions;
 
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
             // Player is 1.13 on 1.13 server
             directions = new HashSet<>();
             if (block.west() == West.TRUE) directions.add(BlockFace.WEST);

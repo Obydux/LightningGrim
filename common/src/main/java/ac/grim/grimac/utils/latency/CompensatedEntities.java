@@ -7,6 +7,8 @@ import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.protocol.potion.PotionType;
 import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
+import ac.grim.grimac.api.packet.world.enums.Direction;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.ShulkerData;
@@ -16,13 +18,10 @@ import ac.grim.grimac.utils.data.packetentity.*;
 import ac.grim.grimac.utils.data.packetentity.dragon.PacketEntityEnderDragon;
 import ac.grim.grimac.utils.nmsutil.BoundingBoxSize;
 import ac.grim.grimac.utils.nmsutil.WatchableIndexUtil;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.entity.EntityData;
 import ac.grim.grimac.api.packet.entity.PacketEntityType;
 import ac.grim.grimac.api.packet.player.PacketUserProfile;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.Direction;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -231,15 +230,15 @@ public class CompensatedEntities {
 
         if (entity.isAgeable()) {
             int id;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_8_8)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_8_8)) {
                 id = 12;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                 id = 11;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_13_2)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_13_2)) {
                 id = 12;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                 id = 14;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 id = 15;
             } else {
                 id = 16;
@@ -260,15 +259,15 @@ public class CompensatedEntities {
 
         if (entity instanceof PacketEntitySizeable sizeable) {
             int id;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_8_8)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_8_8)) {
                 id = 16;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                 id = 11;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_13_2)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_13_2)) {
                 id = 12;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                 id = 14;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 id = 15;
             } else {
                 id = 16;
@@ -288,13 +287,13 @@ public class CompensatedEntities {
         if (entity instanceof PacketEntityShulker shulker) {
             int id;
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                 id = 11;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_13_2)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_13_2)) {
                 id = 12;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                 id = 14;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 id = 15;
             } else {
                 id = 16;
@@ -323,25 +322,25 @@ public class CompensatedEntities {
 
         if (entity instanceof PacketEntityRideable rideable) {
             int offset = 0;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_8_8)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_8_8)) {
                 if (entity.getType() == PacketEntityTypes.PIG) {
                     EntityData<?> pigSaddle = WatchableIndexUtil.getIndex(watchableObjects, 16);
                     if (pigSaddle != null) {
                         rideable.hasSaddle = ((byte) pigSaddle.getValue()) != 0;
                     }
                 }
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                 offset = 5;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_13_2)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_13_2)) {
                 offset = 4;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                 offset = 2;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 offset = 1;
             }
 
             if (entity.getType() == PacketEntityTypes.PIG) {
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21_5))
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_21_5))
                     offset = 1;
 
                 EntityData<?> pigSaddle = WatchableIndexUtil.getIndex(watchableObjects, 17 - offset);
@@ -374,16 +373,16 @@ public class CompensatedEntities {
         }
 
         if (entity instanceof PacketEntityHorse horse) {
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9_4)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9_4)) {
                 int offset = 0;
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+                if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                     offset = 5;
-                } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_13_2)) {
+                } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_13_2)) {
                     offset = 4;
-                } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+                } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                     offset = 2;
-                } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+                } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                     offset = 1;
                 }
 
@@ -397,7 +396,7 @@ public class CompensatedEntities {
                 }
 
                 // track camel dashing
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_20)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_20)) {
                     if (entity instanceof PacketEntityCamel camel) {
                         EntityData<?> entityData = WatchableIndexUtil.getIndex(watchableObjects, 18);
                         if (entityData != null) {
@@ -420,7 +419,7 @@ public class CompensatedEntities {
             }
         }
 
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9_4)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9_4)) {
             EntityData<?> gravity = WatchableIndexUtil.getIndex(watchableObjects, 5);
 
             if (gravity != null) {
@@ -436,9 +435,9 @@ public class CompensatedEntities {
 
         if (entity.getType() == PacketEntityTypes.FIREWORK_ROCKET) {
             int offset = 0;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_12_2)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_12_2)) {
                 offset = 2;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 offset = 1;
             }
 
@@ -461,11 +460,11 @@ public class CompensatedEntities {
 
         if (entity instanceof PacketEntityHook hook) {
             int index;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                 index = 5;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                 index = 6;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 index = 7;
             } else {
                 index = 8;
@@ -480,13 +479,13 @@ public class CompensatedEntities {
 
         if (entity instanceof PacketEntityArmorStand) {
             int index;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9_4)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9_4)) {
                 index = 10;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_13_2)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_13_2)) {
                 index = 11;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_14_4)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_14_4)) {
                 index = 13;
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_16_5)) {
+            } else if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_16_5)) {
                 index = 14;
             } else {
                 index = 15;
@@ -501,13 +500,13 @@ public class CompensatedEntities {
             }
         }
 
-        if (entity instanceof PacketEntityGuardian && PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_11)) {
+        if (entity instanceof PacketEntityGuardian && ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_11)) {
             int index;
             int isElderlyBitMask;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9)) {
+            if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9)) {
                 index = 16;
                 isElderlyBitMask = 0x04; // the wiki is wrong 0x02 is not "Is Elderly"
-            } else if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_10)) {
+            } else if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_10)) {
                 index = 11;
                 isElderlyBitMask = 0x04;
             } else {

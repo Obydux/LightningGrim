@@ -16,11 +16,10 @@ import ac.grim.grimac.utils.data.TrackerData;
 import ac.grim.grimac.utils.data.packetentity.PacketEntitySelf;
 import ac.grim.grimac.utils.enums.Pose;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.types.server.play.ServerRespawnPacket;
 
@@ -61,12 +60,12 @@ public class PacketPlayerRespawn extends PacketListenerAbstract {
         if (flag == KEEP_ATTRIBUTES) {
             // On versions older than 1.15, via does not keep all attributes.
             // https://github.com/ViaVersion/ViaVersion/blob/master/common/src/main/java/com/viaversion/viaversion/protocols/v1_15_2to1_16/rewriter/EntityPacketRewriter1_16.java#L124
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_15)) {
+            if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_15)) {
                 return false;
             }
         } else if (flag == KEEP_TRACKED_DATA) {
             // But for metadata, via DOES keep all data
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_15)) {
+            if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_15)) {
                 return true;
             }
         }
@@ -85,7 +84,7 @@ public class PacketPlayerRespawn extends PacketListenerAbstract {
             if (player.packetStateData.lastFood == health.getFood()
                     && player.packetStateData.lastHealth == health.getHealth()
                     && player.packetStateData.lastSaturation == health.getFoodSaturation()
-                    && PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9))
+                    && ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9))
                 return;
 
             player.packetStateData.lastFood = health.getFood();
@@ -118,7 +117,7 @@ public class PacketPlayerRespawn extends PacketListenerAbstract {
             player.entityID = joinGame.getEntityId();
             player.dimensionType = joinGame.getDimensionType();
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_17))
+            if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_17))
                 return;
             player.compensatedWorld.setDimension(joinGame.getDimensionType(), event.getUser());
         }
@@ -207,7 +206,7 @@ public class PacketPlayerRespawn extends PacketListenerAbstract {
                 player.pose = Pose.STANDING;
                 player.clientVelocity = new Vector3dm();
                 player.gamemode = respawn.getGameMode();
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_17)) {
                     player.compensatedWorld.setDimension(respawn.getDimensionType(), event.getUser());
                 }
 
@@ -221,7 +220,7 @@ public class PacketPlayerRespawn extends PacketListenerAbstract {
     }
 
     private boolean isWorldChange(GrimPlayer player, ServerRespawnPacket respawn) {
-        PacketClientVersion version = PacketEvents.getAPI().getServerManager().getVersion().toClientVersion();
+        PacketClientVersion version = ServerVersions.getServerVersion().toClientVersion();
         return respawn.getDimensionType().getId(version) != player.dimensionType.getId(version)
                 || !Objects.equals(respawn.getDimensionType().getName(), player.dimensionType.getName());
     }

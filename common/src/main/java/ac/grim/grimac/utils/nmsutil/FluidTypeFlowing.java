@@ -9,7 +9,7 @@ import ac.grim.grimac.utils.collisions.blocks.DoorHandler;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 
 public class FluidTypeFlowing {

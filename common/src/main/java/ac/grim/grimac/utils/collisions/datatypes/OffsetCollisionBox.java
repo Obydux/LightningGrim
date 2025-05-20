@@ -2,8 +2,8 @@ package ac.grim.grimac.utils.collisions.datatypes;
 
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.utils.math.GrimMath;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 
 import java.util.HashSet;
 

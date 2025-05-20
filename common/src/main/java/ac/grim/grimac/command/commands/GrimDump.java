@@ -1,6 +1,7 @@
 package ac.grim.grimac.command.commands;
 
 import ac.grim.grimac.GrimAPI;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.command.BuildableCommand;
 import ac.grim.grimac.api.platform.PlatformPlugin;
 import ac.grim.grimac.api.platform.sender.Sender;
@@ -59,7 +60,7 @@ public class GrimDump implements BuildableCommand {
         base.add("versions", versions);
         versions.addProperty("grim", GrimAPI.INSTANCE.getExternalAPI().getGrimVersion());
         versions.addProperty("packetevents", PacketEvents.getAPI().getVersion().toString());
-        versions.addProperty("server", PacketEvents.getAPI().getServerManager().getVersion().getReleaseName());
+        versions.addProperty("server", ServerVersions.getServerVersion().getReleaseName());
         versions.addProperty("implementation", GrimAPI.INSTANCE.getPlatformServer().getPlatformImplementationString());
         // properties
         JsonArray properties = new JsonArray();

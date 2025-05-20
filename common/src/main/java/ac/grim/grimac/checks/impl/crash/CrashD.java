@@ -10,8 +10,7 @@ import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.inventory.inventory.MenuType;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 
 @CheckData(name = "CrashD", description = "Clicking slots in lectern window")
 public class CrashD extends Check implements PacketCheck {
@@ -50,7 +49,7 @@ public class CrashD extends Check implements PacketCheck {
     }
 
     private boolean isSupportedVersion() {
-        return PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14);
+        return ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_14);
     }
 
 }

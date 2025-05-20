@@ -9,6 +9,7 @@ import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.player.enums.DiggingAction;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.PacketConnectionState;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.protocol.world.IViewPoint;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.RecievablePacket;
@@ -33,16 +34,14 @@ import ac.grim.grimac.utils.inventory.Inventory;
 import ac.grim.grimac.utils.latency.CompensatedWorld;
 import ac.grim.grimac.utils.math.VectorUtils;
 import ac.grim.grimac.utils.nmsutil.*;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.player.enums.InteractionHand;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateValue;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerFlyingMetaPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerAcknowledgeBlockChangesPacket;
@@ -73,7 +72,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
             // Powder snow, lava, and water all behave like placing normal blocks after checking for waterlogging (replace clicked always false though)
             // If we hit a waterloggable block, then the bucket is directly placed
             // Otherwise, use the face to determine where to place the bucket
-            if (Materials.isPlaceableWaterBucket(blockPlace.getItemStack().getType()) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+            if (Materials.isPlaceableWaterBucket(blockPlace.getItemStack().getType()) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
                 blockPlace.setReplaceClicked(true); // See what's in the existing place
                 PacketBlockState existing = blockPlace.getExistingBlockData();
                 if (!(boolean) existing.getInternalData().getOrDefault(StateValue.WATERLOGGED, true)) {
@@ -194,7 +193,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
     private static void handleBlockPlaceOrUseItem(RecievablePacket packet, GrimPlayer player) {
         // Legacy "use item" packet
         if (packet instanceof ClientPlayerBlockPlacementPacket place &&
-                PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9)) {
+                ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9)) {
 
             if (player.gamemode == GameMode.SPECTATOR || player.gamemode == GameMode.ADVENTURE)
                 return;
@@ -314,7 +313,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
                 type = PacketItemTypes.WATER_BUCKET;
             }
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
                 PacketBlockState existing = blockPlace.getExistingBlockData();
                 if (existing.getInternalData().containsKey(StateValue.WATERLOGGED)) { // waterloggable
                     existing.setWaterlogged(false);
@@ -416,7 +415,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
             // Mark that we want this packet to be cancelled from reaching the server
             // Additionally, only yaw/pitch matters: https://github.com/GrimAnticheat/Grim/issues/1275#issuecomment-1872444018
             // 1.9+ isn't impacted by this packet as much.
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_9)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_9)) {
                 if (player.isCancelDuplicatePacket()) {
                     player.packetStateData.cancelDuplicatePacket = true;
                 }
@@ -622,14 +621,14 @@ public class CheckManagerListener extends PacketListenerAbstract {
             }
 
             // This is the use item packet
-            if (packet.getFace() == BlockFace.OTHER && PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9)) {
+            if (packet.getFace() == BlockFace.OTHER && ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9)) {
                 player.placeUseItemPackets.add(new BlockPlaceSnapshot(packet, player.isSneaking));
             } else {
                 // Anti-air place
                 BlockPlace blockPlace = new BlockPlace(player, packet.getHand(), packet.getBlockPosition(), packet.getFaceId(), packet.getFace(), placedWith, WorldRayTrace.getNearestBlockHitResult(player, null, true, false, false), packet.getSequence());
                 blockPlace.setCursor(packet.getCursorPosition());
 
-                if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_11) && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_11)) {
+                if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_11) && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_11)) {
                     // ViaRewind is stupid and divides the byte by 15 to get the float
                     // We must undo this to get the correct block place... why?
                     if (packet.getCursorPosition().getX() * 15 % 1 == 0 && packet.getCursorPosition().getY() * 15 % 1 == 0 && packet.getCursorPosition().getZ() * 15 % 1 == 0) {
@@ -654,7 +653,7 @@ public class CheckManagerListener extends PacketListenerAbstract {
                     ImmutableVector3i facePos = MCPacket.getAPI().getVectorFactory().getImmutableVec3i(packet.getBlockPosition().getX() + packet.getFace().getModX(), packet.getBlockPosition().getY() + packet.getFace().getModY(), packet.getBlockPosition().getZ() + packet.getFace().getModZ());
 
                     // Ends the client prediction introduced in 1.19+
-                    if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_19) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19)) {
+                    if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_19) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_19)) {
                         player.user.sendPacket(ServerAcknowledgeBlockChangesPacket.from(packet.getSequence()));
                     } else { // The client isn't smart enough to revert changes
                         player.resyncPosition(packet.getBlockPosition());

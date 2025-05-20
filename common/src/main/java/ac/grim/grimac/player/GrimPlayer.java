@@ -17,6 +17,7 @@ import ac.grim.grimac.api.packet.player.PacketUser;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.PacketConnectionState;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.SendablePacket;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerEntityTeleportPacket;
@@ -67,7 +68,6 @@ import ac.grim.grimac.utils.nmsutil.BlockProperties;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.reflection.ViaVersionUtil;
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.netty.channel.ChannelHelper;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
@@ -463,7 +463,7 @@ public class GrimPlayer implements GrimUser {
         try {
 
             SendablePacket packet;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_17)) {
                 packet = ServerPingPacket.from(transactionID);
             } else {
                 packet = new WrapperPlayServerWindowConfirmation((byte) 0, transactionID, false);
@@ -600,7 +600,7 @@ public class GrimPlayer implements GrimUser {
 
     public PacketClientVersion getClientVersion() {
         // If temporarily null, assume server version...
-        return Objects.requireNonNullElseGet(user.getPlayerClientVersion(), () -> PacketClientVersions.getById(PacketEvents.getAPI().getServerManager().getVersion().getProtocolVersion()));
+        return Objects.requireNonNullElseGet(user.getPlayerClientVersion(), () -> PacketClientVersions.getById(ServerVersions.getServerVersion().getProtocolVersion()));
     }
 
     // Alright, someone at mojang decided to not send a flying packet every tick with 1.9
@@ -690,7 +690,7 @@ public class GrimPlayer implements GrimUser {
 
         if (data != null) {
             // If we actually need to check vehicle movement
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9) && getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9)) {
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9) && getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9)) {
                 // And if the vehicle is a type of vehicle that we track
                 if (PacketEntityTypes.isTypeInstanceOf(data.getEntityType(), PacketEntityTypes.BOAT) || PacketEntityTypes.isTypeInstanceOf(data.getEntityType(), PacketEntityTypes.ABSTRACT_HORSE) || data.getEntityType() == PacketEntityTypes.PIG || data.getEntityType() == PacketEntityTypes.STRIDER) {
                     // We need to set its velocity otherwise it will jump a bit on us, flagging the anticheat
@@ -737,7 +737,7 @@ public class GrimPlayer implements GrimUser {
     public boolean canGlide() {
         // Servers older than 1.21.2 don't have this component
         if (getClientVersion().isOlderThan(PacketClientVersions.V_1_21_2)
-                || PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_21_2)) {
+                || ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_21_2)) {
             final PacketItemStack chestPlate = getInventory().getChestplate();
             return chestPlate.getType() == PacketItemTypes.ELYTRA && chestPlate.getDamageValue() < chestPlate.getMaxDamage();
         }
@@ -775,7 +775,7 @@ public class GrimPlayer implements GrimUser {
     @Contract(pure = true)
     public boolean supportsEndTick() {
         // TODO: Bypass viaversion
-        return getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21_2) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21_2);
+        return getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21_2) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_21_2);
     }
 
     @Contract(pure = true)

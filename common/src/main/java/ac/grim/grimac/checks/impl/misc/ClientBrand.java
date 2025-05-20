@@ -6,16 +6,15 @@ import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.MessageUtil;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.util.ChatUtil;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 
 public class ClientBrand extends Check implements PacketCheck {
-    public static final String channel = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13) ? "minecraft:brand" : "MC|Brand";
+    public static final String channel = ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13) ? "minecraft:brand" : "MC|Brand";
 
     @Getter
     private String brand = "vanilla";

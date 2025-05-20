@@ -26,12 +26,11 @@ import ac.grim.grimac.utils.reflection.ViaVersionUtil;
 import ac.grim.grimac.utils.team.EntityPredicates;
 import ac.grim.grimac.utils.team.EntityTeam;
 import ac.grim.grimac.utils.team.TeamHandler;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import com.viaversion.viaversion.api.Via;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -46,7 +45,7 @@ public class MovementTicker {
 
     public static void handleEntityCollisions(GrimPlayer player) {
         // 1.7 and 1.8 do not have player collision
-        final boolean serverSupported = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9);
+        final boolean serverSupported = ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9);
         boolean hasEntityPushing = !(player.getClientVersion().isOlderThan(PacketClientVersions.V_1_9)
                 // Check that ViaVersion disables all collisions on a 1.8 server for 1.9+ clients
                 || (!serverSupported

@@ -8,10 +8,8 @@ import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.item.type.ItemType;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateValue;
 
 import java.util.HashSet;
@@ -192,7 +190,7 @@ public class Materials {
         return type.exceedsCube();
     }
 
-    public static boolean isUsable(ItemType material) {
+    public static boolean isUsable(PacketItemType material) {
         return material != null && (material.hasAttribute(PacketItemAttribute.EDIBLE) || material == PacketItemTypes.POTION || material == PacketItemTypes.MILK_BUCKET
                 || material == PacketItemTypes.CROSSBOW || material == PacketItemTypes.BOW || material.toString().endsWith("SWORD")
                 || material == PacketItemTypes.TRIDENT || material == PacketItemTypes.SHIELD);
@@ -225,7 +223,7 @@ public class Materials {
 
     public static boolean isWaterlogged(PacketClientVersion clientVersion, PacketBlockState state) {
         if (clientVersion.isOlderThanOrEquals(PacketClientVersions.V_1_12_2)) return false;
-        if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_13))
+        if (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_13))
             return false;
 
         PacketStateType type = state.getType();

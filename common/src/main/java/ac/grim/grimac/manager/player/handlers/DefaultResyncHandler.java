@@ -4,13 +4,12 @@ import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.handler.ResyncHandler;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.api.packet.MCPacket;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.server.play.ServerAcknowledgeBlockChangesPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerMultiBlockChangePacket;
 import ac.grim.grimac.api.platform.world.PlatformChunk;
 import ac.grim.grimac.api.platform.world.PlatformWorld;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.netty.channel.ChannelHelper;
 import ac.grim.grimac.api.packet.types.server.play.ServerBlockChangePacket;
 import lombok.RequiredArgsConstructor;
@@ -124,7 +123,7 @@ public class DefaultResyncHandler implements ResyncHandler {
             final int blockId = world.getChunkAt(chunkX, chunkZ).getBlockID(x & 15, y, z & 15);
 
             player.user.sendPacket(ServerBlockChangePacket.from(MCPacket.getAPI().getVectorFactory().getImmutableVec3i(x, y, z), blockId));
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19)) { // Via will handle this for us pre-1.19
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_19)) { // Via will handle this for us pre-1.19
                 player.user.sendPacket(ServerAcknowledgeBlockChangesPacket.from(sequence)); // Make 1.19 clients apply the changes
             }
         });

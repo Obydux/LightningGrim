@@ -7,14 +7,13 @@ import ac.grim.grimac.checks.type.BlockPlaceCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.BlockBreak;
 import ac.grim.grimac.utils.anticheat.update.BlockPlace;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 
 @CheckData(name = "BadPacketsH", description = "Sent unexpected sequence id", experimental = true)
 public class BadPacketsH extends BlockPlaceCheck {
     private int lastSequence;
-    private final boolean isSupportedVersion = player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_19) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19);
+    private final boolean isSupportedVersion = player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_19) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_19);
 
     public BadPacketsH(final GrimPlayer player) {
         super(player);

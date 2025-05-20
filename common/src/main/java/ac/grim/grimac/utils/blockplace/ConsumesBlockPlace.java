@@ -11,7 +11,7 @@ import ac.grim.grimac.utils.collisions.AxisUtil;
 import ac.grim.grimac.utils.latency.CompensatedWorld;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.ItemTags;
 
 // HOW DIFFICULT CAN IT BE TO TELL THE SERVER THAT YOU RANG A BELL, AND NOT CREATE A GHOST BLOCK???

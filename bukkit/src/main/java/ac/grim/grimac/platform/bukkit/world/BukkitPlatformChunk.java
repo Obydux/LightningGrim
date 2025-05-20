@@ -2,8 +2,7 @@ package ac.grim.grimac.platform.bukkit.world;
 
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.platform.world.PlatformChunk;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -13,7 +12,7 @@ import java.util.HashMap;
 
 public class BukkitPlatformChunk implements PlatformChunk {
     private static final HashMap<BlockData, Integer> blockDataToId = new HashMap<>();
-    private static final boolean isFlat = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13);
+    private static final boolean isFlat = ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13);
     private final Chunk chunk;
 
     public BukkitPlatformChunk(@NotNull Chunk chunkAt) {
@@ -25,7 +24,7 @@ public class BukkitPlatformChunk implements PlatformChunk {
         Block block = chunk.getBlock(x, y, z);
 
         return isFlat // Cache blockDataToID because Strings are expensive
-                ? blockDataToId.computeIfAbsent(block.getBlockData(), data -> PacketBlockState.getByString(PacketEvents.getAPI().getServerManager().getVersion().toClientVersion(), data.getAsString(false)).getGlobalId())
+                ? blockDataToId.computeIfAbsent(block.getBlockData(), data -> PacketBlockState.getByString(ServerVersions.getServerVersion().toClientVersion(), data.getAsString(false)).getGlobalId())
                 : (block.getType().getId() << 4) | block.getData();
     }
 }

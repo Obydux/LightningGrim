@@ -1,9 +1,9 @@
 package ac.grim.grimac.utils.inventory.inventory;
 
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.inventory.Inventory;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -40,12 +40,12 @@ public enum MenuType {
     private static final MenuType[] MENU_BY_ID_ARRAY;
 
     static {
-        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
+        ServerVersion version = ServerVersions.getServerVersion();
         MenuType[] menuTypes = MenuType.values();
 
         int menuIdLimit;
 
-        if (version.isOlderThan(ServerVersion.V_1_20_3)) {
+        if (version.isOlderThan(ServerVersions.V_1_20_3)) {
             // versions under 1.20.3
             menuIdLimit = 23;
         } else {
@@ -65,9 +65,9 @@ public enum MenuType {
             return UNKNOWN;
         }
 
-        ServerVersion version = PacketEvents.getAPI().getServerManager().getVersion();
+        ServerVersion version = ServerVersions.getServerVersion();
         // versions under 1.20.3
-        if (version.isOlderThan(ServerVersion.V_1_20_3)) { // TODO: Can this be moved to the static block?
+        if (version.isOlderThan(ServerVersions.V_1_20_3)) { // TODO: Can this be moved to the static block?
             if (id >= 7) {
                 id++;
             }

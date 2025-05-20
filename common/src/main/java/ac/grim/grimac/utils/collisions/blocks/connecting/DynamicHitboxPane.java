@@ -2,6 +2,7 @@ package ac.grim.grimac.utils.collisions.blocks.connecting;
 
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.api.packet.world.enums.North;
 import ac.grim.grimac.api.packet.world.enums.South;
@@ -11,11 +12,9 @@ import ac.grim.grimac.utils.collisions.CollisionData;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HitBoxFactory;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 
@@ -51,14 +50,14 @@ public class DynamicHitboxPane extends DynamicConnecting implements HitBoxFactor
     }
 
     private boolean isModernVersion(PacketClientVersion version) {
-        return PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)
+        return ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)
                 && version.isNewerThanOrEquals(PacketClientVersions.V_1_13);
     }
 
     private boolean shouldUseOldPaneShape(PacketClientVersion version, boolean north, boolean south, boolean east, boolean west) {
         return (!north && !south && !east && !west) &&
                 (version.isOlderThanOrEquals(PacketClientVersions.V_1_8) ||
-                        (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_8_8) &&
+                        (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_8_8) &&
                                 version.isNewerThanOrEquals(PacketClientVersions.V_1_13)));
     }
 

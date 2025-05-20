@@ -5,10 +5,9 @@ import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.client.play.ClientPluginMessagePacket;
 import ac.grim.grimac.api.util.LogUtil;
 import ac.grim.grimac.utils.anticheat.MessageUtil;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -30,7 +29,7 @@ public class ProxyAlertMessenger extends PacketListenerAbstract {
     public ProxyAlertMessenger() {
         usingProxy = ProxyAlertMessenger.getBooleanFromFile("spigot.yml", "settings.bungeecord")
                 || ProxyAlertMessenger.getBooleanFromFile("paper.yml", "settings.velocity-support.enabled")
-                || (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_19) && ProxyAlertMessenger.getBooleanFromFile("config/paper-global.yml", "proxies.velocity.enabled"));
+                || (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_19) && ProxyAlertMessenger.getBooleanFromFile("config/paper-global.yml", "proxies.velocity.enabled"));
 
         if (usingProxy) {
             LogUtil.info("Registering an outgoing plugin channel...");

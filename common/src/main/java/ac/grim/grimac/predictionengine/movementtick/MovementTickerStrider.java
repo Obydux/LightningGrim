@@ -5,12 +5,12 @@ import ac.grim.grimac.api.packet.ResourceLocationI;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.types.server.play.ServerUpdateAttributesPacket;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.attribute.ValuedAttribute;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityStrider;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.BlockProperties;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 
 import java.util.ArrayList;

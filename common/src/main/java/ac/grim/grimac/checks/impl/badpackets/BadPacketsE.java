@@ -1,14 +1,13 @@
 package ac.grim.grimac.checks.impl.badpackets;
 
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 
 @CheckData(name = "BadPacketsE")
 public class BadPacketsE extends Check implements PacketCheck {
@@ -20,7 +19,7 @@ public class BadPacketsE extends Check implements PacketCheck {
 
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
-        final boolean isViaPleaseStopUsingProtocolHacksOnYourServer = player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21_2) || PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21_2);
+        final boolean isViaPleaseStopUsingProtocolHacksOnYourServer = player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21_2) || ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_21_2);
         if (event.getPacketType() == PacketTypes.Play.Client.PLAYER_POSITION_AND_ROTATION ||
                 event.getPacketType() == PacketTypes.Play.Client.PLAYER_POSITION) {
             noReminderTicks = 0;

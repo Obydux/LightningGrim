@@ -5,6 +5,7 @@ import ac.grim.grimac.api.packet.item.PacketItemTypes;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.api.packet.world.enums.*;
 import ac.grim.grimac.player.GrimPlayer;
@@ -30,10 +31,8 @@ import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityStrider;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.utils.reflection.ViaVersionUtil;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.Axis;
 import ac.grim.grimac.api.packet.world.enums.Thickness;
 import ac.grim.grimac.api.packet.world.enums.Tilt;
@@ -59,7 +58,7 @@ public enum CollisionData implements CollisionFactory {
     VINE((player, version, block, x, y, z) -> {
         ComplexCollisionBox boxes = new ComplexCollisionBox(5);
 
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13) && block.isUp())
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13) && block.isUp())
             boxes.add(new HexCollisionBox(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D));
 
         if (block.west() == West.TRUE)
@@ -562,7 +561,7 @@ public enum CollisionData implements CollisionFactory {
     SNOW((player, version, data, x, y, z) -> {
         int layers = data.getLayers();
         if (layers == 1 && version.isNewerThanOrEquals(PacketClientVersions.V_1_13)) {
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)
                     || !ViaVersionUtil.isAvailable() || !Via.getConfig().isSnowCollisionFix()) {
                 return NoCollisionBox.INSTANCE;
             }

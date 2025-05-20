@@ -6,8 +6,7 @@ import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionFactory;
 import ac.grim.grimac.utils.collisions.datatypes.HexCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.world.enums.Type;
@@ -19,7 +18,7 @@ import ac.grim.grimac.api.packet.world.enums.Type;
 public class DynamicChest implements CollisionFactory {
     public CollisionBox fetch(GrimPlayer player, PacketClientVersion version, PacketBlockState chest, int x, int y, int z) {
         // 1.13+ clients on 1.13+ servers
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)
                 && version.isNewerThanOrEquals(PacketClientVersions.V_1_13)) {
             if (chest.typeData() == Type.SINGLE) {
                 return new HexCollisionBox(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);

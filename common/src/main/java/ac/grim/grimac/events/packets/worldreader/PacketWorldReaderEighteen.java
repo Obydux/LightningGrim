@@ -9,13 +9,12 @@ import ac.grim.grimac.api.packet.world.chunk.v1_18.ChunkReaderV1_18;
 import ac.grim.grimac.api.packet.world.chunk.v1_18.ChunkV1_18;
 import ac.grim.grimac.api.packet.world.dimension.DimensionTypes;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 
 public class PacketWorldReaderEighteen extends BasePacketWorldReader {
 
     private static final ChunkReaderV1_18 CHUNK_READER_V_1_18 = ChunkReaderV1_18.from();
-    private static final boolean PRE_1_21_5 = PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_21_5);
+    private static final boolean PRE_1_21_5 = ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_21_5);
 
     // Mojang decided to include lighting in this packet.  It's inefficient to read it, so we replace PacketEvents logic.
     @Override

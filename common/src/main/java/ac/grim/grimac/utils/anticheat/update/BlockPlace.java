@@ -9,6 +9,7 @@ import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.North;
 import ac.grim.grimac.api.packet.world.enums.South;
 import ac.grim.grimac.api.packet.world.enums.West;
@@ -30,11 +31,9 @@ import ac.grim.grimac.utils.nmsutil.BoundingBoxSize;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.utils.nmsutil.ReachUtils;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.api.packet.world.enums.Half;
 import ac.grim.grimac.api.packet.world.enums.Type;
@@ -201,7 +200,7 @@ public class BlockPlace {
         if (state.getType() == PacketStateTypes.VINE) {
             if (baseReplaceable) return true;
             if (heldItem != state.getType()) return false;
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13) && !state.isUp())
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13) && !state.isUp())
                 return true;
             if (state.north() == North.FALSE) return true;
             if (state.south() == South.FALSE) return true;
@@ -465,7 +464,7 @@ public class BlockPlace {
 
     public void setFaceId(int face) {
         this.faceId = face;
-        this.face = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9) ? BlockFace.getBlockFaceByValue(faceId) : BlockFace.getLegacyBlockFaceByValue(faceId);
+        this.face = ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9) ? BlockFace.getBlockFaceByValue(faceId) : BlockFace.getLegacyBlockFaceByValue(faceId);
     }
 
     private List<BlockFace> getNearestLookingDirections() {
@@ -628,7 +627,7 @@ public class BlockPlace {
         }
 
         // Check for waterlogged
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) {
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) {
             if (state.getInternalData().containsKey(StateValue.WATERLOGGED)) { // waterloggable
                 state.setWaterlogged(existingState.getType() == PacketStateTypes.WATER && existingState.getLevel() == 0);
             }

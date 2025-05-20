@@ -2,6 +2,7 @@ package ac.grim.grimac.checks.impl.velocity;
 
 import ac.grim.grimac.api.config.ConfigManager;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerExplosionPacket;
@@ -13,9 +14,7 @@ import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.utils.data.VectorData;
 import ac.grim.grimac.utils.data.VelocityData;
 import ac.grim.grimac.api.math.Vector3dm;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateValue;
@@ -50,7 +49,7 @@ public class ExplosionHandler extends Check implements PostPredictionCheck {
             ServerExplosionPacket explosion = packetFactory.serverExplosion(event);
 
             // Since 1.21.2, the server will instead send these changes via block change packets
-            final boolean hasBlocks = PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_21_2);
+            final boolean hasBlocks = ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_21_2);
             if (hasBlocks) {
                 this.handleBlockExplosions(explosion);
             }

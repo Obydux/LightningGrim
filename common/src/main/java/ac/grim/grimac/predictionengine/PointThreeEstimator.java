@@ -6,6 +6,7 @@ import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.potion.PotionType;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.predictionengine.predictions.PredictionEngine;
 import ac.grim.grimac.utils.collisions.CollisionData;
@@ -19,7 +20,6 @@ import ac.grim.grimac.utils.nmsutil.FluidTypeFlowing;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import lombok.Getter;
 import lombok.Setter;
 

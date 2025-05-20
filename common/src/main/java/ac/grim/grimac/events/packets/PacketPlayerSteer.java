@@ -2,6 +2,7 @@ package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.client.play.ClientPlayerInputPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.player.GrimPlayer;
@@ -9,10 +10,8 @@ import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.KnownInput;
 import ac.grim.grimac.utils.data.packetentity.PacketEntity;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityHorse;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.client.play.ClientSteerVehiclePacket;
 
@@ -48,7 +47,7 @@ public class PacketPlayerSteer extends PacketListenerAbstract {
                         // Although if the player has server controlled entities
                         player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9) &&
                         // or the server controls the entities, then this is vanilla logic so allow it
-                        PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                        ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9)) {
                     return;
                 }
 

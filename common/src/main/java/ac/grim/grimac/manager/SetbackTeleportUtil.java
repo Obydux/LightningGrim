@@ -2,6 +2,7 @@ package ac.grim.grimac.manager;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.MCPacket;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.server.play.*;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.checks.Check;
@@ -30,7 +31,6 @@ import ac.grim.grimac.utils.nmsutil.Collisions;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.nmsutil.ReachUtils;
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.protocol.teleport.RelativeFlag;
 import ac.grim.grimac.api.packet.types.server.play.ServerPlayerPositionAndLookPacket;
@@ -215,7 +215,7 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
                 int vehicleId = player.getRidingVehicleId();
                 if (player.compensatedEntities.serverPlayerVehicle != null) {
                     // Dismount player from vehicle
-                    if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
+                    if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9)) {
                         player.user.sendPacket(ServerSetPassengersPacket.from(vehicleId, new int[2]));
                     } else {
                         player.user.sendPacket(ServerAttachEntityPacket.from(vehicleId, -1, false));
@@ -239,7 +239,7 @@ public class SetbackTeleportUtil extends Check implements PostPredictionCheck {
             }
 
             double y = position.getY();
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_7_10)) {
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_7_10)) {
                 y += 1.62; // 1.7 teleport offset if grim ever supports 1.7 again
             }
 

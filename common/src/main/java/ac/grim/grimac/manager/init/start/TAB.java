@@ -4,8 +4,7 @@ import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.platform.init.StartableInitable;
 import ac.grim.grimac.api.util.LogUtil;
 import ac.grim.grimac.utils.reflection.ViaVersionUtil;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 
 public class TAB implements StartableInitable {
 
@@ -14,7 +13,7 @@ public class TAB implements StartableInitable {
         if (GrimAPI.INSTANCE.getPluginManager().getPlugin("TAB") == null) return;
         if (!ViaVersionUtil.isAvailable()) return;
         // I don't know when team limits were changed, 1.13 is reasonable enough
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13))
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13))
             return;
 
         LogUtil.warn("GrimAC has detected that you have installed TAB with ViaVersion.");

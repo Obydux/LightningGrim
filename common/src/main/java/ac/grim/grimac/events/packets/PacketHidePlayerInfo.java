@@ -2,14 +2,13 @@ package ac.grim.grimac.events.packets;
 
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.player.PacketUserProfile;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
 import ac.grim.grimac.api.packet.types.server.play.ServerPlayerInfoPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerPlayerInfoUpdatePacket;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 
@@ -27,7 +26,7 @@ public class PacketHidePlayerInfo extends PacketListenerAbstract {
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketTypes.Play.Server.PLAYER_INFO) {
             //iterate through players and fake their game mode if they are spectating via grim spectate
-            if (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_12_2))
+            if (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_12_2))
                 return;
 
             GrimPlayer receiver = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());

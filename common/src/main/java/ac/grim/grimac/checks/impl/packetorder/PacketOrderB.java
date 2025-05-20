@@ -1,6 +1,7 @@
 package ac.grim.grimac.checks.impl.packetorder;
 
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.client.play.ClientInteractEntityPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
@@ -8,8 +9,6 @@ import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
 import ac.grim.grimac.checks.type.PacketCheck;
 import ac.grim.grimac.player.GrimPlayer;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 
 @CheckData(name = "PacketOrderB", description = "Did not swing for attack")
 public class PacketOrderB extends Check implements PacketCheck {
@@ -41,7 +40,7 @@ public class PacketOrderB extends Check implements PacketCheck {
             // I will simply disable this check for 1.8- clients on 1.9+ servers as I can't be bothered to find a way around this.
             // Stop supporting such old clients on modern servers!
             if (player.getClientVersion().isOlderThan(PacketClientVersions.V_1_9)
-                    && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
+                    && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9))
                 return;
 
             if (!sentAnimation && flagAndAlert() && shouldModifyPackets()) {

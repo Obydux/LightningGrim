@@ -1,7 +1,9 @@
 package ac.grim.grimac.utils.collisions.blocks.connecting;
 
 import ac.grim.grimac.api.packet.item.PacketStateType;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.api.packet.world.enums.South;
 import ac.grim.grimac.api.packet.world.enums.West;
@@ -11,13 +13,10 @@ import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.ComplexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HitBoxFactory;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.North;
 
 public class DynamicHitboxFence extends DynamicConnecting implements HitBoxFactory {
@@ -52,7 +51,7 @@ public class DynamicHitboxFence extends DynamicConnecting implements HitBoxFacto
         boolean west;
 
         // 1.13+ servers on 1.13+ clients send the full fence data
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)
                 && version.isNewerThanOrEquals(PacketClientVersions.V_1_13)) {
             east = block.east() != East.FALSE;
             north = block.north() != North.FALSE;

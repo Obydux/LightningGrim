@@ -4,16 +4,15 @@ import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.item.*;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.tags.SyncedTags;
 import ac.grim.grimac.utils.enums.FluidTag;
 import ac.grim.grimac.utils.inventory.EnchantmentHelper;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
 
 import java.util.OptionalInt;
 
@@ -117,10 +116,10 @@ public class BlockBreakSpeed {
         }
 
         if (speedMultiplier > 1.0f) {
-            if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21)) {
+            if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_21)) {
                 speedMultiplier += (float) player.compensatedEntities.self.getAttributeValue(Attributes.MINING_EFFICIENCY);
             } else {
-                int digSpeed = tool.getEnchantmentLevel(PacketEnchantmentTypes.BLOCK_EFFICIENCY, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion());
+                int digSpeed = tool.getEnchantmentLevel(PacketEnchantmentTypes.BLOCK_EFFICIENCY, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion());
                 if (digSpeed > 0) {
                     speedMultiplier += digSpeed * digSpeed + 1;
                 }
@@ -156,10 +155,10 @@ public class BlockBreakSpeed {
         speedMultiplier *= (float) player.compensatedEntities.self.getAttributeValue(Attributes.BLOCK_BREAK_SPEED);
 
         if (player.fluidOnEyes == FluidTag.WATER) {
-            if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_21)) {
+            if (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_21) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_21)) {
                 speedMultiplier *= (float) player.compensatedEntities.self.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED);
             } else {
-                if (EnchantmentHelper.getMaximumEnchantLevel(player.getInventory(), PacketEnchantmentTypes.AQUA_AFFINITY, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion()) == 0) {
+                if (EnchantmentHelper.getMaximumEnchantLevel(player.getInventory(), PacketEnchantmentTypes.AQUA_AFFINITY, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion()) == 0) {
                     speedMultiplier /= 5;
                 }
             }

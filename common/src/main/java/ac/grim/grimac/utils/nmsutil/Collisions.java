@@ -3,6 +3,7 @@ package ac.grim.grimac.utils.nmsutil;
 import ac.grim.grimac.api.packet.MCPacket;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
@@ -21,12 +22,10 @@ import ac.grim.grimac.utils.math.GrimMath;
 import ac.grim.grimac.api.math.Location;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.math.VectorUtils;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.potion.PotionTypes;
-import com.github.retrooper.packetevents.protocol.world.Direction;
+import ac.grim.grimac.api.packet.world.enums.Direction;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
@@ -61,7 +60,7 @@ public class Collisions {
             Arrays.asList(Axis.Y, Axis.Z, Axis.X));
 
     static {
-        IS_FOURTEEN = PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_14);
+        IS_FOURTEEN = ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_14);
     }
 
     public static boolean slowCouldPointThreeHitGround(GrimPlayer player, double x, double y, double z) {

@@ -1,6 +1,7 @@
 package ac.grim.grimac.checks.impl.post;
 
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.CheckData;
@@ -9,9 +10,7 @@ import ac.grim.grimac.checks.type.PostPredictionCheck;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.anticheat.update.PredictionComplete;
 import ac.grim.grimac.utils.lists.EvictingQueue;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.PacketType;
 import ac.grim.grimac.api.packet.types.client.play.ClientEntityActionPacket;
@@ -97,7 +96,7 @@ public class Post extends Check implements PacketCheck, PostPredictionCheck {
                 if (sentFlying) post.add(event.getPacketType());
             } else if (ANIMATION.equals(packetType)
                     && (player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9) // ViaVersion delays animations for 1.8 clients
-                    || PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_8_8)) // when on 1.9+ servers
+                    || ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_8_8)) // when on 1.9+ servers
                     && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_13) // 1.13 clicking inventory causes weird animations
                     && isExemptFromSwingingCheck < player.lastTransactionReceived.get()) { // Exempt when the server sends animations because viaversion
                 if (sentFlying) post.add(event.getPacketType());

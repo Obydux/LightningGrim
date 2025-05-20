@@ -6,8 +6,10 @@ import ac.grim.grimac.api.packet.item.PacketItemType;
 import ac.grim.grimac.api.packet.item.PacketItemTypes;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3i;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTag;
 import ac.grim.grimac.api.packet.world.enums.*;
 import ac.grim.grimac.events.packets.CheckManagerListener;
 import ac.grim.grimac.utils.anticheat.update.BlockPlace;
@@ -18,10 +20,8 @@ import ac.grim.grimac.utils.latency.CompensatedWorld;
 import ac.grim.grimac.api.math.Vector3dm;
 import ac.grim.grimac.utils.nmsutil.Dripstone;
 import ac.grim.grimac.utils.nmsutil.Materials;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.item.type.ItemType;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import com.github.retrooper.packetevents.protocol.world.states.defaulttags.ItemTags;
 import ac.grim.grimac.api.packet.world.enums.Hinge;
 import com.github.retrooper.packetevents.protocol.world.states.type.StateValue;
@@ -959,14 +959,14 @@ public enum BlockPlaceResult {
                 door.setOpen(true);
             }
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) { // Only works on 1.13+
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) { // Only works on 1.13+
                 door.setHinge(hinge);
             }
 
             door.setHalf(Half.LOWER);
             place.set(door);
 
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)) { // Only works on 1.13+
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)) { // Only works on 1.13+
                 door.setHalf(Half.UPPER);
                 place.setAbove(door);
             } else {
@@ -1120,7 +1120,7 @@ public enum BlockPlaceResult {
         this(data, tags.getStates().toArray(new PacketItemType[0]));
     }
 
-    BlockPlaceResult(BlockPlaceFactory data, BlockTags tag) {
+    BlockPlaceResult(BlockPlaceFactory data, BlockTag tag) {
         List<PacketItemType> types = new ArrayList<>(tag.getStates().size());
         for (PacketStateType state : tag.getStates()) {
             types.add(state.getTypePlacingState());

@@ -3,16 +3,15 @@ package ac.grim.grimac.events.packets;
 import ac.grim.grimac.GrimAPI;
 import ac.grim.grimac.api.packet.item.PacketEnchantmentTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.client.play.ClientInteractEntityPacket;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.checks.impl.badpackets.BadPacketsW;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.data.packetentity.PacketEntity;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityHorse;
-import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.item.PacketItemStack;
@@ -52,12 +51,12 @@ public class PacketPlayerAttack extends PacketListenerAbstract {
 
                 if (entity != null && (!entity.isLivingEntity() || entity.getType() == PacketEntityTypes.PLAYER)) {
                     int knockbackLevel = player.getClientVersion().isOlderThan(PacketClientVersions.V_1_21) && heldItem != null
-                            ? heldItem.getEnchantmentLevel(PacketEnchantmentTypes.KNOCKBACK, PacketEvents.getAPI().getServerManager().getVersion().toClientVersion().getProtocolVersion())
+                            ? heldItem.getEnchantmentLevel(PacketEnchantmentTypes.KNOCKBACK, ServerVersions.getServerVersion().toClientVersion().getProtocolVersion())
                             : 0;
 
                     boolean isLegacyPlayer = player.getClientVersion().isOlderThanOrEquals(PacketClientVersions.V_1_8);
                     // assume cooldown is full on 1.8 servers
-                    boolean noCooldown = isLegacyPlayer || PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9);
+                    boolean noCooldown = isLegacyPlayer || ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9);
 
                     if (!isLegacyPlayer) {
                         knockbackLevel = Math.max(knockbackLevel, 0);
@@ -77,7 +76,7 @@ public class PacketPlayerAttack extends PacketListenerAbstract {
                     } else if (!isLegacyPlayer && player.lastSprinting) {
                         // 1.9+ players who have attack speed cannot slow themselves twice in one tick because their attack cooldown gets reset on swing.
                         if (player.maxAttackSlow > 0
-                                && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)
+                                && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9)
                                 && player.compensatedEntities.self.getAttributeValue(Attributes.ATTACK_SPEED) < 16) { // 16 is a reasonable limit
                             return;
                         }

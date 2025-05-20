@@ -1,5 +1,6 @@
 package ac.grim.grimac.platform.fabric.mc1194;
 
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersion;
 import ac.grim.grimac.api.platform.PlatformServer;
 import ac.grim.grimac.api.platform.manager.ParserDescriptorFactory;
 import ac.grim.grimac.platform.fabric.mc1161.command.Fabric1161PlayerSelectorAdapter;
@@ -15,8 +16,7 @@ import ac.grim.grimac.platform.fabric.mc1161.util.convert.Fabric1140ConversionUt
 import ac.grim.grimac.platform.fabric.player.FabricPlatformPlayerFactory;
 import ac.grim.grimac.platform.fabric.utils.convert.IFabricConversionUtil;
 import ac.grim.grimac.platform.fabric.utils.message.IFabricMessageUtil;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 
 public class GrimACFabric1190LoaderPlugin extends GrimACFabric1170LoaderPlugin {
 
@@ -28,7 +28,7 @@ public class GrimACFabric1190LoaderPlugin extends GrimACFabric1170LoaderPlugin {
             new FabricPlatformPlayerFactory(
                     Fabric1170PlatformPlayer::new,
                     Fabric1194GrimEntity::new,
-                    PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_19_2)
+                    ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_19_2)
                             ? Fabric1193PlatformInventory::new : Fabric1161PlatformInventory::new
             ),
             new Fabric1190PlatformServer(),
@@ -48,6 +48,6 @@ public class GrimACFabric1190LoaderPlugin extends GrimACFabric1170LoaderPlugin {
 
     @Override
     public ServerVersion getNativeVersion() {
-        return ServerVersion.V_1_19_4;
+        return ServerVersions.V_1_19_4;
     }
 }

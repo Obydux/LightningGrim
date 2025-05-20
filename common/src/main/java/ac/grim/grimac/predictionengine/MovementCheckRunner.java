@@ -6,6 +6,7 @@ import ac.grim.grimac.api.packet.item.PacketItemStack;
 import ac.grim.grimac.api.packet.item.PacketItemTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.attribute.Attributes;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.checks.Check;
 import ac.grim.grimac.checks.impl.prediction.Phase;
@@ -39,12 +40,10 @@ import ac.grim.grimac.utils.nmsutil.Collisions;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
 import ac.grim.grimac.utils.nmsutil.Riptide;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.item.PacketItemType;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 
 public class MovementCheckRunner extends Check implements PositionCheck {
     // Averaged over 500 predictions (Defaults set slightly above my 3600x results)
@@ -65,7 +64,7 @@ public class MovementCheckRunner extends Check implements PositionCheck {
         if (player.getSetbackTeleportUtil().insideUnloadedChunk()) {
             // The player doesn't control this vehicle, we don't care
             final boolean invalidVehicle = player.inVehicle() &&
-                    (PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_9) ||
+                    (ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_9) ||
                             player.getClientVersion().isOlderThan(PacketClientVersions.V_1_9));
 
             if (!invalidVehicle && !data.isTeleport()) {
@@ -434,7 +433,7 @@ public class MovementCheckRunner extends Check implements PositionCheck {
             // Dead players can't cheat, if you find a way how they could, open an issue
             player.predictedVelocity = new VectorData(new Vector3dm(), VectorData.VectorType.Dead);
             player.clientVelocity = new Vector3dm();
-        } else if (player.disableGrim || (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_8) && player.gamemode == GameMode.SPECTATOR) || player.isFlying || (player.isExemptElytra() && player.isGliding)) {
+        } else if (player.disableGrim || (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_8) && player.gamemode == GameMode.SPECTATOR) || player.isFlying || (player.isExemptElytra() && player.isGliding)) {
             // We could technically check spectator but what's the point...
             // Added complexity to analyze a gamemode used mainly by moderators
             //
@@ -480,7 +479,7 @@ public class MovementCheckRunner extends Check implements PositionCheck {
             new MovementTickerPlayer(player).livingEntityAIStep();
             PlayerBaseTick.updatePowderSnow(player);
             PlayerBaseTick.updatePlayerPose(player);
-        } else if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9) && player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9)) {
+        } else if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9) && player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9)) {
             wasChecked = true;
             // The player and server are both on a version with client controlled entities
             // If either or both of the client server version has server controlled entities

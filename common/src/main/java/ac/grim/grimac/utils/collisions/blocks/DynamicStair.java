@@ -9,12 +9,11 @@ import ac.grim.grimac.utils.collisions.datatypes.ComplexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.Half;
 
 import java.util.stream.IntStream;
@@ -116,7 +115,7 @@ public class DynamicStair implements CollisionFactory {
     public CollisionBox fetch(GrimPlayer player, PacketClientVersion version, PacketBlockState block, int x, int y, int z) {
         int shapeOrdinal;
         // If server is 1.13+ and client is also 1.13+, we can read the block's data directly
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_13)
+        if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_13)
                 && version.isNewerThanOrEquals(PacketClientVersions.V_1_13)) {
             shapeOrdinal = toEnumShape(block.shape()).ordinal();
         } else {

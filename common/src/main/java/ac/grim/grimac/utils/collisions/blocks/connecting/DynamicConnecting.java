@@ -4,6 +4,7 @@ import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.item.PacketStateType;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.PacketStateTypes;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
@@ -12,10 +13,8 @@ import ac.grim.grimac.utils.collisions.datatypes.HexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.NoCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.nmsutil.Materials;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 
 public class DynamicConnecting {
 
@@ -74,7 +73,7 @@ public class DynamicConnecting {
         if (BlockTags.STAIRS.contains(target)) {
             // 1.12 clients generate their own data, 1.13 clients use the server's data
             // 1.11- versions don't allow fences to connect to the back sides of stairs
-            if (v.isOlderThan(PacketClientVersions.V_1_12) || (PacketEvents.getAPI().getServerManager().getVersion().isOlderThanOrEquals(ServerVersion.V_1_11) && v.isNewerThanOrEquals(PacketClientVersions.V_1_13)))
+            if (v.isOlderThan(PacketClientVersions.V_1_12) || (ServerVersions.getServerVersion().isOlderThanOrEquals(ServerVersions.V_1_11) && v.isNewerThanOrEquals(PacketClientVersions.V_1_13)))
                 return false;
             return targetBlock.facing().getOppositeFace() == direction;
         } else if (canConnectToGate(fence) && BlockTags.FENCE_GATES.contains(target)) {

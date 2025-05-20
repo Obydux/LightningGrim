@@ -17,6 +17,7 @@ package ac.grim.grimac.utils.data;
 
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.util.vec.ImmutableVector3d;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.datatypes.CollisionBox;
@@ -24,8 +25,6 @@ import ac.grim.grimac.utils.collisions.datatypes.NoCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
 import ac.grim.grimac.utils.data.packetentity.PacketEntity;
 import ac.grim.grimac.utils.nmsutil.GetBoundingBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 
 // You may not copy the check unless you are licensed under GPL
 public class ReachInterpolationData {
@@ -49,7 +48,7 @@ public class ReachInterpolationData {
 
         // 1.9 -> 1.8 precision loss in packets
         // (ViaVersion is doing some stuff that makes this code difficult)
-        if (!isPointNine && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
+        if (!isPointNine && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9)) {
             targetLocation.expand(0.03125);
         }
 

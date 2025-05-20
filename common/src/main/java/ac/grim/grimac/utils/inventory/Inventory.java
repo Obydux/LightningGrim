@@ -1,6 +1,7 @@
 package ac.grim.grimac.utils.inventory;
 
 import ac.grim.grimac.api.packet.item.PacketItemStack;
+import ac.grim.grimac.api.packet.item.PacketItemType;
 import ac.grim.grimac.api.packet.player.enums.GameMode;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.inventory.inventory.AbstractContainerMenu;
@@ -8,7 +9,6 @@ import ac.grim.grimac.utils.inventory.slot.EquipmentSlot;
 import ac.grim.grimac.utils.inventory.slot.ResultSlot;
 import ac.grim.grimac.utils.inventory.slot.Slot;
 import ac.grim.grimac.utils.lists.CorrectingPlayerInventoryStorage;
-import com.github.retrooper.packetevents.protocol.item.type.ItemType;
 import lombok.Getter;
 
 public class Inventory extends AbstractContainerMenu {
@@ -68,7 +68,7 @@ public class Inventory extends AbstractContainerMenu {
         return inventoryStorage.getItem(SLOT_OFFHAND);
     }
 
-    public boolean hasItemType(ItemType item) {
+    public boolean hasItemType(PacketItemType item) {
         for (int i = 0; i < inventoryStorage.items.length; ++i) {
             if (inventoryStorage.getItem(i).getType() == item) {
                 return true;

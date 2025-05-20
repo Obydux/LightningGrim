@@ -8,6 +8,7 @@ import ac.grim.grimac.api.packet.entity.PacketEntityType;
 import ac.grim.grimac.api.packet.player.PacketUserProfile;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
 import ac.grim.grimac.api.packet.protocol.potion.PotionType;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.types.PacketTypes;
 import ac.grim.grimac.api.packet.types.event.PacketReceiveEvent;
 import ac.grim.grimac.api.packet.types.server.play.*;
@@ -21,9 +22,7 @@ import ac.grim.grimac.utils.data.packetentity.PacketEntity;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityHook;
 import ac.grim.grimac.utils.data.packetentity.PacketEntityTrackXRot;
 import ac.grim.grimac.utils.reflection.ViaVersionUtil;
-import com.github.retrooper.packetevents.PacketEvents;
 import ac.grim.grimac.api.packet.types.event.PacketSendEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.entity.PacketEntityTypes;
 import ac.grim.grimac.api.packet.types.server.play.ServerAttachEntityPacket;
 import ac.grim.grimac.api.packet.types.server.play.ServerDestroyEntitiesPacket;
@@ -299,7 +298,7 @@ public class PacketEntityReplication extends Check implements PacketCheck {
             ServerAttachEntityPacket attach = ServerAttachEntityPacket.from(event);
 
             // This packet was replaced by the mount packet on 1.9+ servers - to support multiple passengers on one vehicle
-            if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))
+            if (ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9))
                 return;
 
             // If this is mounting rather than leashing
@@ -422,15 +421,15 @@ public class PacketEntityReplication extends Check implements PacketCheck {
                         && player.getClientVersion().isNewerThanOrEquals(PacketClientVersions.V_1_9)
                         // TODO: https://discord.com/channels/721686193061888071/721686193515003966/1310659538831020123
                         // Why does the server now send an entity rel move packet matching the player's vehicle movement every time?
-                        && PacketEvents.getAPI().getServerManager().getVersion().isOlderThan(ServerVersion.V_1_21_2)
-                        && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9);
+                        && ServerVersions.getServerVersion().isOlderThan(ServerVersions.V_1_21_2)
+                        && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9);
 
                 // ViaVersion sends two relative packets when moving more than 4 blocks
                 // This is broken and causes the client to interpolate like (0, 4) and (1, 3) instead of (1, 7)
                 // This causes impossible hits, so grim must replace this with a teleport entity packet
                 // Not ideal, but neither is 1.8 players on a 1.9+ server.
                 if (vanillaVehicleFlight ||
-                        ((Math.abs(deltaX) >= 3.9375 || Math.abs(deltaY) >= 3.9375 || Math.abs(deltaZ) >= 3.9375) && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_9) && PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9))) {
+                        ((Math.abs(deltaX) >= 3.9375 || Math.abs(deltaY) >= 3.9375 || Math.abs(deltaZ) >= 3.9375) && player.getClientVersion().isOlderThan(PacketClientVersions.V_1_9) && ServerVersions.getServerVersion().isNewerThanOrEquals(ServerVersions.V_1_9))) {
                     player.user.writePacket(ServerEntityTeleportPacket.from(entityId, MCPacket.getAPI().getVectorFactory().getImmutableVec3d(data.getX() + deltaX, data.getY() + deltaY, data.getZ() + deltaZ), yaw == null ? data.getXRot() : yaw, pitch == null ? data.getYRot() : pitch, false));
                     event.setCancelled(true);
                     return;

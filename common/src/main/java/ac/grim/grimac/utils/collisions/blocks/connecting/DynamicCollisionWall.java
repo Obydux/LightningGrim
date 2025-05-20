@@ -3,6 +3,7 @@ package ac.grim.grimac.utils.collisions.blocks.connecting;
 import ac.grim.grimac.api.packet.block.PacketBlockState;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersion;
 import ac.grim.grimac.api.packet.protocol.PacketClientVersions;
+import ac.grim.grimac.api.packet.protocol.version.server.ServerVersions;
 import ac.grim.grimac.api.packet.world.enums.East;
 import ac.grim.grimac.player.GrimPlayer;
 import ac.grim.grimac.utils.collisions.CollisionData;
@@ -11,10 +12,8 @@ import ac.grim.grimac.utils.collisions.datatypes.CollisionFactory;
 import ac.grim.grimac.utils.collisions.datatypes.ComplexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.HexCollisionBox;
 import ac.grim.grimac.utils.collisions.datatypes.SimpleCollisionBox;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import ac.grim.grimac.api.packet.world.enums.BlockFace;
-import com.github.retrooper.packetevents.protocol.world.states.defaulttags.BlockTags;
+import ac.grim.grimac.api.packet.world.blocktags.BlockTags;
 import ac.grim.grimac.api.packet.world.enums.North;
 import ac.grim.grimac.api.packet.world.enums.South;
 import ac.grim.grimac.api.packet.world.enums.West;
@@ -24,7 +23,7 @@ public class DynamicCollisionWall extends DynamicConnecting implements Collision
     // https://bugs.mojang.com/browse/MC-9565
     // https://bugs.mojang.com/browse/MC-94016
     private static final CollisionBox[] COLLISION_BOXES = makeShapes(4.0F, 3.0F, 24.0F, 0.0F, 24.0F, false, 1);
-    private static final boolean isNewServer = PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_12_2);
+    private static final boolean isNewServer = ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_12_2);
 
 
     /**
@@ -35,8 +34,8 @@ public class DynamicCollisionWall extends DynamicConnecting implements Collision
         int north, south, west, east, up;
         north = south = west = east = up = 0;
 
-        if (PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_12_2)) {
-            boolean sixteen = PacketEvents.getAPI().getServerManager().getVersion().isNewerThan(ServerVersion.V_1_16);
+        if (ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_12_2)) {
+            boolean sixteen = ServerVersions.getServerVersion().isNewerThan(ServerVersions.V_1_16);
 
             if (state.north() != North.NONE)
                 north += state.north() == North.LOW || sixteen ? 1 : 2;
