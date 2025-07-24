@@ -32,7 +32,7 @@ public class ReachInterpolationData {
     private final SimpleCollisionBox targetLocation;
     private final GrimPlayer player;
     private final PacketEntity entity;
-    private SimpleCollisionBox startingLocation;
+    public SimpleCollisionBox startingLocation;
     private int interpolationStepsLowBound = 0;
     private int interpolationStepsHighBound = 0;
     private int interpolationSteps = 1;

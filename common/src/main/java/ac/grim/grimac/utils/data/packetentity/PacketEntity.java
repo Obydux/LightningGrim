@@ -147,7 +147,11 @@ public class PacketEntity extends TypedPacketEntity {
             }
         }
         this.oldPacketLocation = newPacketLocation;
-        this.newPacketLocation = new ReachInterpolationData(player, oldPacketLocation.getPossibleLocationCombined(), trackedServerPosition, this);
+        if (!hasPos && (player.getClientVersion().isNewerThan(ClientVersion.V_1_21_4) || player.getClientVersion().isOlderThan(ClientVersion.V_1_20_2))) {
+            this.newPacketLocation = new ReachInterpolationData(player, oldPacketLocation.startingLocation, trackedServerPosition, this);
+        } else {
+            this.newPacketLocation = new ReachInterpolationData(player, oldPacketLocation.getPossibleLocationCombined(), trackedServerPosition, this);
+        }
 
         // In versions < 1.16.2 when the client receives non-relative teleport for an entity
         // And they move less by the thresholds given, the entity does not move client side
