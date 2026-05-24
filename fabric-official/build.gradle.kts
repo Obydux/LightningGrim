@@ -3,6 +3,18 @@ import versioning.BuildConfig
 val minecraft_version: String by project
 val fabric_version: String by project
 
+// Plugin choice rationale:
+//   This module uses the short `fabric-loom` plugin (LoomGradlePlugin, the remap
+//   variant) with `mappings(intermediary:0.0.0:v2)` — a published empty intermediary
+//   stub. Because the stub has zero entries, the named→intermediary remap pass is
+//   effectively a no-op, leaving Mojang-named bytecode untouched in remapJar output.
+//   This is intentional and matches the practical effect of LoomNoRemap
+//   (LoomNoRemapGradlePlugin via the fully-qualified `net.fabricmc.fabric-loom` id)
+//   without requiring the different jar/task/configuration plumbing that PE's
+//   fabric-official uses. See PE's fabric-official build.gradle.kts for the
+//   alternative pattern. Both produce equivalent jars when source contains no
+//   intermediary refs, which is the case here (and will remain the case when real
+//   26.X-mojmap anticheat code lands — see KNOWN BLOCKERS comment below).
 plugins {
     `maven-publish`
     alias(libs.plugins.fabric.loom)
