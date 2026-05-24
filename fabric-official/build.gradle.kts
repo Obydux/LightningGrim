@@ -65,8 +65,17 @@ dependencies {
     //      Fabric261PlatformPlayer + Fabric261LoaderPlugin analogous to mc12111
     //      in fabric-intermediary.
     //
-    // Order of operations for a future supervised session: A → B (mixin-driven
-    // events) → C (per-file API fixes) → D (mc261 wiring). Estimated 6-8h.
+    //   E. Build/remap packaging: prove access-widener application,
+    //      mixin refmap generation, and nested-jar wiring all work under the
+    //      empty intermediary:0.0.0:v2 stub before grinding through per-file
+    //      API fixes. :common's existing AW assumptions may not apply cleanly
+    //      to the no-op-remap pass — needs a smoke build before the real port.
+    //
+    // Order of operations (per codex r5 review): D first (write minimal mc261
+    // platform/loader so compile targets exist) → E (verify the build pipeline
+    // mechanically) → A (strip cloud/perms surface) → B (mixin-driven events
+    // replacing fabric-api) → C (grind through Mojmap API drift last, once the
+    // architecture is proven). Estimated 6-8h supervised.
     mappings("net.fabricmc:intermediary:0.0.0:v2")
     modImplementation(libs.fabric.loader)
 
