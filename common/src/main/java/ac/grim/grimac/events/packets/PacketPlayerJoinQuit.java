@@ -45,8 +45,21 @@ public class PacketPlayerJoinQuit extends PacketListenerAbstract {
 
     @Override
     public void onUserLogin(UserLoginEvent event) {
+        System.out.println("[grim-join-diag] onUserLogin: user=" + event.getUser() + " player=" + event.getPlayer());
         // fake channel (NPC / spoofer / EmbeddedChannel) — no PacketUser, nothing to track
         if (event.getUser() == null) return;
+
+        ac.grim.grimac.player.GrimPlayer existingBefore = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
+        System.out.println("[grim-join-diag] addUser fallback check: existing=" + existingBefore + " channelOpen=" + com.github.retrooper.packetevents.netty.channel.ChannelHelper.isOpen(event.getUser().getChannel()) + " uuid=" + event.getUser().getUUID());
+        // On 26.X (fabric-official chain), PE's pipeline is installed via
+        // Connection.configureSerialization which fires AFTER LOGIN_SUCCESS is
+        // already sent — so the normal onPacketSend(LOGIN_SUCCESS) → addUser path
+        // never triggers. Ensure the GrimPlayer exists here as a fallback.
+        if (GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser()) == null) {
+            GrimAPI.INSTANCE.getPlayerDataManager().addUser(event.getUser());
+            System.out.println("[grim-join-diag] addUser fallback called, now exists=" + GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser()));
+        }
+
         Object nativePlayerObject = Objects.requireNonNull(event.getPlayer());
 
         // This will never throw a NPE because code is run in OnUserConnect -> onPacketSend -> OnUserLogin order

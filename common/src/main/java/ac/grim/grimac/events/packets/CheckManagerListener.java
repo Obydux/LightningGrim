@@ -382,10 +382,15 @@ public class CheckManagerListener extends PacketListenerAbstract {
         }
     }
 
+    private static int packetDiagCounter = 0;
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
         if (player == null) return;
+        // TEMP DIAG: confirm packets reach the check manager
+        if (packetDiagCounter++ < 20 || packetDiagCounter % 500 == 0) {
+            System.out.println("[grim-pkt-diag] onPacketReceive #" + packetDiagCounter + " type=" + event.getPacketType() + " state=" + event.getConnectionState() + " user=" + event.getUser().getName());
+        }
 
         if (event.getConnectionState() != ConnectionState.PLAY) {
             // Allow checks to listen to configuration packets
