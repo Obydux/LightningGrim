@@ -36,6 +36,12 @@ dependencies {
     // via `nestedJars.from(remapJar)` to avoid the double-JiJ of dev + remapped
     // artifacts.
     include(project(":fabric-common"))
+
+    // PE lives at the aggregator level so its depends.minecraft >=1.16.1 means it
+    // stays active across the full MC range (1.16.1 → 26.X), regardless of whether
+    // the user's MC matches grimac-fabric-intermediary's range (<26) or
+    // grimac-fabric-official's range (>=26.1).
+    include(libs.packetevents.fabric)
 }
 
 publishing.publications.create<MavenPublication>("maven") {

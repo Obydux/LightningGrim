@@ -20,15 +20,14 @@ dependencies {
 
     modImplementation(libs.cloud.fabric)
     modImplementation(libs.fabric.loader)
-    if (BuildConfig.shadePE) {
-        modImplementation(libs.packetevents.fabric)
-    } else {
-        compileOnly(libs.packetevents.fabric)
-    }
+    // PE is JiJ'd at the top-level fabric/ aggregator (so it loads on every MC range
+    // the aggregator covers, not just the intermediary range). Here PE is compile-only:
+    // declaring modImplementation/modApi would also nest the api/transitive jars inside
+    // grimac-fabric-intermediary's published jar, which on a 26.1.2 server would never
+    // load because the intermediary mod itself is gated <26.
+    compileOnly(libs.packetevents.fabric)
     compileOnly("org.slf4j:slf4j-api:2.0.17")
     compileOnly("org.apache.logging.log4j:log4j-api:2.24.3")
-
-    modApi(libs.packetevents.fabric)
 }
 
 // The configurations below will only apply to :fabric and its submodules, not its siblings or the root project
@@ -132,6 +131,10 @@ subprojects {
     dependencies {
         // configuration = "namedElements" required when depending on another loom project
         implementation(project(":fabric-intermediary", configuration = "namedElements"))
+        // PE is JiJ'd at fabric/ (aggregator); per-version submodules just need it on
+        // the compile classpath. compileOnly avoids re-nesting PE inside each mcXXXX jar.
+        val libsx = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
+        compileOnly(libsx.findLibrary("packetevents-fabric").get())
     }
 }
 
