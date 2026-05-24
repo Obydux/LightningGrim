@@ -13,8 +13,11 @@ import java.util.function.BooleanSupplier;
 // Replaces fabric-api's ServerLifecycleEvents / ServerTickEvents, which ship
 // intermediary-bound bytecode and don't link against the 26.X Mojang-named MC.
 // Hook points mirror fabric-api's:
-//   STARTING fires after initServer() returns successfully, at the head of
-//     runServer() — same point as fabric-api before the tick loop spins up.
+//   STARTING fires at @Inject HEAD of runServer() — fabric-api's SERVER_STARTING
+//     also fires before initServer() runs (initServer is the first instruction
+//     inside runServer in 26.1.2 bytecode). For "after init succeeds, before
+//     first tick" semantics use SERVER_STARTED instead — not wired today
+//     because Grim's start path doesn't need that ordering.
 //   STOPPING fires at the head of stopServer().
 //   END_TICK fires at the tail of tickServer(BooleanSupplier).
 @Mixin(MinecraftServer.class)

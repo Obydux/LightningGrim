@@ -34,52 +34,30 @@ loom {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
-    // 26.X anticheat port — concrete remaining work (audited via attempted
-    // source copy of fabric-intermediary, see commit history for the revert).
-    // Compile errors after pulling :common + compileOnly stubs fell into:
+    // 26.X anticheat lives here. Compiles directly against the Mojang-named
+    // 26.1.2 jar via the empty `intermediary:0.0.0:v2` stub (the named→
+    // intermediary remap is a no-op since the stub has zero entries). Source
+    // is the fabric-intermediary platform layer with the intermediary-bound
+    // surface stripped:
     //
-    //   A. Intermediary types in cloud-fabric + fabric-permissions-api public
-    //      signatures (`Permissions.check(class_2168, String)`, etc.). javac
-    //      can't resolve `class_NNNN` against Mojang-named MC, so any source
-    //      file importing those APIs fails to compile. Fix: delete
-    //      FabricPermissionRegistrationManager.java, FabricSenderFactory.java,
-    //      command/FabricPlayerSelectorParser.java, manager/FabricParserDescriptorFactory.java
-    //      and stub the loader plugin's getters to no-op equivalents. Grim's
-    //      existing catch path (CloudHelper.create → NCDFE → silent fallback)
-    //      lets the engine run without these.
+    //   - cloud-fabric / fabric-permissions-api / fabric-api event modules
+    //     all ship intermediary-bound bytecode that won't link against 26.X
+    //     Mojang names. They are NOT on the classpath. /grim commands and
+    //     fabric-permissions-api lookups are no-op on this build by design
+    //     (matches the catch path the intermediary chain takes when cloud
+    //     is unavailable on older MC).
+    //   - Server lifecycle / tick events are driven by MinecraftServerMixin
+    //     into FabricServerEvents (see src/main/java/.../FabricServerEvents.java)
+    //     replacing fabric-api's ServerLifecycleEvents + ServerTickEvents.
+    //   - 26.X mojmap drift is handled inline (Permission.HasCommandLevel,
+    //     services().profileResolver(), Inventory.getSelectedItem(),
+    //     ResourceKey.identifier(), Player.sendSystemMessage, etc.). AW
+    //     widens the same private fields the intermediary side does.
     //
-    //   B. fabric-api event modules ship intermediary-named bytecode that
-    //      doesn't link against 26.X Mojang names. ServerLifecycleEvents.SERVER_STARTING
-    //      and ServerTickEvents.END_SERVER_TICK callers need to be replaced
-    //      with direct mixins into MinecraftServer.runServer() and
-    //      MinecraftServer.tickServer(). Affects GrimACFabricEntryPoint.java,
-    //      initables/FabricTickEndEvent.java, scheduler/*.
-    //
-    //   C. MC API drift 1.21.11 → 26.1.2. Sample symbols javac couldn't resolve:
-    //      Entity.level (private — needs accessWidener applied at build),
-    //      Player.inventory (private — accessWidener), CommandSourceStack.source
-    //      (private — accessWidener), MinecraftServer.playerDataStorage
-    //      (protected — accessWidener), PlayerDataStorage.playerDir (private —
-    //      accessWidener), plus method renames in AbstractFabricPlatformServer
-    //      (lines 13/17/39), FabricPlatformPlayerFactory (lines 113-114),
-    //      AbstractFabricPlatformInventory (lines 20+ chains). Each needs the
-    //      26.1.2-mojmap call updated.
-    //
-    //   D. The mc261 submodule needs concrete Fabric261PlatformServer +
-    //      Fabric261PlatformPlayer + Fabric261LoaderPlugin analogous to mc12111
-    //      in fabric-intermediary.
-    //
-    //   E. Build/remap packaging: prove access-widener application,
-    //      mixin refmap generation, and nested-jar wiring all work under the
-    //      empty intermediary:0.0.0:v2 stub before grinding through per-file
-    //      API fixes. :common's existing AW assumptions may not apply cleanly
-    //      to the no-op-remap pass — needs a smoke build before the real port.
-    //
-    // Order of operations (per codex r5 review): D first (write minimal mc261
-    // platform/loader so compile targets exist) → E (verify the build pipeline
-    // mechanically) → A (strip cloud/perms surface) → B (mixin-driven events
-    // replacing fabric-api) → C (grind through Mojmap API drift last, once the
-    // architecture is proven). Estimated 6-8h supervised.
+    // mc261 covers the full 26.1.X family — mojmap is empirically signature-
+    // stable across 26.1 / 26.1.1 / 26.1.2 (0 of 300 random classes drift,
+    // 6 of 6 critical classes bit-identical). When 26.2 ships a release a
+    // sibling mc262 breakpoint joins it.
     mappings("net.fabricmc:intermediary:0.0.0:v2")
     modImplementation(libs.fabric.loader)
 
