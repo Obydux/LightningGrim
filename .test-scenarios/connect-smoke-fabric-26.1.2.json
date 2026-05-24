@@ -1,0 +1,15 @@
+{
+  "name": "connect-smoke-fabric-26.1.2",
+  "description": "Real Wurst 26.1.2 client connects to fabric-official scaffold. Verifies PE+scaffold load cleanly on Mojang-named MC; does not exercise anticheat (engine inactive on this branch — see fabric-official source comment).",
+  "client": "26.1.2-wurst",
+  "player": "Offline",
+  "steps": [
+    {"type": "RCON", "command": "op {player}"},
+    {"type": "RCON", "command": "difficulty peaceful"},
+    {"type": "CLEAR_MATCH_WINDOW", "target": "both"},
+    {"type": "SEND", "target": "client", "text": "connect localhost {mc_port}"},
+    {"type": "ENDS_WITH", "target": "server", "pattern": "{player} joined the game", "timeout": 30},
+    {"type": "WAIT", "duration": 4},
+    {"type": "RCON_MATCHES", "command": "list", "pattern": "{player}", "assert": "contains:{player}"}
+  ]
+}
