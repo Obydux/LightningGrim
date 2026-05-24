@@ -30,19 +30,43 @@ java {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
-    // 26.X status — KNOWN BLOCKERS preventing a functional Grim anticheat engine on
-    // this branch (tracked as scaffold until they resolve):
-    //   1. FabricMC has not published a tiny intermediary mapping for 26.X. The 0.0.0:v2
-    //      stub is the only mapping the maven currently serves.
-    //   2. Switching to net.fabricmc.fabric-loom (LoomNoRemap) lets source compile
-    //      against the pre-deobfuscated 26.X jar's Mojang names — that works fine for
-    //      PE because PE has no fabric-ecosystem deps. Grim has hard deps on
-    //      cloud-fabric, fabric-permissions-api, and fabric-api event modules, ALL of
-    //      which ship intermediary-named bytecode. With LoomNoRemap there's no
-    //      runtime intermediary remap, so those refs are dead.
-    //   3. Re-enable in steps once any of: FabricMC publishes a 26.X intermediary;
-    //      cloud-fabric / fabric-permissions-api publish 26.X-native builds; or we
-    //      write Mojang-name shims for each missing dep.
+    // 26.X anticheat port — concrete remaining work (audited via attempted
+    // source copy of fabric-intermediary, see commit history for the revert).
+    // Compile errors after pulling :common + compileOnly stubs fell into:
+    //
+    //   A. Intermediary types in cloud-fabric + fabric-permissions-api public
+    //      signatures (`Permissions.check(class_2168, String)`, etc.). javac
+    //      can't resolve `class_NNNN` against Mojang-named MC, so any source
+    //      file importing those APIs fails to compile. Fix: delete
+    //      FabricPermissionRegistrationManager.java, FabricSenderFactory.java,
+    //      command/FabricPlayerSelectorParser.java, manager/FabricParserDescriptorFactory.java
+    //      and stub the loader plugin's getters to no-op equivalents. Grim's
+    //      existing catch path (CloudHelper.create → NCDFE → silent fallback)
+    //      lets the engine run without these.
+    //
+    //   B. fabric-api event modules ship intermediary-named bytecode that
+    //      doesn't link against 26.X Mojang names. ServerLifecycleEvents.SERVER_STARTING
+    //      and ServerTickEvents.END_SERVER_TICK callers need to be replaced
+    //      with direct mixins into MinecraftServer.runServer() and
+    //      MinecraftServer.tickServer(). Affects GrimACFabricEntryPoint.java,
+    //      initables/FabricTickEndEvent.java, scheduler/*.
+    //
+    //   C. MC API drift 1.21.11 → 26.1.2. Sample symbols javac couldn't resolve:
+    //      Entity.level (private — needs accessWidener applied at build),
+    //      Player.inventory (private — accessWidener), CommandSourceStack.source
+    //      (private — accessWidener), MinecraftServer.playerDataStorage
+    //      (protected — accessWidener), PlayerDataStorage.playerDir (private —
+    //      accessWidener), plus method renames in AbstractFabricPlatformServer
+    //      (lines 13/17/39), FabricPlatformPlayerFactory (lines 113-114),
+    //      AbstractFabricPlatformInventory (lines 20+ chains). Each needs the
+    //      26.1.2-mojmap call updated.
+    //
+    //   D. The mc261 submodule needs concrete Fabric261PlatformServer +
+    //      Fabric261PlatformPlayer + Fabric261LoaderPlugin analogous to mc12111
+    //      in fabric-intermediary.
+    //
+    // Order of operations for a future supervised session: A → B (mixin-driven
+    // events) → C (per-file API fixes) → D (mc261 wiring). Estimated 6-8h.
     mappings("net.fabricmc:intermediary:0.0.0:v2")
     modImplementation(libs.fabric.loader)
 
