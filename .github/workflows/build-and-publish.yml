@@ -269,7 +269,13 @@ jobs:
                   changelog: ${{ steps.changelog.outputs.notes }}
                   loaders: |
                       fabric
-                  game-versions: '>=1.16.1'
+                  # Union of the two ranges actually shipped: intermediary
+                  # variant covers [1.16.1, 26), official variant covers
+                  # [26.1.2, 26.2). mc-publish reads multi-line YAML scalar
+                  # as OR. Keep in sync with fabric.mod.json depends.minecraft.
+                  game-versions: |
+                      >=1.16.1 <26
+                      >=26.1.2 <26.2
                   dependencies: 'fabric-api'
 
             #------------------------------------------------------------------
