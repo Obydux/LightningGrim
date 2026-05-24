@@ -28,6 +28,10 @@ java {
     }
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/grimac.accesswidener")
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
     // 26.X anticheat port — concrete remaining work (audited via attempted
@@ -79,7 +83,9 @@ dependencies {
     mappings("net.fabricmc:intermediary:0.0.0:v2")
     modImplementation(libs.fabric.loader)
 
+    implementation(project(":common"))
     compileOnly(libs.packetevents.api)
+    compileOnly(libs.packetevents.fabric)
     compileOnly("org.slf4j:slf4j-api:2.0.17")
     compileOnly("org.apache.logging.log4j:log4j-api:2.24.3")
 }
@@ -166,8 +172,10 @@ allprojects {
 subprojects {
     dependencies {
         implementation(project(":fabric-official", configuration = "namedElements"))
+        compileOnly(project(":common"))
         val libsx = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
         compileOnly(libsx.findLibrary("packetevents-api").get())
+        compileOnly(libsx.findLibrary("packetevents-fabric").get())
     }
 }
 
