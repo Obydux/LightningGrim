@@ -64,10 +64,13 @@ jobs:
                   persist-credentials: false
                   fetch-depth: 0
 
-            - name: Set up JDK 21
+            - name: Set up JDK 25
               uses: actions/setup-java@v4
               with:
-                  java-version: '21'
+                  # fabric-official's LoomNoRemap setup needs the GRADLE JVM itself on
+                  # Java 25 (toolchain alone isn't enough — Loom configures fabric-official
+                  # during Gradle config phase, before toolchain selection kicks in).
+                  java-version: '25'
                   distribution: 'temurin'
                   server-id: github
                   settings-path: ${{ github.workspace }}
