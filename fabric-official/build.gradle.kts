@@ -18,19 +18,22 @@ java {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
-    // MC 26.X jars are pre-deobfuscated with Mojang's official names, but neither
-    // Mojang's manifest nor FabricMC publishes a tiny intermediary mapping for 26.X.
-    // The 0.0.0:v2 stub is the only mapping the maven currently serves; Loom configures
-    // against it cleanly as long as source code references no MC types. Per-version
-    // source compiled against Mojang names lands once a real 26.X intermediary mapping
-    // (or first-class no-mapping Loom support) is available.
+    // 26.X status — KNOWN BLOCKERS preventing a functional Grim anticheat engine on
+    // this branch (tracked as scaffold until they resolve):
+    //   1. FabricMC has not published a tiny intermediary mapping for 26.X. The 0.0.0:v2
+    //      stub is the only mapping the maven currently serves.
+    //   2. Switching to net.fabricmc.fabric-loom (LoomNoRemap) lets source compile
+    //      against the pre-deobfuscated 26.X jar's Mojang names — that works fine for
+    //      PE because PE has no fabric-ecosystem deps. Grim has hard deps on
+    //      cloud-fabric, fabric-permissions-api, and fabric-api event modules, ALL of
+    //      which ship intermediary-named bytecode. With LoomNoRemap there's no
+    //      runtime intermediary remap, so those refs are dead.
+    //   3. Re-enable in steps once any of: FabricMC publishes a 26.X intermediary;
+    //      cloud-fabric / fabric-permissions-api publish 26.X-native builds; or we
+    //      write Mojang-name shims for each missing dep.
     mappings("net.fabricmc:intermediary:0.0.0:v2")
     modImplementation(libs.fabric.loader)
 
-    // PE's pure-Java api jar is safe to pull (no accessWidener inside). The fabric
-    // variant is intentionally excluded — it ships an intermediary-namespaced AW that
-    // Loom would try to remap against the 0.0.0 stub. Source must avoid net.minecraft.*
-    // references so Loom's source remap is a no-op.
     compileOnly(libs.packetevents.api)
     compileOnly("org.slf4j:slf4j-api:2.0.17")
     compileOnly("org.apache.logging.log4j:log4j-api:2.24.3")
