@@ -382,7 +382,6 @@ public class CheckManagerListener extends PacketListenerAbstract {
         }
     }
 
-    private static int packetDiagCounter = 0;
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());

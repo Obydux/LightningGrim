@@ -38,9 +38,7 @@ public class NoopFabricSenderFactory extends SenderFactory<CommandSourceStack> {
 
     @Override
     protected void sendMessage(CommandSourceStack source, String message) {
-        // 26.X: always log via LogUtil so alerts appear in latest.log + tmux.
-        ac.grim.grimac.utils.anticheat.LogUtil.info(message);
-        source.sendSuccess(() -> net.minecraft.network.chat.Component.literal(message), false);
+        System.out.println(message);
     }
 
     @Override
