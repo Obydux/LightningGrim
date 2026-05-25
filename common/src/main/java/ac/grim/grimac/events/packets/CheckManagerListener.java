@@ -389,9 +389,10 @@ public class CheckManagerListener extends PacketListenerAbstract {
         if (player == null && event.getConnectionState() == ConnectionState.PLAY) {
             // 26.X: GrimPlayer vanishes from the map after the first few PLAY
             // packets due to a PE pipeline state issue during CONFIGURATION→PLAY
-            // transition. Force re-creation so checks can run.
-            GrimAPI.INSTANCE.getPlayerDataManager().addUser(event.getUser());
-            player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
+            // transition. Force re-creation bypassing shouldCheck (which may
+            // fail due to transient channel state).
+            player = new ac.grim.grimac.player.GrimPlayer(event.getUser());
+            GrimAPI.INSTANCE.getPlayerDataManager().forcePut(event.getUser(), player);
         }
         if (player == null) return;
 
