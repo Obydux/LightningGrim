@@ -24,28 +24,38 @@ public class PolymerHook {
         if (HAS_POLYMER) {
             try {
                 MethodHandles.Lookup lookup = MethodHandles.publicLookup();
-                Class<?> contextClass = Class.forName("xyz.nucleoid.packettweaker.PacketContext");
                 Class<?> utilsClass = Class.forName("eu.pb4.polymer.core.api.block.PolymerBlockUtils");
 
-                Method createMethod = null;
-                for (Method m : contextClass.getDeclaredMethods()) {
-                    if (m.getName().equals("create") && m.getParameterCount() == 1 && m.getParameterTypes()[0] == ServerPlayer.class) {
-                        createMethod = m;
-                        break;
+                // Polymer 0.16+ (26.X): uses fabric-api's PacketContext via PacketContextProvider mixin on ServerPlayer
+                // Polymer <0.16 (pre-26.X): uses nucleoid PacketTweaker's PacketContext.create(ServerPlayer)
+                Class<?> contextClass = null;
+                try {
+                    contextClass = Class.forName("net.fabricmc.fabric.api.networking.v1.context.PacketContext");
+                    // 26.X path: ServerPlayer implements PacketContextProvider.getPacketContext()
+                    Class<?> providerClass = Class.forName("net.fabricmc.fabric.api.networking.v1.context.PacketContextProvider");
+                    MethodHandle getPacketContext = lookup.findVirtual(providerClass, "getPacketContext",
+                            MethodType.methodType(contextClass));
+                    createContext = getPacketContext.asType(MethodType.methodType(Object.class, ServerPlayer.class));
+                } catch (ClassNotFoundException e) {
+                    // Fallback: pre-26.X nucleoid PacketTweaker
+                    contextClass = Class.forName("xyz.nucleoid.packettweaker.PacketContext");
+                    Method createMethod = null;
+                    for (Method m : contextClass.getDeclaredMethods()) {
+                        if (m.getName().equals("create") && m.getParameterCount() == 1 && m.getParameterTypes()[0] == ServerPlayer.class) {
+                            createMethod = m;
+                            break;
+                        }
+                    }
+                    if (createMethod != null) {
+                        createContext = lookup.unreflect(createMethod).asType(MethodType.methodType(Object.class, ServerPlayer.class));
                     }
                 }
 
-                if (createMethod != null) {
-                    MethodHandle rawCreate = lookup.unreflect(createMethod);
-
-                    createContext = rawCreate.asType(MethodType.methodType(Object.class, ServerPlayer.class));
-                }
                 MethodHandle rawGet = lookup.findStatic(utilsClass, "getPolymerBlockState",
                         MethodType.methodType(BlockState.class, BlockState.class, contextClass));
                 getState = rawGet.asType(MethodType.methodType(BlockState.class, BlockState.class, Object.class));
 
             } catch (Throwable t) {
-                // If Polymer changes their API drastically, log it so server owners know why custom blocks aren't translating
                 System.err.println("[GrimAC] Failed to hook Polymer translation API. Custom blocks may not render correctly or crash client when re-synchronizing.");
                 t.printStackTrace();
             }
@@ -74,9 +84,7 @@ public class PolymerHook {
         public int translate(int serverBlockId) {
             try {
                 BlockState state = Block.stateById(serverBlockId);
-
                 BlockState mappedState = (BlockState) GET_STATE.invokeExact(state, context);
-
                 return Block.getId(mappedState);
             } catch (Throwable t) {
                 return serverBlockId;
