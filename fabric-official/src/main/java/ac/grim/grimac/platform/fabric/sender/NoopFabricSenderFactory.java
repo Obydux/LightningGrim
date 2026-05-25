@@ -36,8 +36,12 @@ public class NoopFabricSenderFactory extends SenderFactory<CommandSourceStack> {
         return name;
     }
 
+    private static final org.slf4j.Logger GRIM_LOGGER = org.slf4j.LoggerFactory.getLogger("Grim");
     @Override
     protected void sendMessage(CommandSourceStack source, String message) {
+        // 26.X: always log to SLF4J so alerts appear in latest.log + tmux.
+        // Also send through MC's system for player-facing chat.
+        GRIM_LOGGER.info(message);
         source.sendSuccess(() -> net.minecraft.network.chat.Component.literal(message), false);
     }
 

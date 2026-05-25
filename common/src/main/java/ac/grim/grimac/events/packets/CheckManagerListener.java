@@ -386,11 +386,14 @@ public class CheckManagerListener extends PacketListenerAbstract {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
         GrimPlayer player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
-        if (player == null) return;
-        // TEMP DIAG: confirm packets reach the check manager
-        if (packetDiagCounter++ < 20 || packetDiagCounter % 500 == 0) {
-            System.out.println("[grim-pkt-diag] onPacketReceive #" + packetDiagCounter + " type=" + event.getPacketType() + " state=" + event.getConnectionState() + " user=" + event.getUser().getName());
+        if (player == null && event.getConnectionState() == ConnectionState.PLAY) {
+            // 26.X: GrimPlayer vanishes from the map after the first few PLAY
+            // packets due to a PE pipeline state issue during CONFIGURATION→PLAY
+            // transition. Force re-creation so checks can run.
+            GrimAPI.INSTANCE.getPlayerDataManager().addUser(event.getUser());
+            player = GrimAPI.INSTANCE.getPlayerDataManager().getPlayer(event.getUser());
         }
+        if (player == null) return;
 
         if (event.getConnectionState() != ConnectionState.PLAY) {
             // Allow checks to listen to configuration packets
