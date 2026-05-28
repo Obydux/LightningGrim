@@ -28,17 +28,9 @@ import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import lombok.Getter;
 import net.minecraft.server.MinecraftServer;
 
-// fabric-official variant of GrimACFabricLoaderPlugin. Mirrors the intermediary
-// variant except for the parts that depend on intermediary-bound APIs:
-//
-//   - cloud-fabric: its public method sigs reference intermediary class_NNNN names
-//     and can't link against Mojang-named 26.X. CommandService becomes a no-op
-//     (same as the catch path the intermediary variant takes when cloud is missing
-//     on older MC). /grim commands are unavailable on 26.X until cloud-fabric ships
-//     a 26.X-native build.
-//   - fabric-permissions-api: same problem. PermissionRegistrationManager is a
-//     no-op; permission checks fall back to vanilla op-level via
-//     CommandSourceStack.hasPermission(int) directly in the concrete platform.
+// fabric-official variant — mirrors the intermediary loader minus APIs that don't
+// link against 26.X: cloud-fabric (no-op CommandService) and fabric-permissions-api
+// (no-op PermissionRegistrationManager + op-level fallback).
 public abstract class GrimACFabricLoaderPlugin implements PlatformLoader {
     public static MinecraftServer FABRIC_SERVER;
     public static GrimACFabricLoaderPlugin LOADER;

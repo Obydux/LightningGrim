@@ -13,10 +13,8 @@ import net.minecraft.server.rcon.RconConsoleSource;
 
 import java.util.UUID;
 
-// Sender factory for fabric-official. Implements just enough of the SenderFactory
-// contract to keep Grim's :common services happy on 26.X without pulling in
-// fabric-permissions-api (intermediary-bound). Permission checks fall through
-// to vanilla op-level via CommandSourceStack.hasPermission(int).
+// fabric-official SenderFactory. Avoids fabric-permissions-api (intermediary-bound)
+// and falls back to vanilla op level for permission checks.
 public class NoopFabricSenderFactory extends SenderFactory<CommandSourceStack> {
 
     @Override
@@ -43,11 +41,8 @@ public class NoopFabricSenderFactory extends SenderFactory<CommandSourceStack> {
 
     @Override
     protected void sendMessage(CommandSourceStack source, Component message) {
-        // Adventure → MC Component conversion would require adventure-platform-fabric;
-        // adventure-text-serializer-plain isn't on the fabric-official classpath either.
-        // Flatten via the always-available ComponentFlattener (adventure-api core) — loses
-        // formatting but preserves text content. The conversion-util pass in Phase C will
-        // replace this with proper formatted text once a 26.X-native adventure path lands.
+        // Flatten via ComponentFlattener (no formatting, but text-only is enough for now
+        // — adventure-platform-fabric isn't available for 26.X).
         StringBuilder out = new StringBuilder();
         ComponentFlattener.basic().flatten(message, out::append);
         sendMessage(source, out.toString());
@@ -55,9 +50,8 @@ public class NoopFabricSenderFactory extends SenderFactory<CommandSourceStack> {
 
     @Override
     protected boolean hasPermission(CommandSourceStack source, String node) {
-        // 26.X overhauled permissions — hasPermission(int) is gone, replaced by
-        // PermissionSet.hasPermission(Permission). Fall back to op level 2 (vanilla
-        // "ops only") since fabric-permissions-api isn't ported.
+        // 26.X: hasPermission(int) → permissions().hasPermission(Permission).
+        // Fall back to op level 2 since fabric-permissions-api isn't ported.
         return source.permissions().hasPermission(
                 new Permission.HasCommandLevel(PermissionLevel.byId(2)));
     }
