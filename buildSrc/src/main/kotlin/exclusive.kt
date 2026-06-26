@@ -25,18 +25,31 @@ fun RepositoryHandler.exclusive(
 }
 
 fun RepositoryHandler.exclusive(
+    urls: Iterable<String>,
+    filterConfig: InclusiveRepositoryContentDescriptor.() -> Unit
+) {
+    val remotes = urls.map { maven(it) }
+
+    exclusiveRemotes(remotes, filterConfig)
+}
+
+fun RepositoryHandler.exclusive(
     remote: MavenArtifactRepository,
+    filterConfig: InclusiveRepositoryContentDescriptor.() -> Unit
+) {
+    exclusiveRemotes(listOf(remote), filterConfig)
+}
+
+private fun RepositoryHandler.exclusiveRemotes(
+    remotes: Iterable<MavenArtifactRepository>,
     filterConfig: InclusiveRepositoryContentDescriptor.() -> Unit
 ) {
     // We access BuildConfig here again to check for local override
     val local = if (BuildConfig.mavenLocalOverride) mavenLocal() else null
+    val repositories = if (local != null) listOf(local) + remotes else remotes.toList()
 
     exclusiveContent {
-        if (local != null) {
-            forRepositories(local, remote)
-        } else {
-            forRepositories(remote)
-        }
+        forRepositories(*repositories.toTypedArray())
         filter(filterConfig)
     }
 }

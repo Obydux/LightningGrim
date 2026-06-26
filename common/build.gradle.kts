@@ -10,7 +10,7 @@ repositories {
     if (BuildConfig.mavenLocalOverride) mavenLocal()
 
     // Grim API & PacketEvents
-    exclusive("https://repo.grim.ac/snapshots") {
+    exclusive(listOf("https://repo.grim.ac/releases", "https://repo.grim.ac/snapshots")) {
         includeGroup("ac.grim.grimac")
         includeGroup("com.github.retrooper")
     }
@@ -62,6 +62,7 @@ dependencies {
     api(libs.adventure.text.minimessage)
     api(libs.jetbrains.annotations)
     api(libs.hikaricp)
+    compileOnly(libs.mongo.driver.sync)
 
     api(libs.grim.api)
     api(libs.grim.internal)
