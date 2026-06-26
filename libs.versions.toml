@@ -11,7 +11,7 @@ cloud-processors-requirements = "1.0.0-rc.1"
 # --- Minecraft-Specific APIs ---
 floodgate-api = "2.0-SNAPSHOT"
 geyser-base-api = "1.0.2"
-grim-api = "1.5.0.3-10fed42"
+grim-api = "1.6.0.5-feat_server-ownership-leases-c31eab4"
 packetevents = "2.12.2+0759fbb-SNAPSHOT"
 placeholderapi = "2.11.6"
 viaversion = "5.9.0"
@@ -19,6 +19,7 @@ viaversion = "5.9.0"
 # --- General Java Utilities ---
 fastutil = "8.5.15"
 hikaricp = "7.0.2"
+mongoDriver = "5.3.1"
 jetbrains-annotations = "24.1.0"
 netty = "4.1.85.Final"
 snakeyaml = "2.2"
@@ -62,6 +63,7 @@ viabackwards = { group = "com.viaversion", name = "viabackwards", version.ref = 
 # --- General Java Utilities ---
 fastutil = { group = "it.unimi.dsi", name = "fastutil", version.ref = "fastutil"}
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
+mongo-driver-sync = { group = "org.mongodb", name = "mongodb-driver-sync", version.ref = "mongoDriver" }
 jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrains-annotations" }
 netty = { group = "io.netty", name = "netty-all", version.ref = "netty" }
 snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
